@@ -177,4 +177,3 @@ def view_queue_small_project(webdriver, datasets):
     browse_queues_page = ViewQueue(webdriver, project_key=datasets['small_project_key'],
                                    queue_id=datasets['all_open_queue_id_small'])
     view_queue_form_diff_projects_size(browse_queues_page, project_size='small')
-
