@@ -6,6 +6,33 @@ logger = init_logger(app_type='jira')
 
 @jira_measure
 def app_specific_action(locust):
+    r = locust.get('/rest/de.resolution.apitokenauth/latest/user/token', catch_response=True)  # call app-specific GET endpoint
+    content = r.content.decode('utf-8')   # decode response content
+
+    token_description_pattern = '"description":"(.+?)"'
+    token_created_by_pattern = '"tokenCreatedByUserKey":"(.+?)"'
+    token_description = re.findall(token_description_pattern, content)  # get TOKEN from response using regexp
+    token_created_by = re.findall(token_created_by_pattern, content)    # get ID from response using regexp
+
+    logger.locust_info(f'token: {token_description}, id: {token_created_by}')  # log information for debug when verbose is true in jira.yml file
+
+    if 'paginationLinks' not in content:
+        logger.error(f"'paginationLinks' was not found in {content}")
+    assert 'paginationLinks' in content  # assert specific string in response content
+
+    # body = {"id": token_created_by, "token": token_description}  # include parsed variables to POST request body
+    # headers = {'content-type': 'application/json'}
+    # r = locust.post('/app/post_endpoint', body, headers, catch_response=True)  # call app-specific POST endpoint
+    # content = r.content.decode('utf-8')
+    # if 'assertion string after successful POST request' not in content:
+    #     logger.error(f"'assertion string after successful POST request' was not found in {content}")
+    #
+    # assert 'assertion string after successful POST request' in content  # assertion after POST request
+
+
+"""
+@jira_measure
+def app_specific_action(locust):
     r = locust.get('/app/get_endpoint', catch_response=True)  # call app-specific GET endpoint
     content = r.content.decode('utf-8')   # decode response content
 
@@ -26,3 +53,4 @@ def app_specific_action(locust):
     if 'assertion string after successful POST request' not in content:
         logger.error(f"'assertion string after successful POST request' was not found in {content}")
     assert 'assertion string after successful POST request' in content  # assertion after POST request
+"""
