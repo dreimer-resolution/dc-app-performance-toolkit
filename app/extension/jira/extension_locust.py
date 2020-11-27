@@ -1,56 +1,47 @@
 import re
 from locustio.common_utils import init_logger, jira_measure
+import time
 
 logger = init_logger(app_type='jira')
 
 
+
 @jira_measure
 def app_specific_action(locust):
-    r = locust.get('/rest/de.resolution.apitokenauth/latest/user/token', catch_response=True)  # call app-specific GET endpoint
-    content = r.content.decode('utf-8')   # decode response content
 
-    token_description_pattern = '"description":"(.+?)"'
-    token_created_by_pattern = '"tokenCreatedByUserKey":"(.+?)"'
-    token_description = re.findall(token_description_pattern, content)  # get TOKEN from response using regexp
-    token_created_by = re.findall(token_created_by_pattern, content)    # get ID from response using regexp
-
-    logger.locust_info(f'token: {token_description}, id: {token_created_by}')  # log information for debug when verbose is true in jira.yml file
-
-    if 'paginationLinks' not in content:
-        logger.error(f"'paginationLinks' was not found in {content}")
-    assert 'paginationLinks' in content  # assert specific string in response content
-
-    # body = {"id": token_created_by, "token": token_description}  # include parsed variables to POST request body
-    # headers = {'content-type': 'application/json'}
-    # r = locust.post('/app/post_endpoint', body, headers, catch_response=True)  # call app-specific POST endpoint
-    # content = r.content.decode('utf-8')
-    # if 'assertion string after successful POST request' not in content:
-    #     logger.error(f"'assertion string after successful POST request' was not found in {content}")
-    #
-    # assert 'assertion string after successful POST request' in content  # assertion after POST request
-
-
-"""
-@jira_measure
-def app_specific_action(locust):
-    r = locust.get('/app/get_endpoint', catch_response=True)  # call app-specific GET endpoint
-    content = r.content.decode('utf-8')   # decode response content
-
-    token_pattern_example = '"token":"(.+?)"'
-    id_pattern_example = '"id":"(.+?)"'
-    token = re.findall(token_pattern_example, content)  # get TOKEN from response using regexp
-    id = re.findall(id_pattern_example, content)    # get ID from response using regexp
-
-    logger.locust_info(f'token: {token}, id: {id}')  # log information for debug when verbose is true in confluence.yml file
-    if 'assertion string' not in content:
-        logger.error(f"'assertion string' was not found in {content}")
-    assert 'assertion string' in content  # assert specific string in response content
-
-    body = {"id": id, "token": token}  # include parsed variables to POST request body
+    # create token with description for current perf user
+    current_user = locust.session_data_storage["username"]
+    token_description =  "token_" + str(int(round(time.time() * 1000)))
+    body = '{"tokenDescription": "' + token_description + '"}'  # create token payload
     headers = {'content-type': 'application/json'}
-    r = locust.post('/app/post_endpoint', body, headers, catch_response=True)  # call app-specific POST endpoint
+
+    r = locust.post('/rest/de.resolution.apitokenauth/latest/user/token', body, headers, catch_response=True)
     content = r.content.decode('utf-8')
-    if 'assertion string after successful POST request' not in content:
-        logger.error(f"'assertion string after successful POST request' was not found in {content}")
-    assert 'assertion string after successful POST request' in content  # assertion after POST request
-"""
+
+    if 'plainTextToken' not in content:
+        logger.error(f"a plainTextToken was not found in {content}")
+
+    assert 'plainTextToken' in content  # assert if plain text token is contained in response
+
+    plain_text_token_pattern = '"plainTextToken":"(.+?)"'
+    plain_text_token = re.findall(plain_text_token_pattern, content)
+    token_description_from_result_pattern = '"tokenDescription":"(.+?)"'
+    token_description_from_result = re.findall(token_description_from_result_pattern, content)
+
+    logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
+
+
+    # use that token for another GET request
+    r = locust.get('/rest/api/2/myself', auth=(current_user, plain_text_token[0]), catch_response=True)
+    content = r.content.decode('utf-8')   # decode response content
+
+    username_pattern = '"name":"(.+?)"'
+    username_for_assertion = re.findall(username_pattern, content)
+
+    logger.locust_info(f'username from /rest/api/2/myself response: {username_for_assertion[0]}')
+
+    if username_for_assertion[0] != current_user:
+        logger.error(f" username in response not found/ not matching the current username")
+
+    assert username_for_assertion[0] == current_user
+
