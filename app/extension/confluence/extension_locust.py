@@ -30,13 +30,13 @@ def app_specific_action(locust):
 
 
     # use that token for another GET request
-    r = locust.get('/rest/api/2/myself', auth=(current_user, plain_text_token[0]), catch_response=True)
+    r = locust.get('/rest/api/user/current', auth=(current_user, plain_text_token[0]), catch_response=True)
     content = r.content.decode('utf-8')   # decode response content
 
-    username_pattern = '"name":"(.+?)"'
+    username_pattern = '"username":"(.+?)"'
     username_for_assertion = re.findall(username_pattern, content)
 
-    logger.locust_info(f'username from /rest/api/2/myself response: {username_for_assertion[0]}')
+    logger.locust_info(f'username from /rest/api/user/current response: {username_for_assertion[0]}')
 
     if username_for_assertion[0] != current_user:
         logger.error(f" username in response not found/ not matching the current username")
