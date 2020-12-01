@@ -1,5 +1,6 @@
 import re
 from locustio.common_utils import init_logger, confluence_measure
+import time
 
 logger = init_logger(app_type='confluence')
 
