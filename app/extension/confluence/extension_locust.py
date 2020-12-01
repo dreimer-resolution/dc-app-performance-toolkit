@@ -10,11 +10,12 @@ def app_specific_action(locust):
 
     # create token with description for current perf user
     current_user = locust.session_data_storage["username"]
-    token_description =  "token_" + str(int(round(time.time() * 1000)))
-    body = '{"tokenDescription": "' + token_description + '"}'  # create token payload
-    headers = {'content-type': 'application/json'}
 
-    r = locust.post('/rest/de.resolution.apitokenauth/latest/user/token', body, headers, catch_response=True)
+    logger.locust_info(f'current_user: {current_user} ')
+
+    token_description =  "token_" + str(int(round(time.time() * 1000)))
+    body =  {"tokenDescription": token_description} # create token payload
+    r = locust.post('/rest/de.resolution.apitokenauth/latest/user/token', json=body, catch_response=True)
     content = r.content.decode('utf-8')
 
     if 'plainTextToken' not in content:
