@@ -968,7 +968,7 @@ if (responseCode != &quot;0&quot;) {
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;tokenDescription&quot; : &quot;JMeter Token&quot;}</stringProp>
+                    <stringProp name="Argument.value">{&quot;tokenDescription&quot; : &quot;JMeter Token&quot;, &quot;tokenScope&quot;: 2}</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
@@ -1020,7 +1020,7 @@ if (responseCode != &quot;0&quot;) {
                 <stringProp name="parameters"></stringProp>
                 <stringProp name="filename"></stringProp>
                 <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="script">log.info(&quot;API TOKEN AUTH &quot; + vars.get(&quot;api_token&quot;))</stringProp>
+                <stringProp name="script">log.info(&quot;---&gt; Created token &quot; + vars.get(&quot;api_token&quot;) + &quot; for user &quot; +  vars.get(&quot;USERNAME&quot;))</stringProp>
               </JSR223PostProcessor>
               <hashTree/>
             </hashTree>
@@ -1043,6 +1043,14 @@ if (responseCode != &quot;0&quot;) {
               <stringProp name="HTTPSampler.response_timeout"></stringProp>
             </HTTPSamplerProxy>
             <hashTree>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="false">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">log.info(&quot;---&gt; Using token &quot; + vars.get(&quot;api_token&quot;) + &quot; for user &quot; +  vars.get(&quot;USERNAME&quot;))</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
               <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
                 <collectionProp name="AuthManager.auth_list">
                   <elementProp name="" elementType="Authorization">
