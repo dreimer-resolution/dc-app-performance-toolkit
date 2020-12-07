@@ -23,7 +23,7 @@ settings:
     # Action percentage for Jmeter and Locust load executors
     create_issue: 4
     search_jql: 13
-    view_issue: 43
+    view_issue: 23
     view_project_summary: 4
     view_dashboard: 12
     edit_issue: 4
@@ -33,7 +33,7 @@ settings:
     view_kanban_board: 3
     view_backlog: 6
     browse_boards: 2
-    standalone_extension: 0 # By default disabled
+    standalone_extension: 20 # By default disabled
     # Custom dataset section.
     custom_dataset_query:          # Write JQL query to add JQL output to the app/datasets/jira/custom-issues.csv, e.g. "summary ~ 'AppIssue*'"
 services:
