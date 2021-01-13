@@ -22,7 +22,7 @@ def app_specific_action(locust):
     body = {
         "id": null,
         "shortUrl": random_short_url,
-        "longUrl": base_url + "/display/ISS/Crew+Section",
+        "longUrl": base_url + "display/ISS/Crew+Section",
         "note": "Meet the Crew",
         "anchor": null
     }
@@ -37,14 +37,13 @@ def app_specific_action(locust):
     short_url_pattern = '"shortUrl":"(.+?)"'
     short_url_from_result = re.findall(short_url_pattern, content)
 
-    creation_date_from_result_pattern = '"creationDate":"(.+?)"'
+    creation_date_from_result_pattern = '"creationDate":(.+?),'
     creation_date_from_result = re.findall(creation_date_from_result_pattern, content)
 
     logger.locust_info(f"created shortUrl: {short_url_from_result[0]}, creationDate is {creation_date_from_result[0]}")
 
-
     # request short URL
-    r = locust.get('/go/' + short_url_pattern, catch_response=True)
+    r = locust.get('/go/' + short_url_from_result[0], catch_response=True)
 
     if r.status_code != 200:
         logger.error(f"calling the shortUrl {short_url_from_result[0]} didn't return status 200")
