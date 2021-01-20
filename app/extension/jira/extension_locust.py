@@ -11,7 +11,7 @@ def app_specific_action(locust):
     # like our test users created with the test connector
     body = {"notInGroups": ["jira-software-users"], "action": "DEACTIVATE"}
 
-    r = locust.post('/rest/de.resolution.userdeactivator/1.0/ui/users', json=body, catch_response=True)
+    r = locust.post('/rest/de.resolution.userdeactivator/1.0/ui/users', auth=("admin", "admin"), json=body,  catch_response=True)
     content = r.content.decode('utf-8')
 
     if 'resultId' not in content:
