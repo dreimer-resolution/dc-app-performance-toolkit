@@ -4,15 +4,16 @@ from locustio.common_utils import init_logger, confluence_measure
 logger = init_logger(app_type='confluence')
 
 
-@confluence_measure
+@confluence_measure("locust_app_specific_action")
 def app_specific_action(locust):
+
 
     # this will trigger deactivation of everybody who is not in confluence-users,
     # like our test users created with the test connector
     body = {"notInGroups": ["confluence-users"], "action": "DEACTIVATE"}
 
     r = locust.post('/rest/de.resolution.userdeactivator/1.0/ui/users', auth=("admin", "admin"), json=body, catch_response=True)
-    content = r.content.decode('utf-8')
+    content = r.content.decode('utf-8')   # decode response content
 
     if 'resultId' not in content:
         logger.error(f"resultId was not found in {content}, looks like deactivation was not triggered properly")
