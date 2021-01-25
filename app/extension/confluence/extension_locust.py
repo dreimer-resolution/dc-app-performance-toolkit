@@ -9,8 +9,9 @@ This test requires a space called ISS with a page called Crew Section
 """
 
 
-@confluence_measure
+@confluence_measure("locust_app_specific_action")
 def app_specific_action(locust):
+
 
     random_short_url =  str(int(round(time.time() * 1000)))
 
