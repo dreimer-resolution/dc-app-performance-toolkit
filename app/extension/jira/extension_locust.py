@@ -5,8 +5,8 @@ import time
 logger = init_logger(app_type='jira')
 
 
+@jira_measure("locust_app_specific_action")
 
-@jira_measure
 def app_specific_action(locust):
 
     # create token with description for current perf user
@@ -38,10 +38,12 @@ def app_specific_action(locust):
     username_pattern = '"name":"(.+?)"'
     username_for_assertion = re.findall(username_pattern, content)
 
+
     logger.locust_info(f'username from /rest/api/2/myself response: {username_for_assertion[0]}')
 
     if username_for_assertion[0] != current_user:
         logger.error(f" username in response not found/ not matching the current username")
 
     assert username_for_assertion[0] == current_user
+
 

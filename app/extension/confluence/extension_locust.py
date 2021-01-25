@@ -5,11 +5,12 @@ import time
 logger = init_logger(app_type='confluence')
 
 
-@confluence_measure
+@confluence_measure("locust_app_specific_action")
 def app_specific_action(locust):
 
     # create token with description for current perf user
     current_user = locust.session_data_storage["username"]
+
 
     logger.locust_info(f'current_user: {current_user} ')
 
