@@ -4,7 +4,7 @@ from locustio.common_utils import init_logger, confluence_measure
 logger = init_logger(app_type='confluence')
 
 
-@confluence_measure
+@confluence_measure("locust_app_specific_action")
 def app_specific_action(locust):
 
     # add header key and value for http header auth to log us in
