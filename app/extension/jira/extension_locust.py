@@ -25,3 +25,10 @@ def app_specific_action(locust):
 
     logger.locust_info(f"resultId: {result_id[0]}")
     assert int(result_id[0]) >= 0
+
+
+    # RESET SESSION USER BACK, UNLESS WE DO THAT WE GET STRANGE
+    # "ADMIN STILL LOGGED IN" ERRORS IN OTHER LOCUST ACTIONS
+    # WE DO THAT WITH THIS DUMMY CALL:
+    locust.get(f"/secure/BrowseProjects.jspa?selectedCategory=archived",
+               catch_response=True, auth=(locust.session_data_storage["username"], "password"))
