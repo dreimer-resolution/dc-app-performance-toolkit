@@ -3,9 +3,13 @@ from extension.jira import extension_ui  # noqa F401
 
 
 # this action should be the first one
-def test_0_selenium_a_login(jira_webdriver, jira_datasets, jira_screen_shots):
-    modules.login(jira_webdriver, jira_datasets)
+# def test_0_selenium_a_login(jira_webdriver, jira_datasets, jira_screen_shots):
+#     modules.login(jira_webdriver, jira_datasets)
 
+# app specific login instead of selenium default, since we need to test log in with OpenId
+def test_0_selenium_app_specific_login(jira_webdriver, jira_datasets, jira_screen_shots):
+    modules.setup_run_data(jira_datasets)
+    extension_ui.app_specific_action(jira_webdriver, jira_datasets)
 
 def test_1_selenium_browse_projects_list(jira_webdriver, jira_datasets, jira_screen_shots):
     modules.browse_projects_list(jira_webdriver, jira_datasets)

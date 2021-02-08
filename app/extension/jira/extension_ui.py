@@ -5,20 +5,42 @@ from selenium.webdriver.common.by import By
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from util.conf import JIRA_SETTINGS
+from selenium_ui.jira.pages.pages import PopupManager
 
+
+"""
+https://social.technet.microsoft.com/wiki/contents/articles/24541.powershell-bulk-create-ad-users-from-csv-file.aspx
+https://www.alitajran.com/create-active-directory-users-from-csv-with-powershell/
+"""
 
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
-    if datasets['custom_issues']:
-        issue_key = datasets['custom_issue_key']
+
 
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_issue")
+        @print_timing("selenium_app_custom_action:login_with_open_id")
         def sub_measure():
-            page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/{issue_key}")
-            page.wait_until_visible((By.ID, "summary-val"))  # Wait for summary field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
+            print(f"login_with_open_id, user: {datasets['username'][0:20]}")
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa") # open dashboard page with login screen
+
+            page.wait_until_visible((By.ID, "openid-1"))
+
+            webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
+
+            page.wait_until_visible((By.ID, "userNameInput"))
+            page.wait_until_visible((By.ID, "passwordInput"))
+
+            username_input = webdriver.find_element_by_xpath(".//*[@id='userNameInput']")
+            username_input.send_keys("ad\\" + datasets['username'][0:20])
+
+            password_input = webdriver.find_element_by_xpath(".//*[@id='passwordInput']")
+            password_input.send_keys('just4lab!')
+
+            webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
+            PopupManager(webdriver).dismiss_default_popup()
+
+
         sub_measure()
     measure()
