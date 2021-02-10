@@ -11,6 +11,7 @@ def test_0_selenium_app_specific_login(jira_webdriver, jira_datasets, jira_scree
     modules.setup_run_data(jira_datasets)
     extension_ui.app_specific_action(jira_webdriver, jira_datasets)
 
+
 def test_1_selenium_browse_projects_list(jira_webdriver, jira_datasets, jira_screen_shots):
     modules.browse_projects_list(jira_webdriver, jira_datasets)
 

@@ -41,6 +41,7 @@ def app_specific_action(webdriver, datasets):
             webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
             PopupManager(webdriver).dismiss_default_popup()
 
+            page.wait_until_visible((By.ID, "gadget-10002-title"))
 
         sub_measure()
     measure()
