@@ -29,7 +29,6 @@ def app_specific_action(webdriver, datasets):
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa") # open dashboard page with login screen
 
             page.wait_until_visible((By.ID, "openid-1"))
-
             webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
 
             page.wait_until_visible((By.ID, "userNameInput"))

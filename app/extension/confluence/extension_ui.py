@@ -6,6 +6,13 @@ from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from util.conf import CONFLUENCE_SETTINGS
 
+from selenium_ui.confluence.pages.selectors import UrlManager, LoginPageLocators, AllUpdatesLocators, PopupLocators, \
+    PageLocators, DashboardLocators, TopPanelLocators, EditorLocators
+
+from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager, Page, Dashboard, TopNavPanel, Editor, \
+    Logout
+
+
 """
 https://social.technet.microsoft.com/wiki/contents/articles/24541.powershell-bulk-create-ad-users-from-csv-file.aspx
 https://www.alitajran.com/create-active-directory-users-from-csv-with-powershell/
@@ -38,6 +45,17 @@ def app_specific_action(webdriver, datasets):
 
             webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
 
+            if page.get_elements(LoginPageLocators.first_login_setup_page):
+                if page.get_element(LoginPageLocators.current_step_sel).text == 'Welcome':
+                    page.wait_until_clickable(LoginPageLocators.skip_welcome_button).click()
+                if page.get_element(LoginPageLocators.current_step_sel).text == 'Upload your photo':
+                    page.wait_until_clickable(LoginPageLocators.skip_photo_upload).click()
+                if page.get_element(LoginPageLocators.current_step_sel).text == 'Find content':
+                    page.wait_until_any_element_visible(LoginPageLocators.skip_find_content)[0].click()
+                    page.wait_until_clickable(LoginPageLocators.finish_setup).click()
+
+            all_updates_page = AllUpdates(webdriver)
+            all_updates_page.wait_for_page_loaded()
 
         sub_measure()
     measure()
