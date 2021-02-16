@@ -4,7 +4,7 @@ from extension.confluence import extension_ui  # noqa F401
 
 # this action should be the first one
 def test_0_selenium_app_specific_login(confluence_webdriver, confluence_datasets, confluence_screen_shots):
-    modules.setup_run_data(confluence_webdriver)
+    modules.setup_run_data(confluence_datasets)
     extension_ui.app_specific_action(confluence_webdriver, confluence_datasets)
 
 def test_1_selenium_view_page(confluence_webdriver, confluence_datasets, confluence_screen_shots):
