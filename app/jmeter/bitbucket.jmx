@@ -966,7 +966,7 @@ if (responseCode != &quot;0&quot;) {
             <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
               <stringProp name="IfController.condition">${__groovy(
         def udcVal = vars.get(&quot;UDC&quot;);
-        if (udcVal == null || udcVal == 0) {
+        if (udcVal == null || udcVal == &quot;0&quot;) {
         	return true
         } else {
         	return false
@@ -1030,7 +1030,7 @@ if (responseCode != &quot;0&quot;) {
                   <stringProp name="parameters"></stringProp>
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
-                  <stringProp name="script">vars.put(&quot;UDC&quot;, 1);
+                  <stringProp name="script">vars.put(&quot;UDC&quot;, &quot;1&quot;);
 log.info(&quot;set UDC to 1 result: &quot; + vars.get(&quot;UDC&quot;))</stringProp>
                 </JSR223PostProcessor>
                 <hashTree/>
