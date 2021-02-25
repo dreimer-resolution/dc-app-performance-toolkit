@@ -969,7 +969,7 @@ if (responseCode != &quot;0&quot;) {
             </SystemSampler>
             <hashTree/>
             <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
-              <stringProp name="IfController.condition">${ud_call_completed} == &apos;0&apos;</stringProp>
+              <stringProp name="IfController.condition">&quot;${ud_call_completed}&quot; == &quot;0&quot;</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
             </IfController>
@@ -1027,7 +1027,7 @@ if (responseCode != &quot;0&quot;) {
                   <stringProp name="parameters"></stringProp>
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
-                  <stringProp name="script">vars.put(&quot;ud_call_completed&quot;, 1);</stringProp>
+                  <stringProp name="script">vars.put(&quot;ud_call_completed&quot;, &quot;1&quot;);</stringProp>
                 </JSR223PostProcessor>
                 <hashTree/>
               </hashTree>
