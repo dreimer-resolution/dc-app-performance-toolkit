@@ -408,6 +408,8 @@ vars.put(&quot;SERVER_SSH_KEYS&quot;, result.join(&quot;::&quot;));
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="script">import java.io.File; 
 vars.put(&quot;USER_SSH_KEY&quot;, new File(&apos;${__P(PRIVATE_SSH_KEY_LOCATION)}.pub&apos;).getText(&apos;UTF-8&apos;).trim());
+vars.put(&quot;UDC&quot;, 0);
+log.info(&quot;UDC value is &quot; + vars.get(&quot;UDC&quot;))
 </stringProp>
           </JSR223Sampler>
           <hashTree/>
@@ -969,7 +971,11 @@ if (responseCode != &quot;0&quot;) {
             </SystemSampler>
             <hashTree/>
             <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
-              <stringProp name="IfController.condition">${ud_call_completed} == 0</stringProp>
+              <stringProp name="IfController.condition">${__groovy(
+        def udcVal = vars.get(&quot;UDC&quot;);
+        if(udcVal == null || udcVal == 0) return true
+		return false
+)}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
             </IfController>
@@ -1027,7 +1033,8 @@ if (responseCode != &quot;0&quot;) {
                   <stringProp name="parameters"></stringProp>
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
-                  <stringProp name="script">vars.put(&quot;ud_call_completed&quot;, 1);</stringProp>
+                  <stringProp name="script">vars.put(&quot;UDC&quot;, 1);
+log.info(&quot;set UDC to 1 result: &quot; + vars.get(&quot;UDC&quot;))</stringProp>
                 </JSR223PostProcessor>
                 <hashTree/>
               </hashTree>
