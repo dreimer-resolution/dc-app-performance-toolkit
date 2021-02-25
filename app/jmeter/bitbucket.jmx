@@ -89,11 +89,6 @@
             <stringProp name="Argument.value">${__P(total_actions_per_hr,32700)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="ud_call_completed" elementType="Argument">
-            <stringProp name="Argument.name">ud_call_completed</stringProp>
-            <stringProp name="Argument.value">0</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -408,8 +403,6 @@ vars.put(&quot;SERVER_SSH_KEYS&quot;, result.join(&quot;::&quot;));
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="script">import java.io.File; 
 vars.put(&quot;USER_SSH_KEY&quot;, new File(&apos;${__P(PRIVATE_SSH_KEY_LOCATION)}.pub&apos;).getText(&apos;UTF-8&apos;).trim());
-vars.put(&quot;UDC&quot;, 0);
-log.info(&quot;UDC value is &quot; + vars.get(&quot;UDC&quot;))
 </stringProp>
           </JSR223Sampler>
           <hashTree/>
@@ -973,8 +966,12 @@ if (responseCode != &quot;0&quot;) {
             <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
               <stringProp name="IfController.condition">${__groovy(
         def udcVal = vars.get(&quot;UDC&quot;);
-        if(udcVal == null || udcVal == 0) return true
-		return false
+        if (udcVal == null || udcVal == 0) {
+        	return true
+        } else {
+        	return false
+        }
+		
 )}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
