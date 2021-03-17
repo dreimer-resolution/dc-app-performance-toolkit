@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
+from selenium_ui.jira.pages.pages import Login
 from util.conf import JIRA_SETTINGS
 from selenium_ui.jira.pages.pages import Login, PopupManager, Issue, Project, Search, ProjectsList, \
     BoardsList, Board, Dashboard, Logout
@@ -20,9 +21,27 @@ https://www.alitajran.com/create-active-directory-users-from-csv-with-powershell
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
 
+    # To run action as specific user uncomment code bellow.
+    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
+    # just before test_2_selenium_z_log_out action
+    #
+    # @print_timing("selenium_app_specific_user_login")
+    # def measure():
+    #     def app_specific_user_login(username='admin', password='admin'):
+    #         login_page = Login(webdriver)
+    #         login_page.delete_all_cookies()
+    #         login_page.go_to()
+    #         login_page.set_credentials(username=username, password=password)
+    #         if login_page.is_first_login():
+    #             login_page.first_login_setup()
+    #         if login_page.is_first_login_second_page():
+    #             login_page.first_login_second_page_setup()
+    #         login_page.wait_for_page_loaded()
+    #     app_specific_user_login(username='admin', password='admin')
+    # measure()
+
     @print_timing("selenium_app_custom_action")
     def measure():
-
         @print_timing("selenium_app_custom_action:login_with_open_id")
         def sub_measure():
             print(f"login_with_open_id, user: {datasets['username'][0:20]}")
@@ -58,3 +77,4 @@ def app_specific_action(webdriver, datasets):
         PopupManager(webdriver).dismiss_default_popup()
 
     measure()
+
