@@ -1,6 +1,6 @@
 import re
-from locustio.common_utils import init_logger, confluence_measure
 import time
+from locustio.common_utils import init_logger, confluence_measure, run_as_specific_user  # noqa F401
 
 logger = init_logger(app_type='confluence')
 
@@ -10,6 +10,7 @@ This test requires a space called ISS with a page called Crew Section
 
 
 @confluence_measure("locust_app_specific_action")
+# @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
 
