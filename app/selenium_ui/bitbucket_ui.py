@@ -3,8 +3,13 @@ from extension.bitbucket import extension_ui  # noqa F401
 
 
 # this action should be the first one
-def test_0_selenium_a_login(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
-    modules.login(bitbucket_webdriver, bitbucket_datasets)
+# def test_0_selenium_a_login(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
+#     modules.login(bitbucket_webdriver, bitbucket_datasets)
+
+
+def test_0_selenium_app_specific_login(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
+    modules.setup_run_data(bitbucket_datasets)
+    extension_ui.app_specific_action(bitbucket_webdriver, bitbucket_datasets)
 
 
 def test_1_selenium_view_dashboard(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):

@@ -42,25 +42,30 @@ def app_specific_action(webdriver, datasets):
 
     @print_timing("selenium_app_custom_action")
     def measure():
-        @print_timing("selenium_app_custom_action:login_with_open_id")
+        @print_timing("selenium_app_custom_action:login_with_saml_sso")
         def sub_measure():
-            print(f"login_with_open_id, user: {datasets['username'][0:20]}")
-            page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa") # open dashboard page with login screen
+            print(f"login_with_saml_sso, user: {datasets['username']}")
 
-            page.wait_until_visible((By.ID, "openid-1"))
-            webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/plugins/servlet/samlsso") # open dashboard page with login screen
 
-            page.wait_until_visible((By.ID, "userNameInput"))
-            page.wait_until_visible((By.ID, "passwordInput"))
 
-            username_input = webdriver.find_element_by_xpath(".//*[@id='userNameInput']")
-            username_input.send_keys("ad\\" + datasets['username'][0:20])
+            # trigger sso directly
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/plugins/servlet/samlsso")
 
-            password_input = webdriver.find_element_by_xpath(".//*[@id='passwordInput']")
-            password_input.send_keys('just4lab!')
+            # wait for nameID input field to be shown
+            page.wait_until_visible((By.ID, "nameID"))
 
-            webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
-            #PopupManager(webdriver).dismiss_default_popup()
+            # get field object
+            username_input = webdriver.find_element_by_xpath(".//*[@id='nameID']")
+
+            # clear existing value
+            username_input.clear()
+
+            # add username to it
+            username_input.send_keys(datasets['username'])
+
+            # click send button
+            webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
 
             if page.get_elements(LoginPageLocators.continue_button):
                 page.wait_until_visible(LoginPageLocators.continue_button).send_keys(Keys.ESCAPE)

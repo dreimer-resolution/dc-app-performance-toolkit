@@ -6,7 +6,7 @@ from extension.jira import extension_ui  # noqa F401
 # def test_0_selenium_a_login(jira_webdriver, jira_datasets, jira_screen_shots):
 #     modules.login(jira_webdriver, jira_datasets)
 
-# app specific login instead of selenium default, since we need to test log in with OpenId
+# app specific login instead of selenium default, since we need to test log in with SAML SSO
 def test_0_selenium_app_specific_login(jira_webdriver, jira_datasets, jira_screen_shots):
     modules.setup_run_data(jira_datasets)
     extension_ui.app_specific_action(jira_webdriver, jira_datasets)
