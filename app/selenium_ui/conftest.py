@@ -165,7 +165,7 @@ def webdriver(app_settings):
         chrome_options.add_argument('lang=en')
 
         # workaround to prevent warning before sending testidp form data to atlassian instance
-        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://bitbucket-loadbala-1v3fdiqusich2-1005687555.us-east-1.elb.amazonaws.com')
+        # chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://bitbucket-loadbala-1v3fdiqusich2-1005687555.us-east-1.elb.amazonaws.com')
 
         chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
         driver = Chrome(options=chrome_options)
