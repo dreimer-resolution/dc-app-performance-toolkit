@@ -50,10 +50,11 @@ def app_specific_action(webdriver, datasets):
 
 
             # wait for repositories picker to be shown
-            page.wait_until_visible((By.ID, "repositories-menu-trigger"))
+            #page.wait_until_visible((By.ID, "repositories-menu-trigger"))
 
-            # get_started_page = GetStarted(webdriver)
-            # get_started_page.wait_for_page_loaded()
+            get_started_page = GetStarted(webdriver)
+            get_started_page.wait_for_page_loaded()
+
 
         sub_measure()
 
