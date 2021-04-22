@@ -42,11 +42,11 @@ def app_specific_action(webdriver, datasets):
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
 
-            # wait for insecure warning proceed button (TODO)
-            page.wait_until_visible((By.ID, "proceed-button"))
-
-            # click it
-            webdriver.find_element_by_xpath(".//*[@id='proceed-button']").click()
+            # # wait for insecure warning proceed button (TODO)
+            # page.wait_until_visible((By.ID, "proceed-button"))
+            #
+            # # click it
+            # webdriver.find_element_by_xpath(".//*[@id='proceed-button']").click()
 
 
             # wait for repositories picker to be shown
