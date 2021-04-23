@@ -25,6 +25,7 @@ def app_specific_action(webdriver, datasets):
 
             print(f"login_with_saml_sso, user: {datasets['username']}")
 
+            # important, retrieves the atlassian app version
             login_page = LoginPage(webdriver)
             login_page.go_to()
             webdriver.app_version = login_page.get_app_version()
@@ -48,22 +49,7 @@ def app_specific_action(webdriver, datasets):
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
 
-            # # wait for insecure warning proceed button (TODO)
-            #page.wait_until_visible((By.ID, "proceed-button"))
-            #
-            # # click it
-            try:
-                webdriver.find_element_by_xpath(".//*[@id='proceed-button']").click()
-            except:
-                print("---")
-            #page.get_element(By.ID("proceed-button")).click()
-
-            # wait for user icon section in top right to be shown
-            # page.wait_until_visible((By.ID, "current-user"))
-
-            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/getting-started")
-
-
+            # using end-of-test code from atlassian again (deals with first time login/ validates successful login)
             get_started_page = GetStarted(webdriver)
             get_started_page.wait_for_page_loaded()
 

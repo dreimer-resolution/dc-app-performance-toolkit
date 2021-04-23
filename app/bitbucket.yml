@@ -33,10 +33,10 @@ services:
       - python util/analytics/analytics.py bitbucket
       - python util/post_run/cleanup_results_dir.py
 execution:
-#  - scenario: ${load_executor}
-#    concurrency: ${concurrency}
-#    hold-for: ${test_duration}
-#    ramp-up: ${ramp-up}
+  - scenario: ${load_executor}
+    concurrency: ${concurrency}
+    hold-for: ${test_duration}
+    ramp-up: ${ramp-up}
   - scenario: selenium
     executor: selenium
     runner: pytest
