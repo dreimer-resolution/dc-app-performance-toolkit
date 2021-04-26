@@ -7,6 +7,7 @@ def test_0_selenium_app_specific_login(confluence_webdriver, confluence_datasets
     modules.setup_run_data(confluence_datasets)
     extension_ui.app_specific_action(confluence_webdriver, confluence_datasets)
 
+
 def test_1_selenium_view_page(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     modules.view_page(confluence_webdriver, confluence_datasets)
 

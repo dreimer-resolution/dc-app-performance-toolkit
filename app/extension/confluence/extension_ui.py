@@ -14,44 +14,23 @@ from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager, 
     Logout
 
 
-"""
-https://social.technet.microsoft.com/wiki/contents/articles/24541.powershell-bulk-create-ad-users-from-csv-file.aspx
-https://www.alitajran.com/create-active-directory-users-from-csv-with-powershell/
-"""
-
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
-
-
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_z_log_out
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = Login(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.wait_for_page_loaded()
-    #         login_page.set_credentials(username=username, password=password)
-    #         login_page.click_login_button()
-    #         if login_page.is_first_login():
-    #             login_page.first_user_setup()
-    #         all_updates_page = AllUpdates(webdriver)
-    #         all_updates_page.wait_for_page_loaded()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
 
     @print_timing("selenium_app_custom_action")
     def measure():
 
         @print_timing("selenium_app_custom_action:login_with_saml_sso")
         def sub_measure():
+
             print(f"login_with_saml_sso, user: {datasets['username']}")
 
+            login_page = Login(webdriver)
+            login_page.delete_all_cookies()
+            login_page.go_to()
 
             # trigger sso directly
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso")
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2F")
 
             # wait for nameID input field to be shown
             page.wait_until_visible((By.ID, "nameID"))
@@ -68,17 +47,12 @@ def app_specific_action(webdriver, datasets):
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
 
-            if page.get_elements(LoginPageLocators.first_login_setup_page):
-                if page.get_element(LoginPageLocators.current_step_sel).text == 'Welcome':
-                    page.wait_until_clickable(LoginPageLocators.skip_welcome_button).click()
-                if page.get_element(LoginPageLocators.current_step_sel).text == 'Upload your photo':
-                    page.wait_until_clickable(LoginPageLocators.skip_photo_upload).click()
-                if page.get_element(LoginPageLocators.current_step_sel).text == 'Find content':
-                    page.wait_until_any_element_visible(LoginPageLocators.skip_find_content)[0].click()
-                    page.wait_until_clickable(LoginPageLocators.finish_setup).click()
-
+            if login_page.is_first_login():
+                login_page.first_user_setup()
             all_updates_page = AllUpdates(webdriver)
             all_updates_page.wait_for_page_loaded()
 
         sub_measure()
+
     measure()
+    PopupManager(webdriver).dismiss_default_popup()
