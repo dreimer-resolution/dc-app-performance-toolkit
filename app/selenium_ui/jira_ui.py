@@ -8,7 +8,6 @@ from extension.jira import extension_ui  # noqa F401
 
 # app specific login instead of selenium default, since we need to test log in with SAML SSO
 def test_0_selenium_app_specific_login(jira_webdriver, jira_datasets, jira_screen_shots):
-    modules.setup_run_data(jira_datasets)
     extension_ui.app_specific_action(jira_webdriver, jira_datasets)
 
 
