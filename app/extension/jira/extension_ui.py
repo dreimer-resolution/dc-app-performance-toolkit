@@ -38,6 +38,8 @@ def app_specific_action(webdriver, datasets):
             username_input.send_keys(datasets['username'])
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
+            # wait for html body id "jira" which is always present, both for users who never logged in and who did
+            page.wait_until_visible((By.ID, "jira"))
 
             if login_page.is_first_login():
                 login_page.first_login_setup()
