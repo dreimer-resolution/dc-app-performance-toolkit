@@ -10,14 +10,6 @@ from util.conf import JIRA_SETTINGS
 from selenium_ui.jira.pages.pages import Login, PopupManager, Issue, Project, Search, ProjectsList, \
     BoardsList, Board, Dashboard, Logout
 
-from selenium_ui.jira.pages.selectors import UrlManager, LoginPageLocators, DashboardLocators, PopupLocators, \
-    IssueLocators, ProjectLocators, SearchLocators, BoardsListLocators, BoardLocators, LogoutLocators
-
-"""
-https://social.technet.microsoft.com/wiki/contents/articles/24541.powershell-bulk-create-ad-users-from-csv-file.aspx
-https://www.alitajran.com/create-active-directory-users-from-csv-with-powershell/
-"""
-
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
 
@@ -57,8 +49,7 @@ def app_specific_action(webdriver, datasets):
             login_page.wait_for_page_loaded()
 
         sub_measure()
-
-        PopupManager(webdriver).dismiss_default_popup()
-
     measure()
+
+    PopupManager(webdriver).dismiss_default_popup()
 
