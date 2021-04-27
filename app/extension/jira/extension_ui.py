@@ -21,8 +21,7 @@ def app_specific_action(webdriver, datasets):
             print(f"login_with_saml_sso, user: {datasets['username']}")
 
             login_page = Login(webdriver)
-            login_page.delete_all_cookies()
-            login_page.go_to()
+            # login_page.delete_all_cookies()
 
             # trigger sso directly
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2Fsecure%2FDashboard.jspa")
@@ -41,6 +40,8 @@ def app_specific_action(webdriver, datasets):
 
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
+
+            # login_page.go_to()
 
             if login_page.is_first_login():
                 login_page.first_login_setup()
