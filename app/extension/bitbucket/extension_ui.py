@@ -1,7 +1,5 @@
-import random
-
 from selenium.webdriver.common.by import By
-
+import time
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from selenium_ui.bitbucket.pages.pages import LoginPage, GetStarted
@@ -10,35 +8,42 @@ from util.conf import BITBUCKET_SETTINGS
 
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
-    rnd_repo = random.choice(datasets["repos"])
 
-    project_key = rnd_repo[1]
-    repo_slug = rnd_repo[0]
-
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_logout action
-
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = LoginPage(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.set_credentials(username=username, password=password)
-    #         login_page.submit_login()
-    #         get_started_page = GetStarted(webdriver)
-    #         get_started_page.wait_for_page_loaded()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
+    @print_timing("selenium_app_specific_user_login")
+    def measure():
+        def app_specific_user_login(username='admin', password='admin'):
+            login_page = LoginPage(webdriver)
+            login_page.delete_all_cookies()
+            login_page.go_to()
+            login_page.set_credentials(username=username, password=password)
+            login_page.submit_login()
+            get_started_page = GetStarted(webdriver)
+            get_started_page.wait_for_page_loaded()
+        app_specific_user_login(username='admin', password='admin')
+    measure()
 
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_repo_page")
+        @print_timing("selenium_app_custom_action:trigger_usersync")
         def sub_measure():
-            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/projects/{project_key}/repos/{repo_slug}/browse")
-            page.wait_until_visible((By.CSS_SELECTOR, '.aui-navgroup-vertical>.aui-navgroup-inner')) # Wait for repo navigation panel is visible
-            page.wait_until_visible((By.ID, 'ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT'))  # Wait for you app-specific UI element by ID selector
+            # open user sync connector page
+            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/de.resolution.usersync/admin")
+            # 1 sec pause to prevent 500 errors, obviously caused by trying to use the UI too quickly during automation
+            time.sleep(1)
+            # wait for table to be loaded
+            page.wait_until_visible((By.ID, 'usersync-connector-table-body'))
+            # check if there is a sync running already
+            running_sync = webdriver.find_elements_by_xpath(".//span[.='Sync is running...']")
+            # if not
+            if len(running_sync) == 0:
+                # another check to see if sync button is now available
+                new_sync = webdriver.find_elements_by_xpath(".//span[.='Sync']")
+                if len(new_sync) > 0:
+                    # click on sync
+                    webdriver.find_element_by_xpath(".//span[.='Sync']").click()
+                    # wait for status window
+                    page.wait_until_visible((By.ID, 'usersync-sync-status-dialog'))
+                    # we are done here
         sub_measure()
     measure()

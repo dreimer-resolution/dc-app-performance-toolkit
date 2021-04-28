@@ -59,13 +59,8 @@ def test_1_selenium_view_commits(bitbucket_webdriver, bitbucket_datasets, bitbuc
     modules.view_commits(bitbucket_webdriver, bitbucket_datasets)
 
 
-"""
-Add custom actions anywhere between login and log out action. Move this to a different line as needed.
-Write your custom selenium scripts in `app/extension/bitbucket/extension_ui.py`.
-Refer to `app/selenium_ui/bitbucket/modules.py` for examples.
-"""
-# def test_1_selenium_custom_action(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
-#     extension_ui.app_specific_action(bitbucket_webdriver, bitbucket_datasets)
+def test_1_selenium_custom_action(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
+    extension_ui.app_specific_action(bitbucket_webdriver, bitbucket_datasets)
 
 
 def test_2_selenium_logout(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):

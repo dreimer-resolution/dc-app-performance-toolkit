@@ -963,7 +963,7 @@ if (responseCode != &quot;0&quot;) {
               <stringProp name="SystemSampler.stderr">${__P(GIT_LOG_DIR)}/giterrors.log</stringProp>
             </SystemSampler>
             <hashTree/>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="false">
               <stringProp name="IfController.condition">${__groovy(
         def udcVal = vars.get(&quot;UDC&quot;);
         if (udcVal == null || udcVal == &quot;0&quot;) {
