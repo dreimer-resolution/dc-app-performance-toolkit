@@ -164,8 +164,9 @@ def webdriver(app_settings):
         chrome_options.add_argument("--disable-infobars")
         chrome_options.add_argument('lang=en')
 
-        # prevent warning before sending test idp https form data to http atlassian instance
-        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://jira-loadb-mc2culbztk7g-1796954490.us-east-1.elb.amazonaws.com')
+        # prevents warning before sending test idp https form data to http atlassian instance
+        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=' + app_settings.protocol
+                                    + '://' + app_settings.hostname)
 
         chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
         driver = Chrome(options=chrome_options)
