@@ -14,16 +14,16 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_specific_login")
     def measure():
 
-        @print_timing("selenium_app_specific_login:open_login_page")
-        def sub_measure():
-            login_page.go_to()
-            if login_page.is_logged_in():
-                login_page.delete_all_cookies()
-                login_page.go_to()
-            login_page.wait_for_page_loaded()
-            webdriver.node_id = login_page.get_node_id()
-            print(f"node_id:{webdriver.node_id}")
-        sub_measure()
+        # @print_timing("selenium_app_specific_login:open_login_page")
+        # def sub_measure():
+        #     login_page.go_to()
+        #     if login_page.is_logged_in():
+        #         login_page.delete_all_cookies()
+        #         login_page.go_to()
+        #     login_page.wait_for_page_loaded()
+        #     webdriver.node_id = login_page.get_node_id()
+        #     print(f"node_id:{webdriver.node_id}")
+        # sub_measure()
 
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
