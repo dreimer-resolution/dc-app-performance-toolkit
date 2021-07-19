@@ -39,6 +39,17 @@ class Login(BasePage):
         self.get_element(LoginPageLocators.password_field).send_keys(password)
         self.get_element(LoginPageLocators.login_submit_button).click()
 
+    def __get_footer_text(self):
+        return self.get_element(LoginPageLocators.footer).text
+
+    def get_app_version(self):
+        text = self.__get_footer_text()
+        return text.split('#')[0].replace('(v', '')
+
+    def get_node_id(self):
+        text = self.__get_footer_text()
+        return text.split(':')[-1].replace(')', '')
+
 
 class Logout(BasePage):
     page_url = LogoutLocators.logout_url
@@ -88,14 +99,18 @@ class ViewCustomerRequest(BasePage):
         if rte_status:
             self.wait_until_available_to_switch(ViewCustomerRequestLocators.comment_text_field_RTE)
             tinymce_field = self.get_element(ViewCustomerRequestLocators.comment_tinymce_field)
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", tinymce_field)
             self.action_chains().send_keys_to_element(tinymce_field, comment_text).perform()
             self.return_to_parent_frame()
         else:
             comment_text_field = self.get_element(ViewCustomerRequestLocators.comment_text_field)
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", comment_text_field)
             self.action_chains().move_to_element(comment_text_field).click()\
                 .send_keys_to_element(comment_text_field, comment_text).perform()
 
-        self.get_element(ViewCustomerRequestLocators.comment_internally_btn).click()
+        comment_button = self.get_element(ViewCustomerRequestLocators.comment_internally_btn)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", comment_button)
+        comment_button.click()
         self.wait_until_visible(ViewCustomerRequestLocators.comment_collapsed_textarea)
 
 
