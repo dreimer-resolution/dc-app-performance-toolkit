@@ -90,4 +90,3 @@ modules:
 reporting:
   - data-source: sample-labels
     module: junit-xml
-  {"mode":"full","isActive":false}
