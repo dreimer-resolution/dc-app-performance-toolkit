@@ -12,7 +12,6 @@ def app_specific_action(locust):
     # create token with description for current perf user
     current_user = locust.session_data_storage["username"]
 
-
     logger.locust_info(f'current_user: {current_user} ')
 
     token_description =  "token_" + str(int(round(time.time() * 1000)))
@@ -31,7 +30,6 @@ def app_specific_action(locust):
     token_description_from_result = re.findall(token_description_from_result_pattern, content)
 
     logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
-
 
     # use that token for another GET request
     r = locust.get('/rest/api/user/current', auth=(current_user, plain_text_token[0]), catch_response=True)

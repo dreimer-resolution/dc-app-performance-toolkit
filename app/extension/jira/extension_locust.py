@@ -30,14 +30,12 @@ def app_specific_action(locust):
 
     logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
 
-
     # use that token for another GET request
     r = locust.get('/rest/api/2/myself', auth=(current_user, plain_text_token[0]), catch_response=True)
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"name":"(.+?)"'
     username_for_assertion = re.findall(username_pattern, content)
-
 
     logger.locust_info(f'username from /rest/api/2/myself response: {username_for_assertion[0]}')
 
