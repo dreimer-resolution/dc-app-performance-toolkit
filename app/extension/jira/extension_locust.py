@@ -35,7 +35,8 @@ def app_specific_action(locust):
     # use that token for another GET request, need to override the password for the request.
     # auth=(current_user, plain_text_token[0]) is being ignored
     locust.session_data_storage["password"] = plain_text_token[0]
-    r = locust.get('/rest/api/2/myself', catch_response=True)
+    # r = locust.get('/rest/api/2/myself', catch_response=True)
+    r = requests.get('https://jira-dct.klab.resolution.de/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"name":"(.+?)"'
