@@ -1,5 +1,6 @@
 
 import re
+import time
 from locustio.common_utils import init_logger, jira_measure, run_as_specific_user  # noqa F401
 
 logger = init_logger(app_type='jira')
@@ -11,7 +12,7 @@ def app_specific_action(locust):
 
     # create token with description for current perf user
     current_user = locust.session_data_storage["username"]
-    token_description =  "token_" + str(int(round(time.time() * 1000)))
+    token_description = "token_" + str(int(round(time.time() * 1000)))
     body = '{"tokenDescription": "' + token_description + '"}'  # create token payload
     headers = {'content-type': 'application/json'}
 

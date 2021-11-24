@@ -15,7 +15,7 @@ def app_specific_action(locust):
     logger.locust_info(f'current_user: {current_user} ')
 
     token_description =  "token_" + str(int(round(time.time() * 1000)))
-    body =  {"tokenDescription": token_description} # create token payload
+    body = {"tokenDescription": token_description} # create token payload
     r = locust.post('/rest/de.resolution.apitokenauth/latest/user/token', json=body, catch_response=True)
     content = r.content.decode('utf-8')
 
