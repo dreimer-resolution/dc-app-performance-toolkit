@@ -36,6 +36,7 @@ def app_specific_action(locust):
     # use that token for another GET request, need to override the password for the request.
     # using the requests library here because locust get ignores auth header.
     # hard coding the instance here should be fine since we now are using a persistent domain for confluence.
+    # TODO: locust.client.cookies.clear() might actually help before executing the request
     r = requests.get('https://conf-dct.klab.resolution.de/rest/api/user/current',
                      auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
