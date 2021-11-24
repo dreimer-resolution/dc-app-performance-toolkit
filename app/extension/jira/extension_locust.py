@@ -1,6 +1,7 @@
 
 import re
 import time
+import requests
 from locustio.common_utils import init_logger, jira_measure, run_as_specific_user  # noqa F401
 
 logger = init_logger(app_type='jira')
@@ -31,8 +32,10 @@ def app_specific_action(locust):
 
     logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
 
-    # use that token for another GET request
-    r = locust.get('/rest/api/2/myself', auth=(current_user, plain_text_token[0]), catch_response=True)
+    # use that token for another GET request, need to override the password for the request.
+    # auth=(current_user, plain_text_token[0]) is being ignored
+    locust.session_data_storage["password"] = plain_text_token[0]
+    r = locust.get('/rest/api/2/myself', catch_response=True)
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"name":"(.+?)"'
