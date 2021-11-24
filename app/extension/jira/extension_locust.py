@@ -14,8 +14,7 @@ def app_specific_action(locust):
     # execute a GET request
     r = locust.get('/rest/api/2/myself', headers={"X-AUTH": current_user}, catch_response=True)
     content = r.content.decode('utf-8')   # decode response content
-
-
+    
     # expecting the same username in the response
     username_pattern = '"name":"(.+?)"'
     username_for_assertion = re.findall(username_pattern, content)
