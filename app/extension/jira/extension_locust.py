@@ -33,9 +33,8 @@ def app_specific_action(locust):
     logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
 
     # use that token for another GET request, need to override the password for the request.
-    # auth=(current_user, plain_text_token[0]) is being ignored
-    locust.session_data_storage["password"] = plain_text_token[0]
-    # r = locust.get('/rest/api/2/myself', catch_response=True)
+    # using the requests library here because locust get ignores auth header.
+    # hard coding the instance here should be fine since we now are using a persistent domain for jira.
     r = requests.get('https://jira-dct.klab.resolution.de/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
 

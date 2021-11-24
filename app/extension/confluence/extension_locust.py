@@ -1,5 +1,6 @@
 import re
 import time
+import requests
 from locustio.common_utils import init_logger, confluence_measure, run_as_specific_user  # noqa F401
 
 logger = init_logger(app_type='confluence')
@@ -29,10 +30,14 @@ def app_specific_action(locust):
     token_description_from_result_pattern = '"tokenDescription":"(.+?)"'
     token_description_from_result = re.findall(token_description_from_result_pattern, content)
 
-    logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} for user {current_user}')
+    logger.locust_info(f'plainTextToken: {plain_text_token[0]} with description {token_description_from_result[0]} '
+                       f'for user {current_user}')
 
-    # use that token for another GET request
-    r = locust.get('/rest/api/user/current', auth=(current_user, plain_text_token[0]), catch_response=True)
+    # use that token for another GET request, need to override the password for the request.
+    # using the requests library here because locust get ignores auth header.
+    # hard coding the instance here should be fine since we now are using a persistent domain for confluence.
+    r = requests.get('https://conf-dct.klab.resolution.de/rest/api/user/current',
+                     auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"username":"(.+?)"'
