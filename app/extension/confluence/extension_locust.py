@@ -1,4 +1,5 @@
 import re
+import requests
 from locustio.common_utils import init_logger, confluence_measure, run_as_specific_user  # noqa F401
 
 logger = init_logger(app_type='confluence')
@@ -8,14 +9,12 @@ logger = init_logger(app_type='confluence')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-    # clear cookies so that we don't auth with user session
-    locust.client.cookies.clear()
-
     # add header key and value for http header auth to log us in
     current_user = locust.session_data_storage["username"]
 
     # execute a GET request
-    r = locust.get('/rest/api/user/current', headers={"X-AUTH": current_user}, catch_response=True)
+    r = requests.get('https://conf-dct.klab.resolution.de/rest/api/user/current',
+                     headers={"X-AUTH": current_user})
     content = r.content.decode('utf-8')   # decode response content
 
     # expecting the same username in the response
