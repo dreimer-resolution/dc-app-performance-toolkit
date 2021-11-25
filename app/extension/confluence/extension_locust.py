@@ -8,6 +8,9 @@ logger = init_logger(app_type='confluence')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
+    # clear cookies so that we don't auth with user session
+    locust.client.cookies.clear()
+
     # add header key and value for http header auth to log us in
     current_user = locust.session_data_storage["username"]
 
