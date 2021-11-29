@@ -8,7 +8,6 @@ logger = init_logger(app_type='jira')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-
     # this will trigger deactivation of everybody who is not in jira-software-users,
     # like our test users created with the test connector
     body = {"notInGroups": ["jira-software-users"], "action": "DEACTIVATE"}
@@ -21,12 +20,11 @@ def app_specific_action(locust):
 
     assert 'resultId' in content
 
-    result_id_pattern = '"resultId":(.+?)'
+    result_id_pattern = "resultId=(.+?)"
     result_id = re.findall(result_id_pattern, content)
 
     logger.locust_info(f"resultId: {result_id[0]}")
     assert int(result_id[0]) >= 0
-
 
     # RESET SESSION USER BACK, UNLESS WE DO THAT WE GET STRANGE
     # "ADMIN STILL LOGGED IN" ERRORS IN OTHER LOCUST ACTIONS

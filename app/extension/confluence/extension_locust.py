@@ -31,11 +31,9 @@ logger = init_logger(app_type='confluence')
 """
 
 
-
 @confluence_measure("locust_app_specific_action")
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
-
 
     # this will trigger deactivation of everybody who is not in confluence-users,
     # like our test users created with the test connector
@@ -49,7 +47,7 @@ def app_specific_action(locust):
 
     assert 'resultId' in content
 
-    result_id_pattern = '"resultId":(.+?)'
+    result_id_pattern = "resultId=(.+?)"
     result_id = re.findall(result_id_pattern, content)
 
     logger.locust_info(f"resultId: {result_id[0]}")
