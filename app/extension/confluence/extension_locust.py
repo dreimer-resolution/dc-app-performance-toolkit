@@ -5,7 +5,7 @@ from locustio.common_utils import init_logger, confluence_measure, run_as_specif
 logger = init_logger(app_type='confluence')
 
 """
-This test requires a space called ISS with a page called Crew Section
+This test requires a space called "ISS" with a page called "Crew Section"
 """
 
 
@@ -13,7 +13,7 @@ This test requires a space called ISS with a page called Crew Section
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-    random_short_url =  str(int(round(time.time() * 1000)))
+    random_short_url = str(int(round(time.time() * 1000)))
 
     r = locust.get('/', catch_response=True)
     base_url = r.url
