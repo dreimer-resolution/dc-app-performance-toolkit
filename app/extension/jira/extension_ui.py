@@ -36,7 +36,7 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa?selectPageId=10100")
             # page.wait_until_visible((By.ID, "ossa-chart-wrapper"))
-            page.wait_until_visible((By.CLASS_NAME, "chart-footer"))
+            page.wait_until_visible((By.CLASS_NAME, "ossa-table-wrapper"))
         sub_measure()
     measure()
 
