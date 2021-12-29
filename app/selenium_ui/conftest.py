@@ -139,7 +139,6 @@ def print_timing(interaction=None):
                 error_msg = f"Failed measure: {interaction} - {exc_type.__name__}"
             end = time.time()
             timing = str(int((end - start) * 1000))
-            print(f"end = {end}, start = {start}, diff = {(end - start)}")
             lockfile = f'{selenium_results_file}.lock'
 
             with filelock.SoftFileLock(lockfile):
