@@ -35,7 +35,6 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_custom_action:open_dashboard_with_gadget")
         def sub_measure():
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa?selectPageId=10100")
-            # page.wait_until_visible((By.ID, "gadget-10103-chrome"))
             page.wait_until_visible((By.CLASS_NAME, "custom-charts-dashboard-content"))
         sub_measure()
     measure()
