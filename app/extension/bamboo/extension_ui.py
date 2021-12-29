@@ -1,5 +1,5 @@
 import random
-
+import time
 from selenium.webdriver.common.by import By
 from selenium_ui.bamboo import modules
 
@@ -15,8 +15,9 @@ def app_specific_action(webdriver, datasets):
 
     @print_timing("selenium_app_specific_login:login_and_view_all_plans")
     def measure():
-
-        print(f"login_with_saml_sso, user: {datasets['username']}")
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+        print(f"{current_time} - starting sso for user: {datasets['username']}")
         # trigger sso directly
         page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
         # wait for nameID input field to be shown
@@ -31,5 +32,7 @@ def app_specific_action(webdriver, datasets):
         webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
         # wait for element on page
         page.wait_until_visible((By.ID, "page"))
-
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+        print(f"{current_time} - successfully logged in user: {datasets['username']}")
     measure()
