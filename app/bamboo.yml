@@ -12,14 +12,14 @@ settings:
     admin_login: admin
     admin_password: admin
     load_executor: jmeter
-    concurrency: 200                   # number of Bamboo users for Selenium actions
-    test_duration: 45m
-    ramp-up: 3m                        # time to spin all concurrent threads
-    total_actions_per_hour: 2000       # number of total JMeter actions per hour
+    concurrency: 2 #200                   # number of Bamboo users for Selenium actions
+    test_duration: 5m #45m
+    ramp-up: 1m #3m                        # time to spin all concurrent threads
+    total_actions_per_hour: 20 #2000       # number of total JMeter actions per hour
     WEBDRIVER_VISIBLE: False
     JMETER_VERSION: 5.2.1
     LANGUAGE: en_US.utf8
-    allow_analytics: Yes               # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
+    allow_analytics: False               # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
     view_all_builds: 15
     view_build_result: 15
     view_build_configuration: 10
