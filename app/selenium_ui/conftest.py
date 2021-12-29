@@ -146,7 +146,7 @@ def print_timing(interaction=None):
                 with open(selenium_results_file, "a+") as jtl_file:
                     timestamp = round(time.time() * 1000)
                     jtl_file.write(f"{timestamp},{timing},{interaction},,{error_msg},,{success},0,0,0,0,,0\n")
-
+            print(f"timing >>>>> {timing}")
             print(f"{timestamp},{timing},{interaction},{error_msg},{success}")
 
             if not success:
