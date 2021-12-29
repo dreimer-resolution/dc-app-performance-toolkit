@@ -36,7 +36,13 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_custom_action:open_page_with_macro")
         def sub_measure():
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
-            page.wait_until_visible((By.ID, "ossa-root"))
-            # CLASS: ossa-server ossa-root ossa-custom-charts ossa-product-confluence ossa-macro
+            # page.wait_until_visible((By.ID, "com-atlassian-confluence"))
+            # page.wait_until_visible((By.ID, "main-content"))
+            page.wait_until_visible((By.XPATH, "//iframe[starts-with(@class, 'ossa-macro conf-macro output-block')]"))
+            page.wait_until_available_to_switch((By.XPATH,
+                                                 "//iframe[starts-with(@class, 'ossa-macro conf-macro output-block')]"))
+            page.wait_until_visible((By.XPATH,
+                                     "//iframe[starts-with(@class, 'ossa-macro conf-macro output-block')]"
+                                     and "//div[@class='ossa-table-wrapper']"))
         sub_measure()
     measure()
