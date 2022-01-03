@@ -35,10 +35,11 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_page")
+        @print_timing("selenium_app_custom_action:wait_for_s3_file_to_be_shown")
         def sub_measure():
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/viewpage.action?pageId={app_specific_page_id}")
-            page.wait_until_visible((By.ID, "title-text"))  # Wait for title field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
+            # open our test page
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
+            # wait 4 link to text file called org.hotovo.confluence.amazon-s3-storage-connector.txt in s3 connector list
+            page.wait_until_visible((By.XPATH, "//*[@title='org.hotovo.confluence.amazon-s3-storage-connector.txt']"))
         sub_measure()
     measure()
