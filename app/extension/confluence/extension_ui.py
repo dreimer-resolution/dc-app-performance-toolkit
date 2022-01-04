@@ -38,11 +38,22 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_custom_action:open_page_and_edit_image")
         def sub_measure():
             # open page by id in edit mode
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/resumedraft.action?draftId=8454149")
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/resumedraft.action?draftId=39976965")
+            # wait for editor iframe to be ready
+            page.wait_until_visible((By.ID, "wysiwygTextarea_ifr"))
+            page.wait_until_available_to_switch((By.ID, "wysiwygTextarea_ifr"))
+
             # click on image to reveal action icons
             webdriver.find_element_by_xpath(".//*[@class='confluence-embedded-image confluence-thumbnail']").click()
+            page.return_to_parent_frame()
+
             # click the sketch app image edit button
             webdriver.find_element_by_xpath(".//*[@class='aui-button image-effects last first']").click()
+
+            # wait for sketch app iframe to be ready
+            page.wait_until_visible((By.ID, "ossa-iframe"))
+            page.wait_until_available_to_switch((By.ID, "ossa-iframe"))
+
             # wait for app window to load
             page.wait_until_visible((By.ID, "sketch-app"))
 
