@@ -35,10 +35,16 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_page")
+        @print_timing("selenium_app_custom_action:open_page_and_edit_image")
         def sub_measure():
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/viewpage.action?pageId={app_specific_page_id}")
-            page.wait_until_visible((By.ID, "title-text"))  # Wait for title field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
+            # open page by id in edit mode
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/resumedraft.action?draftId=8454149")
+            # click on image to reveal action icons
+            webdriver.find_element_by_xpath(".//*[@class='confluence-embedded-image confluence-thumbnail']").click()
+            # click the sketch app image edit button
+            webdriver.find_element_by_xpath(".//*[@class='aui-button image-effects last first']").click()
+            # wait for app window to load
+            page.wait_until_visible((By.ID, "sketch-app"))
+
         sub_measure()
     measure()
