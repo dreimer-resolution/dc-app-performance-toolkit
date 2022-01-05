@@ -32,12 +32,13 @@ def app_specific_action(webdriver, datasets):
 
     @print_timing("selenium_app_custom_action")
     def measure():
-        @print_timing("selenium_app_custom_action:view_issue")
+        @print_timing("selenium_app_custom_action:view_issue_and_wait_for_s3_file_to_be_shown")
         def sub_measure():
             # open an issue where the s3 list is included
-            page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/<ISSUE_KEY_HERE>")
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/AANES-152")
             # wait 4 link to text file called org.hotovo.confluence.amazon-s3-storage-connector.txt in s3 connector list
-            page.wait_until_visible((By.XPATH, "//*[@title='org.hotovo.confluence.amazon-s3-storage-connector.txt']"))
+            page.wait_until_visible(
+                (By.XPATH, "//*[@title='[AmazonS3 Files] org.hotovo.confluence.amazon-s3-storage-connector.txt']"))
         sub_measure()
     measure()
 
