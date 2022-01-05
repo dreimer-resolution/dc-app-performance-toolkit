@@ -38,8 +38,5 @@ def app_specific_action(webdriver, datasets):
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
             page.wait_until_visible((By.XPATH,
                                      "//canvas[starts-with(@class, 'pvt-chart-macro chartjs-render-monitor')]"))
-
-
-
         sub_measure()
     measure()
