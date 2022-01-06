@@ -30,11 +30,17 @@ def app_specific_action(webdriver, datasets):
             page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso/usersync")
             # wait for sync button
             page.wait_until_visible((By.XPATH, ".//span[text()='Sync']"))
-            # click sync button
-            webdriver.find_element_by_xpath(".//span[text()='Sync']").click()
-            # wait for span with content DONE, indicating sync has been completed
-            page.wait_until_visible((By.XPATH, ".//span[text()='DONE']"))
-            # press close button
-            webdriver.find_element_by_xpath(".//span[text()='Close']").click()
+
+            # check if there is a sync still running, for that we'll fetch the whole reconfigure div text
+            us_div = webdriver.find_element_by_xpath(".//*[@id='reconfigure-react-root']")
+
+            # only try to start sync again if none is still running
+            if "RUNNING" not in us_div.text:
+                # click sync button
+                webdriver.find_element_by_xpath(".//span[text()='Sync']").click()
+                # wait for span with content DONE, indicating sync has been completed
+                page.wait_until_visible((By.XPATH, ".//div[text()='DONE']"))
+                # press close button
+                webdriver.find_element_by_xpath(".//span[text()='Close']").click()
         sub_measure()
     measure()
