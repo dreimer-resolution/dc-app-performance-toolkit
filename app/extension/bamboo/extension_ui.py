@@ -21,7 +21,9 @@ def app_specific_action(webdriver, datasets):
             login_page.click_login_button()
         app_specific_user_login(username='admin', password='admin')
     measure()
-
+    """
+    this test is intended to start a new sync, not to measure its duration
+    """
     @print_timing("selenium_app_custom_action")
     def measure():
         @print_timing("selenium_app_custom_action:start_sync_and_wait_until_complete")
@@ -38,8 +40,8 @@ def app_specific_action(webdriver, datasets):
             if "RUNNING" not in us_div.text:
                 # click sync button
                 webdriver.find_element_by_xpath(".//span[text()='Sync']").click()
-                # wait for span with content DONE, indicating sync has been completed
-                page.wait_until_visible((By.XPATH, ".//div[text()='DONE']"))
+                # wait for status window to open
+                page.wait_until_visible((By.XPATH, ".//div[text()='Sync Status']"))
                 # press close button
                 webdriver.find_element_by_xpath(".//span[text()='Close']").click()
         sub_measure()
