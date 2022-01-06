@@ -10,32 +10,31 @@ from util.conf import BAMBOO_SETTINGS
 
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
-    rnd_plan = random.choice(datasets["build_plans"])
 
-    build_plan_id = rnd_plan[1]
-
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_z_log_out action
-    #
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = Login(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.set_credentials(username=username, password=password)
-    #         login_page.click_login_button()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
+    @print_timing("selenium_app_specific_user_login")
+    def measure():
+        def app_specific_user_login(username='admin', password='admin'):
+            login_page = Login(webdriver)
+            login_page.delete_all_cookies()
+            login_page.go_to()
+            login_page.set_credentials(username=username, password=password)
+            login_page.click_login_button()
+        app_specific_user_login(username='admin', password='admin')
+    measure()
 
     @print_timing("selenium_app_custom_action")
     def measure():
-        @print_timing("selenium_app_custom_action:view_plan_summary_page")
+        @print_timing("selenium_app_custom_action:start_sync_and_wait_until_complete")
         def sub_measure():
-            page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/browse/{build_plan_id}")
-            page.wait_until_visible((By.ID, "buildResultsTable"))  # Wait for summary field visible
-            # Wait for you app-specific UI element by ID selector
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))
+            # open user sync page with one connector added already (set it up so that sync takes just a few seconds)
+            page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso/usersync")
+            # wait for sync button
+            page.wait_until_visible((By.XPATH, ".//span[text()='Sync']"))
+            # click sync button
+            webdriver.find_element_by_xpath(".//span[text()='Sync']").click()
+            # wait for span with content DONE, indicating sync has been completed
+            page.wait_until_visible((By.XPATH, ".//span[text()='DONE']"))
+            # press close button
+            webdriver.find_element_by_xpath(".//span[text()='Close']").click()
         sub_measure()
     measure()

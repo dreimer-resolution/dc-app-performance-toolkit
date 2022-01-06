@@ -8,7 +8,6 @@ logger = init_logger(app_type='jira')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-
     # this will trigger a usersync for connector with id 1
     r = locust.post('/rest/samlsso-admin/1.0/usersync/connector/1/sync', auth=("admin", "admin"), catch_response=True)
     content = r.content.decode('utf-8')   # decode response content
