@@ -28,6 +28,7 @@ def app_specific_action(webdriver, datasets):
     def measure():
         @print_timing("selenium_app_custom_action:start_sync_and_wait_until_complete")
         def sub_measure():
+            """
             # open user sync page with one connector added already (set it up so that sync takes just a few seconds)
             page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso/usersync")
             # wait for sync button
@@ -44,5 +45,6 @@ def app_specific_action(webdriver, datasets):
                 page.wait_until_visible((By.XPATH, ".//div[text()='Sync Status']"))
                 # press close button
                 webdriver.find_element_by_xpath(".//span[text()='Close']").click()
+            """
         sub_measure()
     measure()
