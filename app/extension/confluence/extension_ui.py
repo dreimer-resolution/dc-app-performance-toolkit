@@ -1,5 +1,5 @@
-import random
-
+import dateutil.parser
+import datetime
 from selenium.webdriver.common.by import By
 
 from selenium_ui.base_page import BasePage
@@ -10,52 +10,31 @@ from util.conf import CONFLUENCE_SETTINGS
 
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
-    if datasets['custom_pages']:
-        app_specific_page_id = datasets['custom_page_id']
-
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_z_log_out
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = Login(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.wait_for_page_loaded()
-    #         login_page.set_credentials(username=username, password=password)
-    #         login_page.click_login_button()
-    #         if login_page.is_first_login():
-    #             login_page.first_user_setup()
-    #         all_updates_page = AllUpdates(webdriver)
-    #         all_updates_page.wait_for_page_loaded()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
 
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:open_page_and_edit_image")
+        @print_timing("selenium_app_custom_action:verify_that_reminder_has_been_sent")
         def sub_measure():
             # open page by id in edit mode
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/resumedraft.action?draftId=39976965")
-            # wait for editor iframe to be ready
-            page.wait_until_visible((By.ID, "wysiwygTextarea_ifr"))
-            page.wait_until_available_to_switch((By.ID, "wysiwygTextarea_ifr"))
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
 
-            # click on image to reveal action icons
-            webdriver.find_element_by_xpath(".//*[@class='confluence-embedded-image confluence-thumbnail']").click()
-            page.return_to_parent_frame()
+            # wait for page reminder icon/ link to be ready
+            page.wait_until_visible((By.ID, "page-reminders-action"))
 
-            # click the sketch app image edit button
-            webdriver.find_element_by_xpath(".//*[@class='aui-button image-effects last first']").click()
+            # activate status window
+            webdriver.find_element_by_xpath(".//*[@id='page-reminders-action']").click()
 
-            # wait for sketch app iframe to be ready
-            page.wait_until_visible((By.ID, "ossa-iframe"))
-            page.wait_until_available_to_switch((By.ID, "ossa-iframe"))
+            # wait for list of reminders
+            page.wait_until_visible((By.ID, "page-reminders-list-new"))
 
-            # wait for app window to load
-            page.wait_until_visible((By.ID, "sketch-app"))
+            # get last sent datetime from table cell (assuming there is just one reminder and ours is the first)
+            last_sent_cell \
+                = webdriver.find_element_by_xpath("/html/body/section[2]/div/div[2]/div/table/tbody/tr[2]/td[3]")
+            last_sent_datetime = dateutil.parser.parse(last_sent_cell.text)
+
+            # only if it's not older than 120 seconds the test succeeds
+            assert last_sent_datetime > datetime.datetime.utcnow() - datetime.timedelta(seconds=120)
 
         sub_measure()
     measure()
