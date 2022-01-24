@@ -1,14 +1,24 @@
-import random
-import time
 from selenium.webdriver.common.by import By
 from selenium_ui.bamboo import modules
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
-from selenium_ui.bamboo.pages.pages import Login
+from selenium_ui.bamboo.pages.pages import Logout
 from util.conf import BAMBOO_SETTINGS
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
+
+
+def app_specific_logout(webdriver, datasets):
+    page = BasePage(webdriver)
+
+    @print_timing("selenium_app_specific_log_out")
+    def measure():
+        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/userLogout.action")
+        pick_signed_in_user \
+            = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
+        pick_signed_in_user[0].click()
+    measure()
 
 
 def app_specific_action(webdriver, datasets):
@@ -79,7 +89,6 @@ def app_specific_action(webdriver, datasets):
         stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
         stay_signed_in_no.click()
 
-        # wait for html body id "jira" which is always present, both for users who never logged in and who did
         page.wait_until_visible((By.ID, "page"))
 
     measure()
