@@ -101,6 +101,7 @@ def app_specific_action(webdriver, datasets):
 
         webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
         """
-        page.wait_until_visible((By.ID, "page"))
+        # wait for build plan dashboard table
+        page.wait_until_visible((By.ID, "dashboard"))
 
     measure()
