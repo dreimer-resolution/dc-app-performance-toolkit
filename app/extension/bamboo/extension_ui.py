@@ -17,7 +17,8 @@ def app_specific_logout(webdriver, datasets):
         page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/userLogout.action")
         pick_signed_in_user \
             = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
-        pick_signed_in_user[0].click()
+        if len(pick_signed_in_user) > 0:
+            pick_signed_in_user[0].click()
     measure()
 
 
@@ -65,7 +66,7 @@ def app_specific_action(webdriver, datasets):
         username_input.clear()
         # add username to it
         username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-        # username_input.send_keys("performance_user_aotvp@azuread.lab.resolution.de")
+        # username_input.send_keys("performance_user_bavba@azuread.lab.resolution.de")
         next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
         next_is_password.click()
 
