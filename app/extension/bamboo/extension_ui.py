@@ -22,6 +22,7 @@ def app_specific_logout(webdriver, datasets):
 
 
 def app_specific_action(webdriver, datasets):
+    app_specific_logout(webdriver, datasets)
     modules.setup_run_data(datasets)
     page = BasePage(webdriver)
 
