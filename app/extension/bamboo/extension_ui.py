@@ -22,7 +22,6 @@ def app_specific_logout(webdriver, datasets):
 
 
 def app_specific_action(webdriver, datasets):
-    app_specific_logout(webdriver, datasets)
     modules.setup_run_data(datasets)
     page = BasePage(webdriver)
 
@@ -55,7 +54,7 @@ def app_specific_action(webdriver, datasets):
         print(f"{current_time} - successfully logged in user: {datasets['username']}")
         """
 
-        # open dashboard to trigger ALB auth
+        # open url to trigger SSO
         page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
 
         # wait for azure user input field to be shown
@@ -90,6 +89,18 @@ def app_specific_action(webdriver, datasets):
         stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
         stay_signed_in_no.click()
 
+        """
+        page.wait_until_visible((By.ID, "userNameInput"))
+        page.wait_until_visible((By.ID, "passwordInput"))
+
+        username_input = webdriver.find_element_by_xpath(".//*[@id='userNameInput']")
+        username_input.send_keys("ad\\" + datasets['username'][0:20])
+
+        password_input = webdriver.find_element_by_xpath(".//*[@id='passwordInput']")
+        password_input.send_keys('just4lab!')
+
+        webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
+        """
         page.wait_until_visible((By.ID, "page"))
 
     measure()
