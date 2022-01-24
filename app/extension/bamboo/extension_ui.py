@@ -44,47 +44,42 @@ def app_specific_action(webdriver, datasets):
         print(f"{current_time} - successfully logged in user: {datasets['username']}")
         """
 
+        # open dashboard to trigger ALB auth
+        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
+
+        # wait for azure user input field to be shown
+        page.wait_until_visible((By.ID, "i0116"))
+        # get username field
+        username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+        # clear existing value
+        username_input.clear()
+        # add username to it
+        username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+        # username_input.send_keys("performance_user_aotvp@azuread.lab.resolution.de")
+        next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+        next_is_password.click()
+
         try:
-            # todo: this is most likely obsolete now that we log out on Azure as well
-            # this is only present if we are logged in already
-            webdriver.find_element_by_xpath(".//*[@id='page']")
-        except:  # if not, there is an excption and we need to login     # noqa E722
-            # open dashboard to trigger ALB auth
-            page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
+            # if we don't see password input within 5 seconds ...
+            page.wait_until_visible((By.ID, "i0118"), 5)
+        except TimeoutException:
+            # ... restart test
+            app_specific_action(webdriver, datasets)
+            return
 
-            # wait for azure user input field to be shown
-            page.wait_until_visible((By.ID, "i0116"))
-            # get username field
-            username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
-            # clear existing value
-            username_input.clear()
-            # add username to it
-            username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-            # username_input.send_keys("performance_user_aotvp@azuread.lab.resolution.de")
-            next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
-            next_is_password.click()
+        password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+        password_input.clear()
 
-            try:
-                # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "i0118"), 5)
-            except TimeoutException:
-                # ... restart test
-                app_specific_action(webdriver, datasets)
-                return
+        # this is required to prevent StaleElementReferenceException
+        actions = ActionChains(webdriver)
+        actions.send_keys("justAnotherPassw0rd!")
+        actions.send_keys(Keys.ENTER)
+        actions.perform()
 
-            password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
-            password_input.clear()
+        stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
+        stay_signed_in_no.click()
 
-            # this is required to prevent StaleElementReferenceException
-            actions = ActionChains(webdriver)
-            actions.send_keys("justAnotherPassw0rd!")
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
-
-            stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
-            stay_signed_in_no.click()
-
-            # wait for html body id "jira" which is always present, both for users who never logged in and who did
-            page.wait_until_visible((By.ID, "page"))
+        # wait for html body id "jira" which is always present, both for users who never logged in and who did
+        page.wait_until_visible((By.ID, "page"))
 
     measure()
