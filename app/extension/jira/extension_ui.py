@@ -1,3 +1,4 @@
+from util.conf import JIRA_SETTINGS
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -22,11 +23,6 @@ def app_specific_action(webdriver, datasets):
 
         login_page = Login(webdriver)
 
-        @print_timing("selenium_app_specific_login:open_login_page")
-        def sub_measure():
-            login_page.go_to()
-        sub_measure()
-
         @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
         def sub_measure():
             print(f"login_with_open_id, user: {datasets['username']}")
@@ -34,6 +30,9 @@ def app_specific_action(webdriver, datasets):
                 # this is only present if user is logged in already, should rarely be the case
                 webdriver.find_element_by_xpath(".//*[@id='user-options-content']")
             except: # if not, there is an excption and we need to login     # noqa E722
+
+                page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+
                 # click on open-id login button
                 page.wait_until_visible((By.ID, "openid-1"))
                 webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
