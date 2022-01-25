@@ -84,13 +84,13 @@ def app_specific_action(webdriver, datasets):
                     page.wait_until_visible((By.ID, "gadget-10002-title"))
                 """
 
-                if login_page.is_first_login():
-                    login_page.first_login_setup()
-                if login_page.is_first_login_second_page():
-                    login_page.first_login_second_page_setup()
-                login_page.wait_for_page_loaded()
-                webdriver.node_id = login_page.get_node_id()
-                print(f"node_id:{webdriver.node_id}")
+            if login_page.is_first_login():
+                login_page.first_login_setup()
+            if login_page.is_first_login_second_page():
+                login_page.first_login_second_page_setup()
+            login_page.wait_for_page_loaded()
+            webdriver.node_id = login_page.get_node_id()
+            print(f"node_id:{webdriver.node_id}")
 
         sub_measure()
 
