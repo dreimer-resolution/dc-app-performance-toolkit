@@ -30,66 +30,67 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
         def sub_measure():
             print(f"login_with_open_id, user: {datasets['username']}")
-
-            # click on open-id login button
-            page.wait_until_visible((By.ID, "openid-1"))
-            webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
-
-            # wait for azure user input field to be shown
-            page.wait_until_visible((By.ID, "i0116"))
-            # get username field
-            username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
-            # clear existing value
-            username_input.clear()
-            # add username to it
-            username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-            next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
-            next_is_password.click()
-
             try:
-                # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "i0118"), 5)
-            except TimeoutException:
-                # ... restart test
-                app_specific_action(webdriver, datasets)
-                return
+                # this is only present if we are logged in already, should rarely be the case
+                webdriver.find_element_by_xpath(".//*[@id='jira']")
+            except: # if not, there is an excption and we need to login     # noqa E722
+                # click on open-id login button
+                page.wait_until_visible((By.ID, "openid-1"))
+                webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
 
-            password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
-            password_input.clear()
+                # wait for azure user input field to be shown
+                page.wait_until_visible((By.ID, "i0116"))
+                # get username field
+                username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+                # clear existing value
+                username_input.clear()
+                # add username to it
+                username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+                next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                next_is_password.click()
 
-            # this is required to prevent StaleElementReferenceException
-            actions = ActionChains(webdriver)
-            actions.send_keys("justAnotherPassw0rd!")
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
+                try:
+                    # if we don't see password input within 5 seconds ...
+                    page.wait_until_visible((By.ID, "i0118"), 5)
+                except TimeoutException:
+                    # ... restart test
+                    app_specific_action(webdriver, datasets)
+                    return
 
-            # stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
-            # stay_signed_in_no.click()            
-            stay_signed_in_yes = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
-            stay_signed_in_yes.click()
+                password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+                password_input.clear()
 
-            # wait for html body id "jira" which is always present, both for users who never logged in and who did
-            page.wait_until_visible((By.ID, "jira"))
+                # this is required to prevent StaleElementReferenceException
+                actions = ActionChains(webdriver)
+                actions.send_keys("justAnotherPassw0rd!")
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
 
-            """
-            if page.get_elements(LoginPageLocators.continue_button):
-                page.wait_until_visible(LoginPageLocators.continue_button).send_keys(Keys.ESCAPE)
-                page.get_element(LoginPageLocators.continue_button).click()
-                page.wait_until_visible(LoginPageLocators.avatar_page_next_button).click()
-                page.wait_until_visible(LoginPageLocators.explore_current_projects).click()
-                page.go_to_url(DashboardLocators.dashboard_url)
-                page.wait_until_visible(DashboardLocators.dashboard_window)
-            else:
-                page.wait_until_visible((By.ID, "gadget-10002-title"))
-            """
+                stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
+                stay_signed_in_no.click()
 
-            if login_page.is_first_login():
-                login_page.first_login_setup()
-            if login_page.is_first_login_second_page():
-                login_page.first_login_second_page_setup()
-            login_page.wait_for_page_loaded()
-            webdriver.node_id = login_page.get_node_id()
-            print(f"node_id:{webdriver.node_id}")
+                # wait for html body id "jira" which is always present, both for users who never logged in and who did
+                page.wait_until_visible((By.ID, "jira"))
+
+                """
+                if page.get_elements(LoginPageLocators.continue_button):
+                    page.wait_until_visible(LoginPageLocators.continue_button).send_keys(Keys.ESCAPE)
+                    page.get_element(LoginPageLocators.continue_button).click()
+                    page.wait_until_visible(LoginPageLocators.avatar_page_next_button).click()
+                    page.wait_until_visible(LoginPageLocators.explore_current_projects).click()
+                    page.go_to_url(DashboardLocators.dashboard_url)
+                    page.wait_until_visible(DashboardLocators.dashboard_window)
+                else:
+                    page.wait_until_visible((By.ID, "gadget-10002-title"))
+                """
+
+                if login_page.is_first_login():
+                    login_page.first_login_setup()
+                if login_page.is_first_login_second_page():
+                    login_page.first_login_second_page_setup()
+                login_page.wait_for_page_loaded()
+                webdriver.node_id = login_page.get_node_id()
+                print(f"node_id:{webdriver.node_id}")
 
         sub_measure()
 
