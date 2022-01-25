@@ -63,8 +63,10 @@ def app_specific_action(webdriver, datasets):
             actions.send_keys(Keys.ENTER)
             actions.perform()
 
-            stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
-            stay_signed_in_no.click()
+            # stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
+            # stay_signed_in_no.click()            
+            stay_signed_in_yes = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+            stay_signed_in_yes.click()
 
             # wait for html body id "jira" which is always present, both for users who never logged in and who did
             page.wait_until_visible((By.ID, "jira"))
