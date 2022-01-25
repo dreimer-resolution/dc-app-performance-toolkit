@@ -31,8 +31,8 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             print(f"login_with_open_id, user: {datasets['username']}")
             try:
-                # this is only present if we are logged in already, should rarely be the case
-                webdriver.find_element_by_xpath(".//*[@id='jira']")
+                # this is only present if user is logged in already, should rarely be the case
+                webdriver.find_element_by_xpath(".//*[@id='gadget-10000-title']")
             except: # if not, there is an excption and we need to login     # noqa E722
                 # click on open-id login button
                 page.wait_until_visible((By.ID, "openid-1"))
