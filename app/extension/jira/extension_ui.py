@@ -16,6 +16,8 @@ from selenium_ui.jira.pages.selectors import UrlManager, LoginPageLocators, Dash
 
 def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
+    login_page = Login(webdriver)
+    login_page.delete_all_cookies()
 
     @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
     def measure():
@@ -26,6 +28,9 @@ def app_specific_action(webdriver, datasets):
         page.wait_until_visible((By.ID, "openid-2"))
 
         webdriver.find_element_by_xpath(".//*[@id='openid-2']").click()
+
+        # page_title = webdriver.find_element_by_xpath("/html/head/title")
+        # print(page_title.text)
 
         page.wait_until_visible((By.ID, "userNameInput"))
         page.wait_until_visible((By.ID, "passwordInput"))
