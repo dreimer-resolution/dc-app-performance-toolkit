@@ -69,8 +69,16 @@ def app_specific_action(webdriver, datasets):
             actions.perform()
             print(f"entered username and password in azure for user: {datasets['username']}")
 
-            stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
-            stay_signed_in_no.click()
+            try:
+                # if we don't see password input within 5 seconds ...
+                page.wait_until_visible((By.ID, "idBtn_Back"), 5)
+                stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
+                stay_signed_in_no.click()
+            except TimeoutException:
+                # ... restart test
+                print(f"about to restart test for user: {datasets['username']}")
+                app_specific_action(webdriver, datasets)
+                return
 
             """
             if page.get_elements(LoginPageLocators.continue_button):
