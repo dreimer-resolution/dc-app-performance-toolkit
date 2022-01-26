@@ -18,6 +18,7 @@ def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
     login_page = Login(webdriver)
     login_page.delete_all_cookies()
+    webdriver.delete_all_cookies()
 
     @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
     def measure():
