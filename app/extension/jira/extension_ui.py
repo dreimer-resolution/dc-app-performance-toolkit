@@ -30,8 +30,10 @@ def app_specific_action(webdriver, datasets):
 
         webdriver.find_element_by_xpath(".//*[@id='openid-2']").click()
 
-        # page_title = webdriver.find_element_by_xpath("/html/head/title")
-        # print(page_title.text)
+        page_title = webdriver.find_element_by_xpath("/html/head/title")
+        if "Bad Request" in page_title.get_attribute("text"):
+            print(f"adfs sucks, restarting test for user: {datasets['username'][0:20]}")
+            app_specific_action(webdriver, datasets)
 
         page.wait_until_visible((By.ID, "userNameInput"))
         page.wait_until_visible((By.ID, "passwordInput"))
