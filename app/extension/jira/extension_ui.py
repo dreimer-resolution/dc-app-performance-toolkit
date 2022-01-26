@@ -25,17 +25,18 @@ def app_specific_action(webdriver, datasets):
 
         @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
         def sub_measure():
-            print(f"login_with_open_id, user: {datasets['username']}")
+            print(f"starting login_with_open_id, user: {datasets['username']}")
             # try:
             #     # this is only present if user is logged in already, should rarely be the case
             #     webdriver.find_element_by_xpath(".//*[@id='user-options-content']")
             # except: # if not, there is an excption and we need to login     # noqa E722
 
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
-
+            print(f"opened dashboard page for user: {datasets['username']}")
             # click on open-id login button
             page.wait_until_visible((By.ID, "openid-1"))
             webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
+            print(f"clicked open id button for user: {datasets['username']}")
 
             # wait for azure user input field to be shown
             page.wait_until_visible((By.ID, "i0116"))
@@ -64,6 +65,7 @@ def app_specific_action(webdriver, datasets):
             actions.send_keys("justAnotherPassw0rd!")
             actions.send_keys(Keys.ENTER)
             actions.perform()
+            print(f"entered username and password in azure for user: {datasets['username']}")
 
             stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
             stay_signed_in_no.click()
@@ -80,16 +82,17 @@ def app_specific_action(webdriver, datasets):
                 page.wait_until_visible((By.ID, "gadget-10002-title"))
             """
 
+            print(f"before handling post login checks for user: {datasets['username']}")
+
             if login_page.is_first_login():
                 login_page.first_login_setup()
             if login_page.is_first_login_second_page():
                 login_page.first_login_second_page_setup()
             login_page.wait_for_page_loaded()
             webdriver.node_id = login_page.get_node_id()
-            print(f"node_id:{webdriver.node_id}")
+            print(f"node_id: {webdriver.node_id}, username: {datasets['username']}")
 
         sub_measure()
-
     measure()
     PopupManager(webdriver).dismiss_default_popup()
 
