@@ -23,15 +23,10 @@ def app_specific_action(webdriver, datasets):
 
         login_page = Login(webdriver)
         login_page.delete_all_cookies()
-        login_page.go_to()
 
         @print_timing("selenium_app_custom_action:login_with_open_id_and_view_dashboard")
         def sub_measure():
             print(f"starting login_with_open_id, user: {datasets['username']}")
-            # try:
-            #     # this is only present if user is logged in already, should rarely be the case
-            #     webdriver.find_element_by_xpath(".//*[@id='user-options-content']")
-            # except: # if not, there is an excption and we need to login     # noqa E722
 
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
             print(f"opened dashboard page for user: {datasets['username']}")
@@ -53,7 +48,8 @@ def app_specific_action(webdriver, datasets):
 
             try:
                 # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "i0118"), 5)
+                page.wait_until_visible((By.ID, "i0118"), 2)
+                print(f"no password prompt from azure - about to restart test for user: {datasets['username']}")
             except TimeoutException:
                 # ... restart test
                 app_specific_action(webdriver, datasets)
@@ -71,12 +67,12 @@ def app_specific_action(webdriver, datasets):
 
             try:
                 # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "idBtn_Back"), 5)
+                page.wait_until_visible((By.ID, "idBtn_Back"), 2)
                 stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
                 stay_signed_in_no.click()
             except TimeoutException:
                 # ... restart test
-                print(f"about to restart test for user: {datasets['username']}")
+                print(f"no stay signed in prompt from azure - about to restart test for user: {datasets['username']}")
                 app_specific_action(webdriver, datasets)
                 return
 
