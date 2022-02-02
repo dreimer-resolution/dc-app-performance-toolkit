@@ -68,7 +68,7 @@ class RestClient(Client):
     def get(self, url: str,
             error_msg: str,
             expected_status_codes: list = None,
-            allow_redirect: bool = False,
+            allow_redirect: bool = True,
             headers: dict = None,
             auth: tuple = None):
         response = self.session.get(url, verify=self.verify, timeout=self.requests_timeout,
