@@ -30,6 +30,9 @@ def app_specific_action(webdriver, datasets):
             print(f"login_with_saml_sso, user: {datasets['username']}")
             # trigger sso directly
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2F")
+
+            """
+            # Test IdP
             # wait for nameID input field to be shown
             page.wait_until_visible((By.ID, "nameID"))
             # get field object
@@ -40,6 +43,21 @@ def app_specific_action(webdriver, datasets):
             username_input.send_keys(datasets['username'])
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
+            """
+            
+            page.wait_until_visible((By.ID, "userNameInput"))
+            page.wait_until_visible((By.ID, "passwordInput"))
+
+            username_input = webdriver.find_element_by_xpath(".//*[@id='userNameInput']")
+            username_input.send_keys("ad\\" + datasets['username'][0:20])
+
+            password_input = webdriver.find_element_by_xpath(".//*[@id='passwordInput']")
+            password_input.send_keys('just4lab!')
+
+            webdriver.find_element_by_xpath(".//*[@id='submitButton']").click()
+
+
+
             # wait for html body id which is always present, both for users who never logged in and who did
             page.wait_until_visible((By.ID, "com-atlassian-confluence"))
 
