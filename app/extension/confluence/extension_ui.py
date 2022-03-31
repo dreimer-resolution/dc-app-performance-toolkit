@@ -30,7 +30,7 @@ def app_specific_action(webdriver, datasets):
             print(f"login_with_saml_sso, user: {datasets['username']}")
             # trigger sso directly
             # page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2F")
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?NameId=" + datasets['username'])
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + datasets['username'])
 
             """
             # Test IdP
@@ -45,7 +45,7 @@ def app_specific_action(webdriver, datasets):
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
             """
-            
+
             """
             page.wait_until_visible((By.ID, "userNameInput"))
             page.wait_until_visible((By.ID, "passwordInput"))
