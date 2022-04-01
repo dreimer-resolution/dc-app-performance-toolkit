@@ -32,8 +32,10 @@ def app_specific_action(webdriver, datasets):
             login_page.delete_all_cookies()
 
             # trigger sso directly
-            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2Fgetting-started")
+            # page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2Fgetting-started")
+            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + datasets['username'])
 
+            """
             # wait for nameID input field to be shown
             page.wait_until_visible((By.ID, "nameID"))
 
@@ -48,6 +50,7 @@ def app_specific_action(webdriver, datasets):
 
             # click send button
             webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
+            """
 
             # using end-of-test code from atlassian again (deals with first time login/ validates successful login)
             get_started_page = GetStarted(webdriver)
