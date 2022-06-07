@@ -35,10 +35,11 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_custom_action")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_page")
+        @print_timing("selenium_app_custom_action:export_page_to_pdf")
         def sub_measure():
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/viewpage.action?pageId={app_specific_page_id}")
-            page.wait_until_visible((By.ID, "title-text"))  # Wait for title field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?idp=4&NameID=admin&redirectTo=%2Fpages%2Fviewpage.action%3FspaceKey%3DMYS%26title%3DSummertime")
+            page.wait_until_clickable((By.XPATH, ".//*[@id='action-menu-link']")).click()
+            page.wait_until_clickable((By.XPATH, ".//*[@id='confluence-export-pdf-menu']")).click()
+            page.wait_until_clickable((By.XPATH, ".//*[@class='button-panel-button confluence-export-pdf-export-button']")).click()
         sub_measure()
     measure()
