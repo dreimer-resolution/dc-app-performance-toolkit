@@ -6,7 +6,7 @@ from extension.confluence import extension_ui  # noqa F401
 def test_0_selenium_a_login(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     modules.login(confluence_webdriver, confluence_datasets)
 
-"""
+
 def test_1_selenium_view_page(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     modules.view_page(confluence_webdriver, confluence_datasets)
 
@@ -29,7 +29,7 @@ def test_1_selenium_view_blog(confluence_webdriver, confluence_datasets, conflue
 
 def test_1_selenium_view_dashboard(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     modules.view_dashboard(confluence_webdriver, confluence_datasets)
-"""
+
 
 def test_1_selenium_custom_action(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     extension_ui.app_specific_action(confluence_webdriver, confluence_datasets)
