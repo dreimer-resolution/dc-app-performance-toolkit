@@ -30,7 +30,7 @@ def app_specific_action(webdriver, datasets):
 
             # get last sent datetime from table cell (assuming there is just one reminder and ours is the first)
             last_sent_cell \
-                = webdriver.find_element_by_xpath("/html/body/section[2]/div/div[2]/div/table/tbody/tr[2]/td[3]")
+                = webdriver.find_element_by_xpath("/html/body/section[1]/div/div[2]/div/table/tbody/tr/td[3]")
             last_sent_datetime = dateutil.parser.parse(last_sent_cell.text)
 
             # only if it's not older than 120 seconds the test succeeds
