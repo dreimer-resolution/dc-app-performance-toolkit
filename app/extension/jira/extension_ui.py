@@ -1,44 +1,103 @@
-import random
-
+from selenium_ui.jira import modules
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
-from selenium_ui.jira.pages.pages import Login
+
 from util.conf import JIRA_SETTINGS
+from selenium_ui.jira.pages.pages import Login, PopupManager, Logout
+from selenium.common.exceptions import TimeoutException
+
+
+def app_specific_logout(webdriver, datasets):
+    logout_page = Logout(webdriver)
+
+    @print_timing("selenium_app_specific_log_out")
+    def measure():
+        logout_page.go_to()
+        pick_signed_in_user \
+            = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
+        pick_signed_in_user[0].click()
+
+    measure()
 
 
 def app_specific_action(webdriver, datasets):
+    modules.setup_run_data(datasets)
+    # datasets['username'] = "performance_elweqrzsuu"
     page = BasePage(webdriver)
-    if datasets['custom_issues']:
-        issue_key = datasets['custom_issue_key']
 
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_z_log_out action
-    #
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = Login(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.set_credentials(username=username, password=password)
-    #         if login_page.is_first_login():
-    #             login_page.first_login_setup()
-    #         if login_page.is_first_login_second_page():
-    #             login_page.first_login_second_page_setup()
-    #         login_page.wait_for_page_loaded()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
-
-    @print_timing("selenium_app_custom_action")
+    @print_timing("selenium_app_specific_login")
     def measure():
-        @print_timing("selenium_app_custom_action:view_issue")
-        def sub_measure():
-            page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/{issue_key}")
-            page.wait_until_visible((By.ID, "summary-val"))  # Wait for summary field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
-        sub_measure()
-    measure()
+        login_page = Login(webdriver)
 
+        @print_timing("selenium_app_specific_login:open_login_page")
+        def sub_measure():
+            login_page.go_to()
+            # the code below wouldn't work with our app, we won't see the login page before authentication.
+            # setting the webdriver node_id after login instead
+            """
+            webdriver.node_id = login_page.get_node_id()
+            print(f"node_id:{webdriver.node_id}")
+            """
+
+        sub_measure()
+
+        @print_timing("selenium_app_specific_login:login_and_view_dashboard")
+        def sub_measure():
+            print(f"login_with_alb_auth, user: {datasets['username']}")
+            try:
+                # todo: this is most likely obsolete now that we log out on Azure as well
+                # this is only present if we are logged in already
+                webdriver.find_element_by_xpath(".//*[@id='jira']")
+            except:  # if not, there is an excption and we need to login     # noqa E722
+                # open dashboard to trigger ALB auth
+                page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+
+                # wait for azure user input field to be shown
+                page.wait_until_visible((By.ID, "i0116"))
+                # get username field
+                username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+                # clear existing value
+                username_input.clear()
+                # add username to it
+                username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+                next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                next_is_password.click()
+
+                try:
+                    # if we don't see password input within 5 seconds ...
+                    page.wait_until_visible((By.ID, "i0118"), 5)
+                except TimeoutException:
+                    # ... restart test
+                    app_specific_action(webdriver, datasets)
+                    return
+
+                password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+                password_input.clear()
+
+                # this is required to prevent StaleElementReferenceException
+                actions = ActionChains(webdriver)
+                actions.send_keys("justAnotherPassw0rd!")
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
+
+                stay_signed_in_no = webdriver.find_element_by_xpath(".//*[@id='idBtn_Back']")
+                stay_signed_in_no.click()
+
+                # wait for html body id "jira" which is always present, both for users who never logged in and who did
+                page.wait_until_visible((By.ID, "jira"))
+                webdriver.node_id = login_page.get_node_id()
+                print(f"node_id: {webdriver.node_id}")
+
+                if login_page.is_first_login():
+                    login_page.first_login_setup()
+                if login_page.is_first_login_second_page():
+                    login_page.first_login_second_page_setup()
+                login_page.wait_for_page_loaded()
+
+        sub_measure()
+
+    measure()
+    PopupManager(webdriver).dismiss_default_popup()

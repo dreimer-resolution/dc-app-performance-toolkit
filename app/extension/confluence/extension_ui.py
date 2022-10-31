@@ -1,44 +1,91 @@
-import random
-
 from selenium.webdriver.common.by import By
-
+from selenium_ui.confluence import modules
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
-from selenium_ui.confluence.pages.pages import Login, AllUpdates
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from util.conf import CONFLUENCE_SETTINGS
+from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager, Logout
+from selenium.common.exceptions import TimeoutException
+
+
+def app_specific_logout(webdriver, datasets):
+
+    @print_timing("selenium_app_specific_log_out")
+    def measure():
+        logout_page = Logout(webdriver)
+        logout_page.go_to()
+        pick_signed_in_user \
+            = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
+        pick_signed_in_user[0].click()
+    measure()
 
 
 def app_specific_action(webdriver, datasets):
+    login_page = Login(webdriver)
     page = BasePage(webdriver)
-    if datasets['custom_pages']:
-        app_specific_page_id = datasets['custom_page_id']
 
-    # To run action as specific user uncomment code bellow.
-    # NOTE: If app_specific_action is running as specific user, make sure that app_specific_action is running
-    # just before test_2_selenium_z_log_out
-    # @print_timing("selenium_app_specific_user_login")
-    # def measure():
-    #     def app_specific_user_login(username='admin', password='admin'):
-    #         login_page = Login(webdriver)
-    #         login_page.delete_all_cookies()
-    #         login_page.go_to()
-    #         login_page.wait_for_page_loaded()
-    #         login_page.set_credentials(username=username, password=password)
-    #         login_page.click_login_button()
-    #         if login_page.is_first_login():
-    #             login_page.first_user_setup()
-    #         all_updates_page = AllUpdates(webdriver)
-    #         all_updates_page.wait_for_page_loaded()
-    #     app_specific_user_login(username='admin', password='admin')
-    # measure()
-
-    @print_timing("selenium_app_custom_action")
+    @print_timing("selenium_app_specific_login")
     def measure():
 
-        @print_timing("selenium_app_custom_action:view_page")
+        """
+        @print_timing("selenium_app_specific_login:open_login_page")
         def sub_measure():
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/pages/viewpage.action?pageId={app_specific_page_id}")
-            page.wait_until_visible((By.ID, "title-text"))  # Wait for title field visible
-            page.wait_until_visible((By.ID, "ID_OF_YOUR_APP_SPECIFIC_UI_ELEMENT"))  # Wait for you app-specific UI element by ID selector
+            login_page.go_to()
+        sub_measure()
+        """
+
+        @print_timing("selenium_app_specific_login:login_and_view_dashboard")
+        def sub_measure():
+
+            print(f"login_with_alb_auth, user: {datasets['username']}")
+            # try:
+            #     # this is only present if we are logged in already
+            #     webdriver.find_element_by_xpath(".//*[@id='com-atlassian-confluence']")
+            # except: # if not, there is an excption and we need to login     # noqa E722
+
+            # open base url
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/")
+
+            # wait for azure user input field to be shown
+            page.wait_until_visible((By.ID, "i0116"))
+            # get field object
+            username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+            # clear existing value
+            username_input.clear()
+            # add username to it
+            username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+            next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+            next_is_password.click()
+
+            try:
+                # if we don't see password input within 5 seconds ...
+                page.wait_until_visible((By.ID, "i0118"), 5)
+            except TimeoutException:
+                # ... restart test
+                app_specific_action(webdriver, datasets)
+                return
+
+            password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+            password_input.clear()
+
+            # this is required to prevent StaleElementReferenceException
+            actions = ActionChains(webdriver)
+            actions.send_keys("justAnotherPassw0rd!")
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
+
+            yes_button = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+            yes_button.click()
+
+            # wait for confluence page
+            page.wait_until_visible((By.ID, "com-atlassian-confluence"))
+            webdriver.node_id = login_page.get_node_id()
+
+            if login_page.is_first_login():
+                login_page.first_user_setup()
+            all_updates_page = AllUpdates(webdriver)
+            all_updates_page.wait_for_page_loaded()
         sub_measure()
     measure()
+    PopupManager(webdriver).dismiss_default_popup()
