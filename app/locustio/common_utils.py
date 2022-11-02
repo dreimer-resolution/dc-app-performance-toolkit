@@ -23,13 +23,15 @@ TEXT_HEADERS = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept-Encoding': 'gzip, deflate',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                }
+        'nosso': 'true'
+}
 RESOURCE_HEADERS = {
     "Accept": "application/json, text/javascript, */*; q=0.01",
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate",
     "Content-Type": "application/json",
-    "X-Requested-With": "XMLHttpRequest"
+    "X-Requested-With": "XMLHttpRequest",
+    "nosso": "true"
 }
 ADMIN_HEADERS = {
     'Accept-Language': 'en-US,en;q=0.5',
@@ -42,7 +44,8 @@ ADMIN_HEADERS = {
     'Connection': 'keep-alive',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'User-Agent': 'xx',
-    'Authorization': 'Basic'
+    'Authorization': 'Basic',
+    "nosso": "true"
 }
 NO_TOKEN_HEADERS = {
     "Accept-Language": "en-US,en;q=0.5",
@@ -51,14 +54,16 @@ NO_TOKEN_HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
     "Accept-Encoding": "gzip, deflate",
     "Accept": "application/json, text/javascript, */*; q=0.01",
-    "X-Atlassian-Token": "no-check"
+    "X-Atlassian-Token": "no-check",
+    'nosso': 'true'
 }
 JSON_HEADERS = {
     "Accept-Language": "en-US,en;q=0.5",
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
     "Accept-Encoding": "gzip, deflate",
-    "Accept": "application/json, text/javascript, */*; q=0.01"
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    'nosso': 'true'
 }
 
 JIRA_API_URL = '/'
