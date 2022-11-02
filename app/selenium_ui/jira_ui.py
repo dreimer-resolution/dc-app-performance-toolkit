@@ -58,4 +58,4 @@ def test_1_selenium_view_issue(jira_webdriver, jira_datasets, jira_screen_shots)
 
 # this action should be the last one
 def test_2_selenium_z_log_out(jira_webdriver, jira_datasets, jira_screen_shots):
-    modules.log_out(jira_webdriver, jira_datasets)
+    extension_ui.app_specific_logout(jira_webdriver, jira_datasets)

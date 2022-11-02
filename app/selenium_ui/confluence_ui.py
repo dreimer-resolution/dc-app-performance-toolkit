@@ -35,4 +35,4 @@ def test_1_selenium_view_dashboard(confluence_webdriver, confluence_datasets, co
 
 # this action should be the last one
 def test_2_selenium_z_log_out(confluence_webdriver, confluence_datasets, confluence_screen_shots):
-    modules.log_out(confluence_webdriver, confluence_datasets)
+    extension_ui.app_specific_logout(confluence_webdriver, confluence_datasets)
