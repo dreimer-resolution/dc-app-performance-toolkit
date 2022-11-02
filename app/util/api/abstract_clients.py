@@ -6,7 +6,8 @@ from requests import Response
 
 JSON_HEADERS = {
     "Accept": "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "nosso": "true"
 }
 LOGIN_POST_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded',
