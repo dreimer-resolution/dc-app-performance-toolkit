@@ -48,45 +48,49 @@ def app_specific_action(webdriver, datasets):
             # open base url
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/")
 
-            # wait for azure user input field to be shown
-            page.wait_until_visible((By.ID, "i0116"))
-            # get field object
-            username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
-            # clear existing value
-            username_input.clear()
-            # add username to it
-            username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-            next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
-            next_is_password.click()
-
             try:
-                # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "i0118"), 5)
-            except TimeoutException:
-                # ... restart test
-                app_specific_action(webdriver, datasets)
-                return
+                still_logged_in = webdriver.find_element_by_xpath(".//*[@id='com-atlassian-confluence']")
+                print(still_logged_in)
+            except:
+                # wait for azure user input field to be shown
+                page.wait_until_visible((By.ID, "i0116"))
+                # get field object
+                username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+                # clear existing value
+                username_input.clear()
+                # add username to it
+                username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+                next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                next_is_password.click()
 
-            password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
-            password_input.clear()
+                try:
+                    # if we don't see password input within 5 seconds ...
+                    page.wait_until_visible((By.ID, "i0118"), 5)
+                except TimeoutException:
+                    # ... restart test
+                    app_specific_action(webdriver, datasets)
+                    return
 
-            # this is required to prevent StaleElementReferenceException
-            actions = ActionChains(webdriver)
-            actions.send_keys("justAnotherPassw0rd!")
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
+                password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+                password_input.clear()
 
-            yes_button = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
-            yes_button.click()
+                # this is required to prevent StaleElementReferenceException
+                actions = ActionChains(webdriver)
+                actions.send_keys("justAnotherPassw0rd!")
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
 
-            # wait for confluence page
-            page.wait_until_visible((By.ID, "com-atlassian-confluence"))
-            webdriver.node_id = login_page.get_node_id()
+                yes_button = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                yes_button.click()
 
-            if login_page.is_first_login():
-                login_page.first_user_setup()
-            all_updates_page = AllUpdates(webdriver)
-            all_updates_page.wait_for_page_loaded()
+                # wait for confluence page
+                page.wait_until_visible((By.ID, "com-atlassian-confluence"))
+                webdriver.node_id = login_page.get_node_id()
+
+                if login_page.is_first_login():
+                    login_page.first_user_setup()
+                all_updates_page = AllUpdates(webdriver)
+                all_updates_page.wait_for_page_loaded()
         sub_measure()
     measure()
     PopupManager(webdriver).dismiss_default_popup()
