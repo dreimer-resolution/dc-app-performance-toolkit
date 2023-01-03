@@ -88,7 +88,7 @@ class RestClient(Client):
              body: dict = None,
              params: dict = None,
              files: dict = None,
-             allow_redirect: bool = False,
+             allow_redirect: bool = True,
              headers: dict = None,
              auth: tuple = None):
         body_data = self.to_json(body) if body else None
