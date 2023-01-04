@@ -11,6 +11,10 @@ def test_1_selenium_custom_action(jira_webdriver, jira_datasets, jira_screen_sho
     extension_ui.app_specific_action(jira_webdriver, jira_datasets)
 
 
+def test_1_selenium_view_project_summary(jira_webdriver, jira_datasets, jira_screen_shots):
+    modules.view_project_summary(jira_webdriver, jira_datasets)
+
+
 def test_1_selenium_browse_projects_list(jira_webdriver, jira_datasets, jira_screen_shots):
     modules.browse_projects_list(jira_webdriver, jira_datasets)
 
@@ -53,10 +57,6 @@ def test_1_selenium_view_dashboard(jira_webdriver, jira_datasets, jira_screen_sh
 
 def test_1_selenium_view_issue(jira_webdriver, jira_datasets, jira_screen_shots):
     modules.view_issue(jira_webdriver, jira_datasets)
-
-
-def test_1_selenium_view_project_summary(jira_webdriver, jira_datasets, jira_screen_shots):
-    modules.view_project_summary(jira_webdriver, jira_datasets)
 
 
 # this action should be the last one
