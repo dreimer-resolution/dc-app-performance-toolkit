@@ -8,7 +8,7 @@ logger = init_logger(app_type='jira')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-    if 'user_deactivator' not in locust.session_data_storage or locust.session_data_storage['user_deactivator'] != 'true':
+    if 'user_deactivator' not in locust.cross_action_storage or locust.cross_action_storage['user_deactivator'] != 'true':
         # like our test users created with the test connector
         body = {"notInGroups": ["jira-software-users"], "action": "DEACTIVATE"}
 
@@ -26,7 +26,7 @@ def app_specific_action(locust):
         logger.locust_info(f"resultId: {result_id[0]}")
         assert int(result_id[0]) >= 0
 
-        locust.session_data_storage['user_deactivator'] = 'true'
+        locust.cross_action_storage['user_deactivator'] = 'true'
 
     # RESET SESSION USER BACK, UNLESS WE DO THAT WE GET STRANGE
     # "ADMIN STILL LOGGED IN" ERRORS IN OTHER LOCUST ACTIONS
