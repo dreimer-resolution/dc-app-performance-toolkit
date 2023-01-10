@@ -26,9 +26,9 @@ def app_specific_action(webdriver, datasets):
         print(f"login_with_open_id, user: {datasets['username'][0:20]}")
         page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")  # open dashboard page with login screen
 
-        page.wait_until_visible((By.ID, "openid-2"))
+        page.wait_until_visible((By.ID, "openid-1"))
 
-        webdriver.find_element_by_xpath(".//*[@id='openid-2']").click()
+        webdriver.find_element_by_xpath(".//*[@id='openid-1']").click()
 
         page_title = webdriver.find_element_by_xpath("/html/head/title")
         if "Bad Request" in page_title.get_attribute("text"):
