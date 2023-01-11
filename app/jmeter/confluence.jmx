@@ -5344,7 +5344,7 @@ if (response_data.username != vars.get(&quot;app_specific_username&quot;)) {
               </HTTPSamplerProxy>
               <hashTree>
                 <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Check if UUID generated" enabled="true">
-                  <stringProp name="JSON_PATH"></stringProp>
+                  <stringProp name="JSON_PATH">$.uuid</stringProp>
                   <stringProp name="EXPECTED_VALUE">[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}</stringProp>
                   <boolProp name="JSONVALIDATION">true</boolProp>
                   <boolProp name="EXPECT_NULL">false</boolProp>
