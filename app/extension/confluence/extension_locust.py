@@ -25,4 +25,3 @@ def app_specific_action(locust):
         logger.locust_info(f"resultId: {result_id[0]}")
         assert int(result_id[0]) >= 0
         locust.cross_action_storage['user_deactivator'] = 'true'
-        
