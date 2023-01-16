@@ -46,4 +46,3 @@ def test_1_selenium_custom_action(confluence_webdriver, confluence_datasets, con
 # this action should be the last one
 def test_2_selenium_z_log_out(confluence_webdriver, confluence_datasets, confluence_screen_shots):
     modules.log_out(confluence_webdriver, confluence_datasets)
-    
