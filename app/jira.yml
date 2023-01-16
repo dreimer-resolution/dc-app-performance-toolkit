@@ -18,9 +18,9 @@ settings:
     ramp-up: 3m                     # time to spin all concurrent users
     total_actions_per_hour: 54500   # number of total JMeter/Locust actions per hour
     WEBDRIVER_VISIBLE: False
-    JMETER_VERSION: 5.4.2
+    JMETER_VERSION: 5.4.3
     LANGUAGE: en_US.utf8
-    allow_analytics: False            # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
+    allow_analytics: No            # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
     # Action percentage for Jmeter and Locust load executors
     create_issue: 4
     search_jql: 11
@@ -118,7 +118,7 @@ modules:
       httpsampler.ignore_failed_embedded_resources: "true"
   selenium:
     chromedriver:
-      version: "103.0.5060.134" # Supports Chrome version 103. You can refer to http://chromedriver.chromium.org/downloads
+      version: "108.0.5359.71" # Supports Chrome version 108. You can refer to http://chromedriver.chromium.org/downloads
 reporting:
-  - data-source: sample-labels
-    module: junit-xml
+- data-source: sample-labels
+  module: junit-xml
