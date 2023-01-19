@@ -5,7 +5,7 @@ settings:
   verbose: false
   check-updates: false    # disable bzt check for updates
   env:
-    application_hostname: bam-dct.klab.resolution.de   # Bamboo DC hostname without protocol and port e.g. test-bamboo.atlassian.com or localhost
+    application_hostname: bamboo.dc-testing-2.reslab.de   # Bamboo DC hostname without protocol and port e.g. test-bamboo.atlassian.com or localhost
     application_protocol: https         # http or https
     application_port: 443             # 80, 443, 8085, etc
     secure: True                       # Set False to allow insecure connections, e.g. when using self-signed SSL certificate
@@ -20,7 +20,7 @@ settings:
     WEBDRIVER_VISIBLE: False
     JMETER_VERSION: 5.4.3
     LANGUAGE: en_US.utf8
-    allow_analytics: Yes               # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
+    allow_analytics: No               # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
     # Action percentage for JMeter load executor
     view_all_builds: 15
     view_build_result: 15
