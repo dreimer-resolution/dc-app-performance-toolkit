@@ -39,6 +39,6 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
             # provide id of input element of the select drop-down macro, finding it by xpath fails again with toolkit
-            page.wait_until_visible((By.ID, "c989651d-711e-4818-bf96-6eb4ff9a5de5"))
+            page.wait_until_visible((By.ID, "LIM-49141308-c856550e-f98c-437a-9803-f88ecca96396"))
         sub_measure()
     measure()
