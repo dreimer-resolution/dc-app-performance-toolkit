@@ -38,7 +38,18 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_custom_action:open_page_with_macro")
         def sub_measure():
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/display/MYS/OSS")
-            # provide id of input element of the select drop-down macro, finding it by xpath fails again with toolkit
+            # provide id of the button element of the select drop-down macro
+            '''
+            e.g. 
+            <button id="LIM-49141308-c856550e-f98c-437a-9803-f88ecca96396" style="min-width:max-content" 
+            class="aui-button lim-dropdown aui-dropdown2-trigger" data-content-id="49141308" 
+            data-macro-id="c856550e-f98c-437a-9803-f88ecca96396" 
+            aria-controls="control-49141308-c856550e-f98c-437a-9803-f88ecca96396" data-save="true" data-email="false" 
+            data-values="" data-variable-name="" data-multi-select="false" data-required="false" data-mtitle="" 
+            data-vertical="false" resolved="" aria-haspopup="true" aria-expanded="false" aria-busy="false">
+                    Select..
+            </button>
+            '''
             page.wait_until_visible((By.ID, "LIM-49141308-c856550e-f98c-437a-9803-f88ecca96396"))
         sub_measure()
     measure()
