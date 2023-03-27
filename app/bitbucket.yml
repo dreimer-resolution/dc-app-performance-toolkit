@@ -12,10 +12,10 @@ settings:
     application_postfix:            # e.g. /bitbucket in case of url like http://localhost:7990/bitbucket
     admin_login: admin
     admin_password: admin
-    load_executor: jmeter           # only jmeter executor is supported
-    concurrency: 20                 # number of concurrent virtual users for jmeter scenario
+    load_executor: jmeter             # only jmeter executor is supported
+    concurrency: 20                   # number of concurrent virtual users for jmeter scenario
     test_duration: 50m
-    ramp-up: 10m                    # time to spin all concurrent users
+    ramp-up: 10m                      # time to spin all concurrent users
     total_actions_per_hour: 32700
     WEBDRIVER_VISIBLE: False
     JMETER_VERSION: 5.4.3
@@ -90,7 +90,7 @@ modules:
       httpsampler.ignore_failed_embedded_resources: "true"
   selenium:
     chromedriver:
-      version: "108.0.5359.71" # Supports Chrome version 108. You can refer to http://chromedriver.chromium.org/downloads
+      version: "110.0.5481.77" # Supports Chrome version 110. You can refer to http://chromedriver.chromium.org/downloads
 reporting:
 - data-source: sample-labels
   module: junit-xml
