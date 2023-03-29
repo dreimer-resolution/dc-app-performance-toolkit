@@ -14,7 +14,7 @@ def app_specific_action(webdriver, datasets):
 
     @print_timing("selenium_app_specific_login")
     def measure():
-        # login_page = Login(webdriver)
+        login_page = Login(webdriver)
         #
         # @print_timing("selenium_app_specific_login:open_login_page")
         # def sub_measure():
