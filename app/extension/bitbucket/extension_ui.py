@@ -28,7 +28,7 @@ def app_specific_action(webdriver, datasets):
             # important, retrieves the atlassian app version
             login_page = LoginPage(webdriver)
             login_page.go_to()
-            webdriver.app_version = login_page.get_app_version()
+            # webdriver.app_version = login_page.get_app_version()
             login_page.delete_all_cookies()
 
             # trigger sso directly
