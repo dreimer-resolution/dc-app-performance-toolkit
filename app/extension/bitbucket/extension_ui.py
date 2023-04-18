@@ -1,12 +1,10 @@
-import random
-
 from selenium.webdriver.common.by import By
-
+from packaging import version
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from selenium_ui.bitbucket.pages.pages import LoginPage, GetStarted
 from util.conf import BITBUCKET_SETTINGS
-
+from util.api.bitbucket_clients import BitbucketRestClient
 """
 - SSO redirection needs to be disabled, so that regular framework tests using the default login don't fail
 - IdP selection needs to be set to use lowest weight IdP
@@ -24,7 +22,11 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
 
             print(f"login_with_saml_sso, user: {datasets['username']}")
-
+            client = BitbucketRestClient(
+                BITBUCKET_SETTINGS.server_url,
+                BITBUCKET_SETTINGS.admin_login,
+                BITBUCKET_SETTINGS.admin_password)
+            webdriver.app_version = version.parse(client.get_bitbucket_version())
             # important, retrieves the atlassian app version
             login_page = LoginPage(webdriver)
             login_page.go_to()
