@@ -4,7 +4,11 @@ platform: platform
 product: marketplace
 category: devguide
 subcategory: build
+<<<<<<< HEAD
 date: "2022-12-21"
+=======
+date: "2023-04-20"
+>>>>>>> master
 ---
 # Data Center App Performance Toolkit User Guide For Bamboo
 
@@ -43,7 +47,11 @@ specifically for performance testing during the DC app review process.
    {{% /warning %}}
 4. Clone the project repo:
    ```bash
+<<<<<<< HEAD
    git clone -b 2.2.3 https://github.com/atlassian-labs/data-center-terraform.git && cd data-center-terraform
+=======
+   git clone -b 2.4.0 https://github.com/atlassian-labs/data-center-terraform.git && cd data-center-terraform
+>>>>>>> master
    ```
 5. Copy [`dcapt.tfvars`](https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/k8s/dcapt.tfvars) file to the `data-center-terraform` folder.
       ``` bash
@@ -54,11 +62,19 @@ specifically for performance testing during the DC app review process.
    - `products` - `bamboo`
    - `bamboo_license` - one-liner of valid bamboo license without spaces and new line symbols
    - `region` - **Do not change default region (`us-east-2`). If specific region is required, contact support.**
+<<<<<<< HEAD
 7. Start the installation (~40min):
+=======
+7. From local terminal (Git bash terminal for Windows) start the installation (~40min):
+>>>>>>> master
    ```bash
    ./install.sh -c dcapt.tfvars
    ```
 8. Copy product URL from the console output. Product url should look like `http://a1234-54321.us-east-2.elb.amazonaws.com/bamboo`.
+<<<<<<< HEAD
+=======
+9. Wait for all remote agents to be started and connected. It can take up to 10 minutes. Agents can be checked in `Settings` > `Agents`.
+>>>>>>> master
 
 {{% note %}}
 New trial license could be generated on [my atlassian](https://my.atlassian.com/license/evaluation).
@@ -381,5 +397,9 @@ Do not forget to attach performance testing results to your ECOHELP ticket.
 
 
 ## <a id="support"></a> Support
-In case of technical questions, issues or problems with DC Apps Performance Toolkit, contact us for support in the 
-[community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.
+For Terraform deploy related questions see  [Troubleshooting tips](https://atlassian-labs.github.io/data-center-terraform/troubleshooting/TROUBLESHOOTING/)page.
+
+If the installation script fails on installing Helm release or any other reason, collect the logs, zip and share to [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.  
+For instructions on how to do this, see [How to troubleshoot a failed Helm release installation?](https://atlassian-labs.github.io/data-center-terraform/troubleshooting/TROUBLESHOOTING/#_1).
+
+In case of the above problem or any other technical questions, issues with DC Apps Performance Toolkit, contact us for support in the [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.

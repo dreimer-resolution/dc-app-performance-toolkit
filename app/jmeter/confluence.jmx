@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="upload_attachments" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -48,8 +48,8 @@
         <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
         <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
         <stringProp name="HTTPSampler.embedded_url_re">^((?!google|youtube|facebook|pinterest|twimg|doubleclick|lorempixel|extranet|bulldogwiki|jira-dev|jira).)*$</stringProp>
-        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-        <stringProp name="HTTPSampler.response_timeout">20000</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout">10000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">10000</stringProp>
       </ConfigTestElement>
       <hashTree/>
       <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
@@ -554,7 +554,7 @@
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="x_editable" enabled="true">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                   <stringProp name="RegexExtractor.refname">x_editable</stringProp>
-                  <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot; href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
+                  <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot;\s+href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
                   <stringProp name="RegexExtractor.template">$1$</stringProp>
                   <stringProp name="RegexExtractor.default"></stringProp>
                   <stringProp name="RegexExtractor.match_number">1</stringProp>
@@ -3446,7 +3446,11 @@ vars.put(&quot;page_text&quot;, &quot;jmeter_create_and_edit_page:edit_page - &q
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="x_editable" enabled="false">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                   <stringProp name="RegexExtractor.refname">x_editable</stringProp>
+<<<<<<< HEAD
                   <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot; href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
+=======
+                  <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot;\s+href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
+>>>>>>> master
                   <stringProp name="RegexExtractor.template">$1$</stringProp>
                   <stringProp name="RegexExtractor.default"></stringProp>
                   <stringProp name="RegexExtractor.match_number">1</stringProp>
@@ -3560,7 +3564,11 @@ vars.put(&quot;page_text&quot;, &quot;jmeter_create_and_edit_page:edit_page - &q
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="x_editable" enabled="false">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                   <stringProp name="RegexExtractor.refname">x_editable</stringProp>
+<<<<<<< HEAD
                   <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot; href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
+=======
+                  <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot;\s+href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
+>>>>>>> master
                   <stringProp name="RegexExtractor.template">$1$</stringProp>
                   <stringProp name="RegexExtractor.default"></stringProp>
                   <stringProp name="RegexExtractor.match_number">1</stringProp>

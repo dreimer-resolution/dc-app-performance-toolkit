@@ -109,11 +109,11 @@ class RestClient(Client):
         return response
 
     def __verify_response(self, response: Response, error_msg: str, expected_status_codes: list = None):
-        if response.is_redirect:
-            raise Exception(f"Redirect detected.\n "
-                            f"Please check config.yml file (application_hostname, application_port, "
-                            f"application_protocol, application_postfix).")
-        if response.ok or (expected_status_codes and response.status_code in expected_status_codes):
+        # if response.is_redirect:
+        #     raise Exception(f"Redirect detected.\n "
+        #                     f"Please check config.yml file (application_hostname, application_port, "
+        #                     f"application_protocol, application_postfix).")
+        if response.ok or response.is_redirect or (expected_status_codes and response.status_code in expected_status_codes):
             return
 
         status_code = response.status_code

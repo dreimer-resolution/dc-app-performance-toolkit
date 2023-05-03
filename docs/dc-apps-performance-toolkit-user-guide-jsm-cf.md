@@ -1,16 +1,12 @@
 ---
-title: "Data Center App Performance Toolkit User Guide For Jira Service Management"
+title: "Data Center App Performance Toolkit User Guide For Jira Service Management (CloudFormation deployment)"
 platform: platform
 product: marketplace
 category: devguide
 subcategory: build
-<<<<<<< HEAD
-date: "2022-12-21"
-=======
 date: "2023-04-20"
->>>>>>> master
 ---
-# Data Center App Performance Toolkit User Guide For Jira Service Management
+# Data Center App Performance Toolkit User Guide For Jira Service Management (CloudFormation deployment)
 
 This document walks you through the process of testing your app on Jira Service Management using the Data Center App Performance Toolkit. These instructions focus on producing the required [performance and scale benchmarks for your Data Center app](/platform/marketplace/dc-apps-performance-and-scale-testing/):
 
@@ -21,42 +17,49 @@ Please, make sure you have enabled Insight-specific tests in the `jsm.yml` file,
 
 In this document, we cover the use of the Data Center App Performance Toolkit on two types of environments:
 
-
-**[Development environment](#mainenvironmentdev)**: Jira Service Management Data Center environment for a test run of Data Center App Performance Toolkit and development of [app-specific actions](#appspecificactions).
+**[Development environment](#mainenvironmentdev)**: Jira Service Management Data Center environment for a test run of Data Center App Performance Toolkit and development of [app-specific actions](#appspecificactions). We recommend you use the [AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) with the parameters prescribed here.
 
 1. [Set up a development environment Jira Service Management Data Center on AWS](#devinstancesetup).
-2. [Run toolkit on the development environment locally](#devtestscenario).
-3. [Develop and test app-specific actions locally](#devappaction).
+2. [Load a "small" dataset for the development environment](#devdataset).
+3. [Run toolkit on the development environment locally](#devtestscenario).
+4. [Develop and test app-specific actions locally](#devappaction).
 
-**[Enterprise-scale environment](#mainenvironmententerprise)**: Jira Service Management Data Center environment used to generate Data Center App Performance Toolkit test results for the Marketplace approval process.
+**[Enterprise-scale environment](#mainenvironmententerprise)**: Jira Service Management Data Center environment used to generate Data Center App Performance Toolkit test results for the Marketplace approval process. Preferably, use the [AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) with the parameters prescribed below. These parameters provision larger, more powerful infrastructure for your Jira Service Management Data Center.
 
-4. [Set up an enterprise-scale environment Jira Service Management Data Center on AWS](#instancesetup).
-5. [Set up an execution environment for the toolkit](#executionhost).
-6. [Running the test scenarios from execution environment against enterprise-scale Jira Service Management Data Center](#testscenario).
+5. [Set up an enterprise-scale environment Jira Service Management Data Center on AWS](#instancesetup).
+6. [Load an enterprise-scale dataset on your Jira Service Management Data Center deployment](#preloading).
+7. [Set up an execution environment for the toolkit](#executionhost).
+8. [Running the test scenarios from execution environment against enterprise-scale Jira Service Management Data Center](#testscenario).
 
 ---
 
 ## <a id="mainenvironmentdev"></a>Development environment
 
-Running the tests in a development environment helps familiarize you with the toolkit.
-It'll also provide you with a lightweight and less expensive environment for developing app-specific actions.
-Once you're ready to generate test results for the Marketplace Data Center Apps Approval process,
-run the toolkit in an **enterprise-scale environment**.
-
----
-
-{{% note %}}
-DCAPT has fully transitioned to Terraform deployment. If you still wish to use CloudFormation deployment, refer to the [Jira Service Management Data Center app testing [CloudFormation]](/platform/marketplace/dc-apps-performance-toolkit-user-guide-jsm-cf/)
-{{% /note %}}
+Running the tests in a development environment helps familiarize you with the toolkit. It'll also provide you with a lightweight and less expensive environment for developing. Once you're ready to generate test results for the Marketplace Data Center Apps Approval process, run the toolkit in an **enterprise-scale environment**.
 
 ### <a id="devinstancesetup"></a>1. Setting up Jira Service Management Data Center development environment
 
-We recommend that you use the [official documentation](https://atlassian-labs.github.io/data-center-terraform/) 
-how to deploy a Jira Service Management Data Center environment and AWS on k8s.
+We recommend that you set up development environment using the [AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) (**How to deploy** tab). All the instructions on this page are optimized for AWS. 
+
+
+#### Using the AWS Quick Start for Jira Service Management
+
+If you are a new user, perform an end-to-end deployment. This involves deploying Jira Service Management into a _new_ ASI:
+
+Navigate to **[AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) &gt; How to deploy** tab **&gt; Deploy into a new ASI** link.
+
+If you have already deployed the ASI separately by using the [ASI Quick Start](https://aws.amazon.com/quickstart/architecture/atlassian-standard-infrastructure/)ASI Quick Start or by deploying another Atlassian product (Jira, Bitbucket, or Confluence Data Center development environment) with ASI, deploy Jira Service Management into your existing ASI:
+
+Navigate to **[AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) &gt; How to deploy** tab **&gt; Deploy into your existing ASI** link.
+
+{{% note %}}
+You are responsible for the cost of AWS services used while running this Quick Start reference deployment. This Quick Start doesn't have any additional prices. See [Amazon EC2 pricing](https://aws.amazon.com/ec2/pricing/) for more detail.
+{{% /note %}}
+
+To reduce costs, we recommend you to keep your deployment up and running only during the performance runs.
 
 #### AWS cost estimation for the development environment
 
-<<<<<<< HEAD
 AWS Jira Service Management Data Center development environment infrastructure costs about 25 - 50$ per working week depending on such factors like region, instance type, deployment type of DB, and other.  
 
 #### <a id="quick-start-parameters"></a> Quick Start parameters for development environment
@@ -68,7 +71,7 @@ All important parameters are listed and described in this section. For all other
 | Parameter | Recommended value                                                                                                                                                                                      |
 | --------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Jira Product | ServiceManagement                                                                                                                                                                                      |
-| Version | The Data Center App Performance Toolkit officially supports `4.20.15`, `5.4.0` ([Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html)) |
+| Version | The Data Center App Performance Toolkit officially supports `4.20.20`, `5.4.4` ([Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html)) |
 
 **Cluster nodes**
 
@@ -194,56 +197,33 @@ To populate the database with SQL:
     ./populate_db.sh --jsm --small 2>&1 | tee -a populate_db.log
     ```
 
-=======
->>>>>>> master
 {{% note %}}
-You are responsible for the cost of AWS services used while running this Terraform deployment.
-See [Amazon EC2 pricing](https://aws.amazon.com/ec2/pricing/) for more detail.
+In case of a failure, check the `Variables` section and run the script one more time.
 {{% /note %}}
 
-To reduce costs, we recommend you to keep your deployment up and running only during the performance runs.
-AWS Jira Service Management Data Center development environment infrastructure costs about  20 - 40$ per working week depending on such factors like region, instance type, deployment type of DB, and other.  
+##### Option 2: Loading the "small" dataset through XML import
 
-#### Setup Jira Service Management Data Center development environment on k8s.
+We recommend that you only use this method if you are having problems with the [populate_db.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/populate_db.sh) script.
 
-{{% note %}}
-Jira Service Management Data Center development environment is good for app-specific actions development.
-But not powerful enough for performance testing at scale.
-See [Set up an enterprise-scale environment Jira Service Management Data Center on AWS](#instancesetup) for more details.
-{{% /note %}}
+1. In the AWS console, go to **Services** > **EC2** > **Instances**.
+1. On the **Description** tab, do the following:
+    - Copy the _Public IP_ of the Bastion instance.
+    - Copy the _Private IP_ of the Jira Service Management node instance.
+1. Using SSH, connect to the Jira Service Management node via the Bastion instance:
 
-Below process describes how to install low-tier Jira Service Management DC with "small" dataset included:
-
-1. Read [requirements](https://atlassian-labs.github.io/data-center-terraform/userguide/PREREQUISITES/#requirements)
-   section of the official documentation.
-2. Set up [environment](https://atlassian-labs.github.io/data-center-terraform/userguide/PREREQUISITES/#environment-setup).
-3. Set up [AWS security credentials](https://atlassian-labs.github.io/data-center-terraform/userguide/INSTALLATION/#1-set-up-aws-security-credentials).
-   {{% warning %}}
-   Do not use `root` user credentials for cluster creation. Instead, [create an admin user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-set-up.html#create-an-admin).
-   {{% /warning %}}
-4. Clone the project repo:
-   ```bash
-   git clone -b 2.4.0 https://github.com/atlassian-labs/data-center-terraform.git && cd data-center-terraform
-   ```
-5. Copy [`dcapt-small.tfvars`](https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/k8s/dcapt-small.tfvars) file to the `data-center-terraform` folder.
-   ``` bash
-   wget https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/k8s/dcapt-small.tfvars
+    For Linux or MacOS run following commands in terminal (for Windows use [Git Bash](https://git-scm.com/downloads) terminal):
+    
+    ``` bash
+    ssh-add path_to_your_private_key_pem
+    export BASTION_IP=bastion_instance_public_ip
+    export NODE_IP=node_private_ip
+    export SSH_OPTS1='-o ServerAliveInterval=60'
+    export SSH_OPTS2='-o ServerAliveCountMax=30'
+    ssh ${SSH_OPTS1} ${SSH_OPTS2} -o "proxycommand ssh -W %h:%p ${SSH_OPTS1} ${SSH_OPTS2} ec2-user@${BASTION_IP}" ec2-user@${NODE_IP}
     ```
-6. Set **required** variables in `dcapt-small.tfvars` file:
-   - `environment_name` - any name for you environment, e.g. `dcapt-jira-small`.
-   - `products` - `jira`
-   - `jira_image_repository` - `atlassian/jira-servicemanagement` - make sure to select the **Jira Service Management** application.
-   - `jira_license` - one-liner of valid Jira Service Management license without spaces and new line symbols.
-   - `region` - AWS region for deployment. **Do not change default region (`us-east-2`). If specific region is required, contact support.**
-7. Optional variables to override:
-   - `jira_version_tag` - Jira Service Management version to deploy. Supported versions see in [README.md](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/README.md).
-8. From local terminal (Git bash terminal for Windows) start the installation (~20 min):
-   ```bash
-   ./install.sh -c dcapt-small.tfvars
-   ```
-9. Copy product URL from the console output. Product url should look like `http://a1234-54321.us-east-2.elb.amazonaws.com/jira`.
+    For more information, go to [Connecting your nodes over SSH](https://confluence.atlassian.com/adminjiraserver/administering-jira-data-center-on-aws-938846969.html#AdministeringJiraDataCenteronAWS-ConnectingtoyournodesoverSSH).
+1. Download the xml_backup.zip file corresponding to your Jira Service Management version.
 
-<<<<<<< HEAD
     ``` bash
     JSM_VERSION=$(sudo su jira -c "cat /media/atl/jira/shared/jira-servicedesk.version")
     sudo su jira -c "wget https://centaurus-datasets.s3.amazonaws.com/jsm/${JSM_VERSION}/small/xml_backup.zip -O /media/atl/jira/shared/import/xml_backup.zip"
@@ -252,20 +232,55 @@ Below process describes how to install low-tier Jira Service Management DC with 
 1. Go to **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; Restore System.** from the menu.
 1. Populate the **File name** field with `xml_backup.zip`.
 1. Click **Restore** and wait until the import is completed.
-=======
-{{% note %}}
-New trial license could be generated on [my atlassian](https://my.atlassian.com/license/evaluation).
-Use `BX02-9YO1-IN86-LO5G` Server ID for generation.
-{{% /note %}}
->>>>>>> master
 
+#### Restoring "small" dataset attachments
+
+1. Using SSH, connect to the Jira Service Management node via the Bastion instance:
+
+    For Linux or MacOS run following commands in terminal (for Windows use [Git Bash](https://git-scm.com/downloads) terminal):
+
+    ```bash
+    ssh-add path_to_your_private_key_pem
+    export BASTION_IP=bastion_instance_public_ip
+    export NODE_IP=node_private_ip
+    export SSH_OPTS1='-o ServerAliveInterval=60'
+    export SSH_OPTS2='-o ServerAliveCountMax=30'
+    ssh ${SSH_OPTS1} ${SSH_OPTS2} -o "proxycommand ssh -W %h:%p ${SSH_OPTS1} ${SSH_OPTS2} ec2-user@${BASTION_IP}" ec2-user@${NODE_IP}
+    ```
+    For more information, go to [Connecting your nodes over SSH](https://confluence.atlassian.com/adminjiraserver/administering-jira-data-center-on-aws-938846969.html#AdministeringJiraDataCenteronAWS-ConnectingtoyournodesoverSSH).
+1. Download the [upload_attachments.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/upload_attachments.sh) script and make it executable:
+
+    ``` bash
+    wget https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/jira/upload_attachments.sh && chmod +x upload_attachments.sh
+    ```    
+1. Review the following `Variables section` of the script:
+
+    ``` bash
+    # JSM version file location
+    JIRA_VERSION_FILE="/media/atl/jira/shared/jira-servicedesk.version"
+    ```
+1. Run the script:
+
+    ``` bash
+    ./upload_attachments.sh --jsm --small 2>&1 | tee -a upload_attachments.log
+    ```
+
+#### Re-indexing development environment Jira Service Management Data Center
+
+For more information, go to [Re-indexing Jira](https://confluence.atlassian.com/adminjiraserver/search-indexing-938847710.html).
 {{% note %}}
-All the datasets use the standard `admin`/`admin` credentials.
+The re-index time for JSM 4.20.x is about ~30-50 minutes, while for JSM 5.4.x it can take significantly longer at around 110-130 minutes. This increase in re-index time is due to a known issue which affects Jira 5.4.x, and you can find more information about it in this ticket: [Re-Index: JSM 5.4.x](https://jira.atlassian.com/browse/JRASERVER-74787).
 {{% /note %}}
+1. Log in as a user with the **Jira System Administrators** [global permission](https://confluence.atlassian.com/adminjiraserver/managing-global-permissions-938847142.html).
+1. Go to **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; Indexing**.
+1. Select the **Full re-index** option.
+1. Click **Re-Index** and wait until re-indexing is completed.
+
+When finished, the **Acknowledge** button will be available on the re-indexing page.
 
 ---
 
-### <a id="devtestscenario"></a>2. Run toolkit on the development environment locally
+### <a id="devtestscenario"></a>3. Run toolkit on the development environment locally
 
 {{% warning %}}
 Make sure **English (United States)** language is selected as a default language on the **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; General configuration** page. Other languages are **not supported** by the toolkit.
@@ -317,7 +332,7 @@ Do not proceed with the next step until you have all actions 95+% success rate. 
 
 ---
 
-### <a id="devappaction"></a>3. Develop and test app-specific action locally
+### <a id="devappaction"></a>4. Develop and test app-specific action locally
 Data Center App Performance Toolkit has its own set of default test actions for Jira Service Management Data Center: JMeter/Locust and Selenium for load and UI tests respectively.     
 
 **App-specific action** - action (performance test) you have to develop to cover main use cases of your application. Performance test should focus on the common usage of your application and not to cover all possible functionality of your app. For example, application setup screen or other one-time use cases are out of scope of performance testing.
@@ -461,10 +476,27 @@ App-specific actions are required. Do not proceed with the next step until you h
 
 After adding your custom app-specific actions, you should now be ready to run the required tests for the Marketplace Data Center Apps Approval process. To do this, you'll need an **enterprise-scale environment**.
 
-### <a id="instancesetup"></a>4. Setting up Jira Service Management Data Center enterprise-scale environment with "large" dataset
+### <a id="instancesetup"></a>5. Set up an enterprise-scale environment Jira Service Management Data Center on AWS
 
-We recommend that you use the [official documentation](https://atlassian-labs.github.io/data-center-terraform/) 
-how to deploy a Jira Service Management Data Center environment and AWS on k8s.
+We recommend that you use the [AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) (**How to deploy** tab)  to deploy a Jira Service Management Data Center enterprise-scale environment. This Quick Start will allow you to deploy Jira Service Management Data Center with a new [Atlassian Standard Infrastructure](https://aws.amazon.com/quickstart/architecture/atlassian-standard-infrastructure/) (ASI) or into an existing one.
+
+The ASI is a Virtual Private Cloud (VPC) consisting of subnets, NAT gateways, security groups, bastion hosts, and other infrastructure components required by all Atlassian applications, and then deploys Jira Service Management into this new VPC. Deploying Jira Service Management with a new ASI takes around 50 minutes. With an existing one, it'll take around 30 minutes.
+
+#### Using the AWS Quick Start for Jira Service Management
+
+If you are a new user, perform an end-to-end deployment. This involves deploying Jira Service Management into a _new_ ASI:
+
+Navigate to **[AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) &gt; How to deploy** tab **&gt; Deploy into a new ASI** link.
+
+If you have already deployed the ASI separately by using the [ASI Quick Start](https://aws.amazon.com/quickstart/architecture/atlassian-standard-infrastructure/)ASI Quick Start or by deploying another Atlassian product (Jira, Bitbucket, or Confluence Data Center development environment) with ASI, deploy Jira Service Management into your existing ASI:
+
+Navigate to **[AWS Quick Start for Jira Data Center](https://aws.amazon.com/quickstart/architecture/jira/) &gt; How to deploy** tab **&gt; Deploy into your existing ASI** link.
+
+{{% note %}}
+You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional price for using this Quick Start. For more information, go to [aws.amazon.com/pricing](https://aws.amazon.com/ec2/pricing/).
+{{% /note %}}
+
+To reduce costs, we recommend you to keep your deployment up and running only during the performance runs.
 
 #### AWS cost estimation
 [AWS Pricing Calculator](https://calculator.aws/) provides an estimate of usage charges for AWS services based on certain information you provide.
@@ -478,7 +510,6 @@ Monthly charges will be based on your actual usage of AWS services and may vary 
 | Two Nodes Jira Service Management DC | 1.2 - 1.7
 | Four Nodes Jira Service Management DC | 2.0 - 3.0
 
-<<<<<<< HEAD
 #### Stop cluster nodes
 
 To reduce AWS infrastructure costs you could stop cluster nodes when the cluster is standing idle.  
@@ -522,7 +553,7 @@ All important parameters are listed and described in this section. For all other
 | Parameter | Recommended Value                                                                                                                                                                                      |
 | --------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Jira Product | ServiceManagement                                                                                                                                                                                      |
-| Version | The Data Center App Performance Toolkit officially supports `4.20.15`, `5.4.0` ([Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html)) |
+| Version | The Data Center App Performance Toolkit officially supports `4.20.20`, `5.4.4` ([Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html)) |
 
 **Cluster nodes**
 
@@ -599,9 +630,6 @@ After successfully deploying Jira Service Management Data Center in AWS, you'll 
 ---
 
 ### <a id="preloading"></a>6. Preloading your Jira Service Management deployment with an enterprise-scale dataset
-=======
-####  Setup Jira Service Management Data Center enterprise-scale environment on k8s
->>>>>>> master
 
 Data dimensions and values for an enterprise-scale dataset are listed and described in the following table.
 
@@ -626,50 +654,69 @@ Data dimensions and values for an enterprise-scale dataset are listed and descri
 All the datasets use the standard `admin`/`admin` credentials.
 {{% /note %}}
 
-{{% warning %}}
-It is recommended to terminate a development environment before creating an enterprise-scale environment.
-Follow [Uninstallation and Cleanup](https://atlassian-labs.github.io/data-center-terraform/userguide/CLEANUP/) instructions.
-If you want to keep a development environment up, read [How do I deal with a pre-existing state in multiple environments?](https://atlassian-labs.github.io/data-center-terraform/troubleshooting/TROUBLESHOOTING/#:~:text=How%20do%20I%20deal%20with%20pre%2Dexisting%20state%20in%20multiple%20environment%3F)
-{{% /warning %}}
+#### Pre-loading the dataset is a three-step process:
 
-Below process describes how to install enterprise-scale Jira Service Management DC with "large" dataset included: 
+1. [Importing the main dataset](#importingdataset). To help you out, we provide an enterprise-scale dataset you can import either via the [populate_db.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/populate_db.sh) script or restore from xml backup file.
+1. [Restoring attachments](#copyingattachments). We also provide attachments, which you can pre-load via an [upload_attachments.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/upload_attachments.sh) script.
+1. [Re-indexing Jira Data Center](#reindexing). For more information, go to [Re-indexing Jira](https://confluence.atlassian.com/adminjiraserver/search-indexing-938847710.html).
 
-1. Read [requirements](https://atlassian-labs.github.io/data-center-terraform/userguide/PREREQUISITES/#requirements)
-   section of the official documentation.
-2. Set up [environment](https://atlassian-labs.github.io/data-center-terraform/userguide/PREREQUISITES/#environment-setup).
-3. Set up [AWS security credentials](https://atlassian-labs.github.io/data-center-terraform/userguide/INSTALLATION/#1-set-up-aws-security-credentials).
-   {{% warning %}}
-   Do not use `root` user credentials for cluster creation. Instead, [create an admin user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-set-up.html#create-an-admin).
-   {{% /warning %}}
-4. Clone the project repo:
-   ```bash
-   git clone -b 2.4.0 https://github.com/atlassian-labs/data-center-terraform.git && cd data-center-terraform
-   ```
-5. Copy [`dcapt.tfvars`](https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/k8s/dcapt.tfvars) file to the `data-center-terraform` folder.
-      ``` bash
-   wget https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/k8s/dcapt.tfvars
-    ```
-6. Set **required** variables in `dcapt.tfvars` file:
-   - `environment_name` - any name for you environment, e.g. `dcapt-jira-large`.
-   - `products` - `jira`
-   - `jira_image_repository` - `atlassian/jira-servicemanagement` - make sure to select the **Jira Service Management** application.
-   - `jira_license` - one-liner of valid Jira Service Management license without spaces and new line symbols.
-   - `region` - AWS region for deployment.  **Do not change default region (`us-east-2`). If specific region is required, contact support.**
-   - `instance_types` - `["m5.4xlarge"]` 
-7. Optional variables to override:
-    - `jira_version_tag` - Jira Service Management version to deploy. Supported versions see in [README.md](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/README.md).
-8. From local terminal (Git bash terminal for Windows) start the installation (~40min):
+The following subsections explain each step in greater detail.
+
+#### <a id="importingdataset"></a> Importing the main dataset
+
+You can load this dataset directly into the database (via a [populate_db.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/populate_db.sh) script), or import it via XML.  
+
+##### Option 1 (recommended): Loading the dataset via populate_db.sh script (~40 min)
+
+
+To populate the database with SQL:
+
+1. In the AWS console, go to **Services** > **EC2** > **Instances**.
+1. On the **Description** tab, do the following:
+    - Copy the _Public IP_ of the Bastion instance.
+    - Copy the _Private IP_ of the Jira Service Management node instance.
+1. Using SSH, connect to the Jira Service Management node via the Bastion instance:
+
+    For Linux or MacOS run following commands in terminal (for Windows use [Git Bash](https://git-scm.com/downloads) terminal):
+    
     ```bash
-    ./install.sh -c dcapt.tfvars
+    ssh-add path_to_your_private_key_pem
+    export BASTION_IP=bastion_instance_public_ip
+    export NODE_IP=node_private_ip
+    export SSH_OPTS1='-o ServerAliveInterval=60'
+    export SSH_OPTS2='-o ServerAliveCountMax=30'
+    ssh ${SSH_OPTS1} ${SSH_OPTS2} -o "proxycommand ssh -W %h:%p ${SSH_OPTS1} ${SSH_OPTS2} ec2-user@${BASTION_IP}" ec2-user@${NODE_IP}
     ```
-9. Copy product URL from the console output. Product url should look like `http://a1234-54321.us-east-2.elb.amazonaws.com/jira`.
+    For more information, go to [Connecting your nodes over SSH](https://confluence.atlassian.com/adminjiraserver/administering-jira-data-center-on-aws-938846969.html#AdministeringJiraDataCenteronAWS-ConnectingtoyournodesoverSSH).
+1. Download the [populate_db.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/populate_db.sh) script and make it executable:
+
+    ``` bash
+    wget https://raw.githubusercontent.com/atlassian/dc-app-performance-toolkit/master/app/util/jira/populate_db.sh && chmod +x populate_db.sh
+    ```
+1. Review the following `Variables section` of the script:
+
+    ``` bash
+    DB_CONFIG="/var/atlassian/application-data/jira/dbconfig.xml"
+    JIRA_DB_NAME="jira"
+    JIRA_DB_USER="postgres"
+    JIRA_DB_PASS="Password1!"
+    # JSM section
+    JIRA_CURRENT_DIR="/opt/atlassian/jira-servicedesk/current"
+    JIRA_SETENV_FILE="${JIRA_CURRENT_DIR}/bin/setenv.sh"
+    JIRA_VERSION_FILE="/media/atl/jira/shared/jira-servicedesk.version"
+    ```
+1. Run the script:
+
+    ``` bash
+    ./populate_db.sh --jsm 2>&1 | tee -a populate_db.log
+    ```
 
 {{% note %}}
-New trial license could be generated on [my atlassian](https://my.atlassian.com/license/evaluation).
-Use this server id for generation `BX02-9YO1-IN86-LO5G`.
+Do not close or interrupt the session. It will take about 40 min to restore SQL database. When SQL restoring is finished, an admin user will have `admin`/`admin` credentials.
+
+In case of a failure, check the `Variables` section and run the script one more time.
 {{% /note %}}
 
-<<<<<<< HEAD
 ##### Option 2: Loading the dataset through XML import (~4 hours)
 
 We recommend that you only use this method if you are having problems with the [populate_db.sh](https://github.com/atlassian/dc-app-performance-toolkit/blob/master/app/util/jira/populate_db.sh) script.
@@ -744,9 +791,13 @@ Populate DB and restore attachments scripts could be run in parallel in separate
 Do not close or interrupt the session. It will take about two hours to upload attachments to Elastic File Storage (EFS).
 {{% /note %}}
 
-#### <a id="reindexing"></a> Re-indexing Jira Service Management Data Center (~30 min)
+#### <a id="reindexing"></a> Re-indexing Jira Service Management Data Center
 
 For more information, go to [Re-indexing Jira](https://confluence.atlassian.com/adminjiraserver/search-indexing-938847710.html).
+{{% note %}}
+The re-index time for JSM 4.20.x is about ~30-50 minutes, while for JSM 5.4.x it can take significantly longer at around 110-130 minutes. This increase in re-index time is due to a known issue which affects Jira 5.4.x, and you can find more information about it in this ticket: [Re-Index: JSM 5.4.x](https://jira.atlassian.com/browse/JRASERVER-74787).
+{{% /note %}}
+
 
 1. Log in as a user with the **Jira System Administrators** [global permission](https://confluence.atlassian.com/adminjiraserver/managing-global-permissions-938847142.html).
 1. Go to **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; Indexing**.
@@ -802,20 +853,11 @@ Please note that the snapshot size must be around 2GB or larger.
 ---
 {{% note %}}
 After [Preloading your Jira Service Management deployment with an enterprise-scale dataset](#preloading), the admin user will have `admin`/`admin` credentials.
-=======
-{{% note %}}
-All the datasets use the standard `admin`/`admin` credentials.
->>>>>>> master
 It's recommended to change default password from UI account page for security reasons.
 {{% /note %}}
-
-{{% warning %}}
-Terminate cluster when it is not used for performance results generation.
-{{% /warning %}}
-
 ---
 
-### <a id="executionhost"></a>5. Setting up an execution environment
+### <a id="executionhost"></a>7. Setting up an execution environment
 
 For generating performance results suitable for Marketplace approval process use dedicated execution environment. This is a separate AWS EC2 instance to run the toolkit from. Running the toolkit from a dedicated instance but not from a local machine eliminates network fluctuations and guarantees stable CPU and memory performance.
 
@@ -833,7 +875,7 @@ Instead, set those values directly in `.yml` file on execution environment insta
        application_protocol: http                # http or https
        application_port: 80                      # 80, 443, 8080, 2990, etc
        secure: True                              # Set False to allow insecure connections, e.g. when using self-signed SSL certificate
-       application_postfix: /jira      # e.g. /jira for TerraForm deployment url like `http://a1234-54321.us-east-2.elb.amazonaws.com/jira`. Leave this value blank for url without postfix.
+       application_postfix:                      # e.g. /jira in case of url like http://localhost:2990/jira
        admin_login: admin
        admin_password: admin
        load_executor: jmeter                     # jmeter and locust are supported. jmeter by default.
@@ -869,7 +911,7 @@ You'll need to run the toolkit for each [test scenario](#testscenario) in the ne
 
 ---
 
-### <a id="testscenario"></a>6. Running the test scenarios from execution environment against enterprise-scale Jira Service Management Data Center
+### <a id="testscenario"></a>8. Running the test scenarios from execution environment against enterprise-scale Jira Service Management Data Center
 
 Using the Data Center App Performance Toolkit for [Performance and scale testing your Data Center app](/platform/marketplace/developing-apps-for-atlassian-data-center-products/) involves two test scenarios:
 
@@ -911,29 +953,22 @@ Review `results_summary.log` file under artifacts dir location. Make sure that o
 If you are submitting a Jira Service Management app, you are required to conduct a Lucene Index timing test. This involves conducting a foreground re-index on a single-node Data Center deployment (with your app installed) and a dataset that has 1M issues.
 
 {{% note %}}
-The re-index time for JSM 4.20.x is about ~30-50 minutes, while for JSM 5.4.x it can take significantly longer at around 110-130 minutes. This increase in re-index time is due to a known issue which affects JSM 5.4.x, and you can find more information about it in this ticket: [Re-Index: JSM 9.4.x](https://jira.atlassian.com/browse/JRASERVER-74787).
+The re-index time for JSM 4.20.x is about ~30-50 minutes, while for JSM 5.4.x it can take significantly longer at around 110-130 minutes. This increase in re-index time is due to a known issue which affects Jira 5.4.x, and you can find more information about it in this ticket: [Re-Index: JSM 5.4.x](https://jira.atlassian.com/browse/JRASERVER-74787).
 {{% /note %}}
 
+{{% note %}}
+If your Amazon RDS DB instance class is lower than `db.m5.xlarge` it is required to wait ~2 hours after previous reindex finish before starting a new one.
+{{% /note %}}
 
 **Benchmark your re-index time with your app installed:**
 
 1. Install the app you want to test.
-<<<<<<< HEAD
 1. Setup app license.
 1. Go to **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; Indexing**.
 1. Select the **Full re-index** option.
 1. Click **Re-Index** and wait until re-indexing is completed.
 1. **Take a screenshot of the acknowledgment screen** displaying the re-index time and Lucene index timing.
 1. Attach the screenshot to your ECOHELP ticket.
-=======
-2. Setup app license.
-3. Go to **![cog icon](/platform/marketplace/images/cog.png) &gt; System &gt; Indexing**.
-4. Select the **Full re-index** option.
-5. Click **Re-Index** and wait until re-indexing is completed.
-6. **Take a screenshot of the acknowledgment screen** displaying the re-index time and Lucene index timing.
-7. Attach the screenshot(s) to your ECOHELP ticket.
-
->>>>>>> master
 
 **Performance results generation with the app installed:**
 
@@ -1018,7 +1053,6 @@ The same article has instructions on how to increase limit if needed.
 
 To receive scalability benchmark results for two-node Jira Service Management DC **with** app-specific actions:
 
-<<<<<<< HEAD
 1. In the AWS console, go to **CloudFormation** > **Stack details** > **Select your stack**.
 2. On the **Update** tab, select **Use current template**, and then click **Next**.
 3. Enter `2` in the **Maximum number of cluster nodes** and the **Minimum number of cluster nodes** fields.
@@ -1044,16 +1078,6 @@ In case if index synchronization is failed by some reason (e.g. application stat
 {{% /warning %}}
    
 7. Run toolkit with docker from the execution environment instance:
-=======
-1. Navigate to `data-center-terraform` folder.
-2. Open `dcapt.tfvars` file and set `jira_replica_count` value to `2`.
-3. From local terminal (Git bash terminal for Windows) start scaling (~20 min):
-   ```bash
-   ./install.sh -c dcapt.tfvars
-   ```
-4. Use SSH to connect to execution environment.
-5. Run toolkit with docker from the execution environment instance:
->>>>>>> master
 
    ``` bash
    cd dc-app-performance-toolkit
@@ -1075,7 +1099,10 @@ The same article has instructions on how to increase limit if needed.
 
 To receive scalability benchmark results for four-node Jira Service Management DC with app-specific actions:
 
-1. Scale your Jira Data Center deployment to 4 nodes as described in [Run 4](#run4).
+1. Scale your Jira Service Management Data Center deployment to 3 nodes as described in [Run 4](#run4).
+1. Check Index is synchronized to the new node #3 the same way as in [Run 4](#run4).
+1. Scale your Jira Service Management Data Center deployment to 4 nodes as described in [Run 4](#run4).
+1. Check Index is synchronized to the new node #4 the same way as in [Run 4](#run4).
 1. Run toolkit with docker from the execution environment instance:
 
    ``` bash
@@ -1137,9 +1164,4 @@ Do not forget to attach performance testing results to your ECOHELP ticket.
 2. Attach two reports folders to your ECOHELP ticket.
 
 ## <a id="support"></a> Support
-For Terraform deploy related questions see  [Troubleshooting tips](https://atlassian-labs.github.io/data-center-terraform/troubleshooting/TROUBLESHOOTING/)page.
-
-If the installation script fails on installing Helm release or any other reason, collect the logs, zip and share to [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.  
-For instructions on how to do this, see [How to troubleshoot a failed Helm release installation?](https://atlassian-labs.github.io/data-center-terraform/troubleshooting/TROUBLESHOOTING/#_1).
-
-In case of the above problem or any other technical questions, issues with DC Apps Performance Toolkit, contact us for support in the [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.
+In case of technical questions, issues or problems with DC Apps Performance Toolkit, contact us for support in the [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.

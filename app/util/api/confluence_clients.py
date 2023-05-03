@@ -194,6 +194,16 @@ class ConfluenceRestClient(RestClient):
             return 'terraform'
         return 'other'
 
+<<<<<<< HEAD
+=======
+    def get_node_ip(self, node_id: str) -> str:
+        return self.get(
+            url=f"{self.host}/rest/zdu/nodes/{node_id}",
+            expected_status_codes=[200],
+            error_msg=f"Cannot get {node_id} node IP",
+        ).json().get("ipAddress")
+
+>>>>>>> master
 
 class ConfluenceRpcClient(Client):
 

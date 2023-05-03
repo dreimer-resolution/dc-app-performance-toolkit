@@ -5,6 +5,7 @@ This repository contains Taurus scripts for performance testing of Atlassian Dat
 
 ## Supported versions
 * Supported Jira versions: 
+<<<<<<< HEAD
     * Jira [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `8.20.15` and `9.4.0`
 
 * Supported Jira Service Management versions: 
@@ -15,12 +16,28 @@ This repository contains Taurus scripts for performance testing of Atlassian Dat
 
 * Supported Bitbucket Server versions:
     * Bitbucket Server [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `7.21.5`, `7.17.11`, and `8.0.4` platform release.
+=======
+    * Jira [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `8.20.20` and `9.4.4`
+
+* Supported Jira Service Management versions: 
+    * Jira Service Management [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `4.20.20` and `5.4.4`
+    
+* Supported Confluence versions:
+    * Confluence [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `7.19.6`, `7.13.14`  and `8.1.1` platform release
+
+* Supported Bitbucket Server versions:
+    * Bitbucket Server [Long Term Support release](https://confluence.atlassian.com/enterprise/atlassian-enterprise-releases-948227420.html): `7.21.10`, `7.17.15`, and `8.8.2` platform release.
+>>>>>>> master
 
 * Supported Crowd versions:
     * Crowd [release notes](https://confluence.atlassian.com/crowd/crowd-release-notes-199094.html): `5.0.2`
   
 * Supported Bamboo versions:
+<<<<<<< HEAD
     * Bamboo [release notes](https://confluence.atlassian.com/bamboo/bamboo-release-notes-671089224.html): `8.1.3`
+=======
+    * Bamboo [Long Term Support release](https://confluence.atlassian.com/bamboo/bamboo-release-notes-671089224.html): `9.2.1`
+>>>>>>> master
   
 ## Support
 In case of technical questions, issues or problems with DC Apps Performance Toolkit, contact us for support in the [community Slack](http://bit.ly/dcapt_slack) **#data-center-app-performance-toolkit** channel.
@@ -28,7 +45,11 @@ In case of technical questions, issues or problems with DC Apps Performance Tool
 ## Installation and set up
 
 #### Dependencies
+<<<<<<< HEAD
 * Python 3.8, 3.9 or 3.10 and pip
+=======
+* Python 3.8, 3.9, 3.10 or 3.11 and pip
+>>>>>>> master
 * JDK 11
 * Google Chrome web browser
 * Git client (only for Bitbucket DC)
@@ -66,7 +87,11 @@ pip install virtualenv
 ```
 2. Create new virtual env with python3:
 ```
+<<<<<<< HEAD
 virtualenv venv -p full_path_to_python # e.g. use `which python3.10` to find the path
+=======
+virtualenv venv -p full_path_to_python # e.g. use `which python3.11` to find the path
+>>>>>>> master
 ```
 3. Activate virtual env:
 ```

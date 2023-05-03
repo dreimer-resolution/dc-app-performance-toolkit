@@ -18,7 +18,11 @@ CROWD_DB_PASS="Password1!"
 
 # Crowd version variables
 BASE_CROWD_VERSION=4.3.0
+<<<<<<< HEAD
 SUPPORTED_CROWD_VERSIONS=(5.0.2)
+=======
+SUPPORTED_CROWD_VERSIONS=(5.0.5)
+>>>>>>> master
 
 if [[ ! $(systemctl status crowd) ]]; then
   echo "The Crowd service was not found on this host." \
