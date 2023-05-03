@@ -3446,11 +3446,7 @@ vars.put(&quot;page_text&quot;, &quot;jmeter_create_and_edit_page:edit_page - &q
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="x_editable" enabled="false">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                   <stringProp name="RegexExtractor.refname">x_editable</stringProp>
-<<<<<<< HEAD
-                  <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot; href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
-=======
                   <stringProp name="RegexExtractor.regex">id=\&quot;editPageLink\&quot;\s+href=(.+?)\?pageId=(.+?)\&quot;</stringProp>
->>>>>>> master
                   <stringProp name="RegexExtractor.template">$1$</stringProp>
                   <stringProp name="RegexExtractor.default"></stringProp>
                   <stringProp name="RegexExtractor.match_number">1</stringProp>
