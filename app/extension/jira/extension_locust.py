@@ -36,7 +36,7 @@ def app_specific_action(locust):
     # using the requests library here because locust get ignores auth header.
     # hard coding the instance here should be fine since we now are using a persistent domain for jira.
     # TODO: locust.client.cookies.clear() might actually help before executing the request
-    r = requests.get('https://jira-dct.klab.resolution.de/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
+    r = requests.get('https://jira.dc-testing.reslab.de/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"name":"(.+?)"'
