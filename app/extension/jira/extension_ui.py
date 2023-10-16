@@ -16,11 +16,16 @@ def app_specific_logout(webdriver, datasets):
     @print_timing("selenium_app_specific_log_out")
     def measure():
         logout_page.go_to()
-        pick_signed_in_user \
-            = webdriver.find_element("xpath",".//div[@class='table-cell text-left content']")
-        if len(pick_signed_in_user) > 0:
-            pick_signed_in_user[0].click()
-    measure()
+        # pick_signed_in_user \
+        #     = webdriver.find_element("xpath",".//div[@class='table-cell text-left content']")
+        # if len(pick_signed_in_user) > 0:
+        #     pick_signed_in_user[0].click()
+        try:
+            logout_user_table = webdriver.find_element("xpath",".//div[@class='table']")
+            logout_user_table.click()
+        except:
+            print("no logout user table found")
+        measure()
 
 
 def app_specific_action(webdriver, datasets):
