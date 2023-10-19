@@ -13,7 +13,7 @@ def app_specific_action(locust):
     current_user = locust.session_data_storage["username"]
 
     # execute a GET request, but using python requests because we have a locust session we can't clear
-    r = requests.get('https://conf-dct.klab.resolution.de/rest/api/user/current',
+    r = requests.get('https://confluence.dc-testing.reslab.de/rest/api/user/current',
                      headers={"X-AUTH": current_user})
     content = r.content.decode('utf-8')   # decode response content
 
