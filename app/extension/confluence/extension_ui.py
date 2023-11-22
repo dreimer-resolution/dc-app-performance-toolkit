@@ -21,7 +21,7 @@ def app_specific_logout(webdriver, datasets):
         #     pick_signed_in_user[0].click()
         logout_page.go_to()
         pick_signed_in_user \
-            = webdriver.find_elements("xpath",".//div[@class='table-cell text-left content']")
+            = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
         if len(pick_signed_in_user) > 0:
             pick_signed_in_user[0].click()
     measure()
@@ -54,18 +54,18 @@ def app_specific_action(webdriver, datasets):
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/")
 
             try:
-                still_logged_in = webdriver.find_element_by_xpath(".//*[@id='com-atlassian-confluence']")
+                still_logged_in = webdriver.find_element("xpath", ".//*[@id='com-atlassian-confluence']")
                 print(still_logged_in)
             except:
                 # wait for azure user input field to be shown
                 page.wait_until_visible((By.ID, "i0116"))
                 # get field object
-                username_input = webdriver.find_element_by_xpath(".//*[@id='i0116']")
+                username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
                 # clear existing value
                 username_input.clear()
                 # add username to it
                 username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-                next_is_password = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
                 next_is_password.click()
 
                 try:
@@ -76,7 +76,7 @@ def app_specific_action(webdriver, datasets):
                     app_specific_action(webdriver, datasets)
                     return
 
-                password_input = webdriver.find_element_by_xpath(".//*[@id='i0118']")
+                password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
                 password_input.clear()
 
                 # this is required to prevent StaleElementReferenceException
@@ -85,7 +85,7 @@ def app_specific_action(webdriver, datasets):
                 actions.send_keys(Keys.ENTER)
                 actions.perform()
 
-                yes_button = webdriver.find_element_by_xpath(".//*[@id='idSIButton9']")
+                yes_button = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
                 yes_button.click()
 
                 # wait for confluence page

@@ -17,7 +17,7 @@ def app_specific_logout(webdriver, datasets):
     def measure():
         logout_page.go_to()
         pick_signed_in_user \
-            = webdriver.find_elements("xpath",".//div[@class='table-cell text-left content']")
+            = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
         if len(pick_signed_in_user) > 0:
             pick_signed_in_user[0].click()
         # try:
@@ -62,12 +62,12 @@ def app_specific_action(webdriver, datasets):
                 # wait for azure user input field to be shown
                 page.wait_until_visible((By.ID, "i0116"))
                 # get username field
-                username_input = webdriver.find_element("xpath",".//*[@id='i0116']")
+                username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
                 # clear existing value
                 username_input.clear()
                 # add username to it
                 username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
-                next_is_password = webdriver.find_element("xpath",".//*[@id='idSIButton9']")
+                next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
                 next_is_password.click()
 
                 try:
@@ -78,7 +78,7 @@ def app_specific_action(webdriver, datasets):
                     app_specific_action(webdriver, datasets)
                     return
 
-                password_input = webdriver.find_element("xpath",".//*[@id='i0118']")
+                password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
                 password_input.clear()
 
                 # this is required to prevent StaleElementReferenceException
@@ -87,7 +87,7 @@ def app_specific_action(webdriver, datasets):
                 actions.send_keys(Keys.ENTER)
                 actions.perform()
 
-                stay_signed_in_no = webdriver.find_element("xpath",".//*[@id='idBtn_Back']")
+                stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
                 stay_signed_in_no.click()
 
                 # wait for html body id "jira" which is always present, both for users who never logged in and who did
