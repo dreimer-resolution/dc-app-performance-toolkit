@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from selenium_ui.confluence import modules
+from util.api.confluence_clients import ConfluenceRestClient
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from selenium.webdriver.common.keys import Keys
@@ -30,6 +30,13 @@ def app_specific_logout(webdriver, datasets):
 def app_specific_action(webdriver, datasets):
     login_page = Login(webdriver)
     page = BasePage(webdriver)
+
+    rest_client = ConfluenceRestClient(
+        CONFLUENCE_SETTINGS.server_url,
+        CONFLUENCE_SETTINGS.admin_login,
+        CONFLUENCE_SETTINGS.admin_password,
+        verify=CONFLUENCE_SETTINGS.secure,
+    )
 
     @print_timing("selenium_app_specific_login")
     def measure():
@@ -90,7 +97,10 @@ def app_specific_action(webdriver, datasets):
 
                 # wait for confluence page
                 page.wait_until_visible((By.ID, "com-atlassian-confluence"))
-                webdriver.node_id = login_page.get_node_id()
+                node_id = login_page.get_node_id()
+                node_ip = rest_client.get_node_ip(node_id)
+                webdriver.node_id = node_id
+                webdriver.node_ip = node_ip
 
                 if login_page.is_first_login():
                     login_page.first_user_setup()
