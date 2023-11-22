@@ -14,9 +14,14 @@ def app_specific_logout(webdriver, datasets):
     @print_timing("selenium_app_specific_log_out")
     def measure():
         logout_page = Logout(webdriver)
+        # logout_page.go_to()
+        # pick_signed_in_user \
+        #     = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
+        # if len(pick_signed_in_user) > 0:
+        #     pick_signed_in_user[0].click()
         logout_page.go_to()
         pick_signed_in_user \
-            = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
+            = webdriver.find_elements("xpath",".//div[@class='table-cell text-left content']")
         if len(pick_signed_in_user) > 0:
             pick_signed_in_user[0].click()
     measure()
