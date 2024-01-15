@@ -85,34 +85,34 @@ jira_replica_count = 1
 # Supported versions by DCAPT: https://github.com/atlassian/dc-app-performance-toolkit#supported-versions
 #
 # Jira version
-jira_version_tag = "8.20.20"
+jira_version_tag = "9.4.10"
 # JSM version
-# jira_version_tag = "4.20.20"
+# jira_version_tag = "5.4.10"
 
 # Shared home restore configuration.
 # Make sure Jira/JSM version set in `jira_version_tag` match the snapshot version.
 #
-# Jira 8.20.20 DCAPT small dataset EBS snapshot
-jira_shared_home_snapshot_id = "snap-0351f7762a1699d27"
-# Jira 9.4.4 DCAPT small dataset EBS snapshot
-# jira_shared_home_snapshot_id = "snap-0ad0c33d363c47a28"
-# JSM 4.20.20 DCAPT small dataset EBS snapshot
-# jira_shared_home_snapshot_id = "snap-0565b9bc27f03de7f"
-# JSM 5.4.4 DCAPT small dataset EBS snapshot
-# jira_shared_home_snapshot_id = "snap-045402ed4f2702994"
+# Jira 9.4.10 DCAPT small dataset EBS snapshot
+ jira_shared_home_snapshot_id = "snap-019fd367ec397b1f3"
+# Jira 8.20.26 DCAPT small dataset EBS snapshot
+# jira_shared_home_snapshot_id = "snap-0592bc60820536611"
+# JSM 5.4.10 DCAPT small dataset EBS snapshot
+# jira_shared_home_snapshot_id = "snap-0e340e980918e45f6"
+# JSM 4.20.26 DCAPT small dataset EBS snapshot
+# jira_shared_home_snapshot_id = "snap-096d1185a5fee02ea"
 
 # Database restore configuration.
 # Make sure Jira/JSM version set in `jira_version_tag` match the snapshot version.
 # Build number stored within the snapshot and Jira license are also required, so that Jira can be fully setup prior to start.
 #
-# Jira 8.20.20 DCAPT small dataset RDS snapshot
-jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jira-small-8-20-20"
-# Jira 9.4.4 DCAPT small dataset RDS snapshot
-# jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jira-small-9-4-4"
-# JSM 4.20.20 DCAPT small dataset RDS snapshot
-#jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jsm-small-4-20-20"
-# JSM 5.4.4 DCAPT small dataset RDS snapshot
-# jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jsm-small-5-4-4"
+# Jira 9.4.10 DCAPT small dataset RDS snapshot
+ jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jira-small-9-4-10"
+# Jira 8.20.26 DCAPT small dataset RDS snapshot
+# jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jira-small-8-20-26"
+# JSM 5.4.10 DCAPT small dataset RDS snapshot
+# jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jsm-small-5-4-10"
+# JSM 4.20.26 DCAPT small dataset RDS snapshot
+# jira_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-jsm-small-4-20-26"
 
 # Helm chart version of Jira
 # jira_helm_chart_version = "<helm_chart_version>"
@@ -160,6 +160,10 @@ jira_db_name = "jira"
 jira_db_master_username = "atljira"
 jira_db_master_password = "Password1!"
 
+# Custom values file location. Defaults to an empty string which means only values from config.tfvars
+# are passed to Helm chart. Variables from config.tfvars take precedence over those defined in a custom values.yaml.
+# jira_custom_values_file = "/path/to/values.yaml"
+
 ################################################################################
 # Confluence Settings
 ################################################################################
@@ -177,33 +181,27 @@ confluence_license = "confluence-license"
 confluence_replica_count = 1
 
 # Supported versions by DCAPT: https://github.com/atlassian/dc-app-performance-toolkit#supported-versions
-confluence_version_tag = "7.19.6"
+confluence_version_tag = "8.5.1"
 
 # Shared home restore configuration.
-# 8.1.1 DCAPT small dataset EBS snapshot
-# confluence_shared_home_snapshot_id = "snap-00b5fda281c2e52f4"
-# 7.19.6 DCAPT small dataset EBS snapshot
-confluence_shared_home_snapshot_id = "snap-062f7120e8f21970a"
-# 7.13.14 DCAPT small dataset EBS snapshot
-# confluence_shared_home_snapshot_id = "snap-0fc8de44395b91431"
+# 8.5.1 DCAPT small dataset EBS snapshot
+confluence_shared_home_snapshot_id = "snap-008cc496f440198de"
+# 7.19.14 DCAPT small dataset EBS snapshot
+# confluence_shared_home_snapshot_id = "snap-0a175c4fd76039985"
 
 # Database restore configuration.
 # Build number stored within the snapshot and Confluence license are also required, so that Confluence can be fully setup prior to start.
-# 8.1.1 DCAPT small dataset RDS snapshot
-# confluence_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-confluence-small-8-1-1"
-# 7.19.6 DCAPT small dataset RDS snapshot
-confluence_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-confluence-small-7-19-6"
-# 7.13.14 DCAPT small dataset RDS snapshot
-# confluence_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-confluence-small-7-13-14"
+# 8.5.1 DCAPT small dataset RDS snapshot
+confluence_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-confluence-small-8-5-1"
+# 7.19.14 DCAPT small dataset RDS snapshot
+# confluence_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-confluence-small-7-19-14"
 
 # Build number for a specific Confluence version can be found in the link below:
 # https://developer.atlassian.com/server/confluence/confluence-build-information
-# 8.1.1
-# confluence_db_snapshot_build_number = "9003"
-# 7.19.6
-confluence_db_snapshot_build_number = "8804"
-# 7.13.14
-# confluence_db_snapshot_build_number = "8703"
+# 8.5.1
+confluence_db_snapshot_build_number = "9012"
+# 7.19.14
+# confluence_db_snapshot_build_number = "8804"
 
 # Helm chart version of Confluence
 #confluence_helm_chart_version = "<helm_chart_version>"
@@ -258,6 +256,9 @@ confluence_db_master_password = "Password1!"
 # Enables Collaborative editing in Confluence
 confluence_collaborative_editing_enabled = true
 
+# Custom values file location. Defaults to an empty string which means only values from config.tfvars
+# are passed to Helm chart. Variables from config.tfvars take precedence over those defined in a custom values.yaml.
+# confluence_custom_values_file = "/path/to/values.yaml"
 
 ################################################################################
 # Bitbucket Settings
@@ -276,27 +277,23 @@ bitbucket_license = "bitbucket-license"
 bitbucket_replica_count = 1
 
 # Supported versions by DCAPT: https://github.com/atlassian/dc-app-performance-toolkit#supported-versions
-bitbucket_version_tag = "7.21.10"
+bitbucket_version_tag = "7.21.16"
 
 # Shared home restore configuration.
 # Make sure Bitbucket version set in `bitbucket_version_tag` match the snapshot version.
 #
-# 7.21.10 DCAPT small dataset EBS snapshot
-bitbucket_shared_home_snapshot_id = "snap-0505439b4ecfadf75"
-# 8.8.2 DCAPT small dataset EBS snapshot
-#bitbucket_shared_home_snapshot_id = "snap-059a11340cca3af6b"
-# 7.17.15 DCAPT small dataset EBS snapshot
-#bitbucket_shared_home_snapshot_id = "snap-0e54d66956c46718f"
+# 7.21.16 DCAPT small dataset EBS snapshot
+bitbucket_shared_home_snapshot_id = "snap-04351bd6779e3ee76"
+# 8.9.5 DCAPT small dataset EBS snapshot
+#bitbucket_shared_home_snapshot_id = "snap-01806166c1afe8bd5"
 
 # Database restore configuration.
 # Make sure Bitbucket version set in `bitbucket_version_tag` match the snapshot version.
 #
-# 7.21.10 DCAPT small dataset RDS snapshot
- bitbucket_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-bitbucket-small-7-21-10"
-# 8.8.2 DCAPT small dataset RDS snapshot
-#bitbucket_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-bitbucket-small-8-8-2"
-# 7.17.15 DCAPT small dataset RDS snapshot
-#bitbucket_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-bitbucket-small-7-17-15"
+# 7.21.16 DCAPT small dataset RDS snapshot
+bitbucket_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-bitbucket-small-7-21-16"
+# 8.9.5 DCAPT small dataset RDS snapshot
+#bitbucket_db_snapshot_id = "arn:aws:rds:us-east-2:585036043680:snapshot:dcapt-bitbucket-small-8-9-5"
 
 # Helm chart version of Bitbucket
 #bitbucket_helm_chart_version = "<helm_chart_version>"
@@ -369,3 +366,7 @@ bitbucket_db_name = "bitbucket"
 # If password is not provided, a random password will be generated.
 bitbucket_db_master_username = "atlbitbucket"
 bitbucket_db_master_password = "Password1!"
+
+# Custom values file location. Defaults to an empty string which means only values from config.tfvars
+# are passed to Helm chart. Variables from config.tfvars take precedence over those defined in a custom values.yaml.
+# bitbucket_custom_values_file = "/path/to/values.yaml"
