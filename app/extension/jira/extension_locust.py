@@ -8,7 +8,7 @@ logger = init_logger(app_type='jira')
 # @run_as_specific_user(username='admin', password='admin')  # run as specific user
 def app_specific_action(locust):
 
-    r = requests.get('/rest/api/2/issue/UM-1?fields=customfield_10106')
+    r = locust.get('/rest/api/2/issue/UM-1?fields=customfield_10106')
     json = r.json()
     current_story_points = json['fields']['customfield_10106']
     body = '{"fields": {"customfield_10106": ' + str(int(current_story_points + random.randint(10, 20))) + '}}'
