@@ -11,7 +11,7 @@ def app_specific_action(locust):
     get_start = time.time()
     r = requests.get('https://jira.dc-testing.reslab.de/rest/api/2/issue/UM-1?fields=customfield_10106', auth=("admin", "admin"))
     get_end = time.time()
-    print("GET Issue: %s seconds" % str(get_end - get_start))
+    logger.locust_info(f'*********** GET Issue: {str(get_end - get_start)} seconds')
 
     json = r.json()
     current_story_points = json['fields']['customfield_10106']
@@ -21,7 +21,7 @@ def app_specific_action(locust):
     headers = {'content-type': 'application/json'}
     r = requests.put('https://jira.dc-testing.reslab.de/rest/api/2/issue/UM-1', body, headers=headers, auth=("admin", "admin"))
     put_end = time.time()
-    print("PUT Issue: %s seconds" % str(put_end - put_start))
+    logger.locust_info(f'*********** PUT Issue: {str(put_end - put_start)} seconds')
 
     assert r.status_code == 204
 
