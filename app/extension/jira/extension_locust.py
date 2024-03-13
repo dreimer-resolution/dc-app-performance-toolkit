@@ -13,7 +13,7 @@ def app_specific_action(locust):
     current_story_points = json['fields']['customfield_10106']
     body = '{"fields": {"customfield_10106": ' + str(int(current_story_points + random.randint(10, 20))) + '}}'
     headers = {'content-type': 'application/json'}
-    r = locust.put('/rest/api/2/issue/UM-1', body, headers, catch_response=True)
+    r = requests.put('https://jira.dc-testing.reslab.de/rest/api/2/issue/UM-1', body, headers=headers)
     assert r.status_code == 204
 
 
