@@ -2,7 +2,7 @@
 settings:
   artifacts-dir: results/jira/%Y-%m-%d_%H-%M-%S
   aggregator: consolidator
-  verbose: false
+  verbose: true
   check-updates: false                 # disable bzt check for updates
   env:
     application_hostname: jira.dc-testing.reslab.de    # Jira DC hostname without protocol and port e.g. test-jira.atlassian.com or localhost
