@@ -39,7 +39,14 @@ def app_specific_action(locust):
     r = requests.put('https://jira.dc-testing.reslab.de/rest/api/2/issue/' + issue_key, body, headers=headers, auth=("admin", "admin"))
     put_end = time.time()
     logger.locust_info(f'*********** PUT Issue: {str(put_end - put_start)} seconds')
-
     assert r.status_code == 204
+
+    # delete issue again to not blow up the sprint
+    delete_start = time.time()
+    r = requests.delete('https://jira.dc-testing.reslab.de/rest/api/2/issue/' + issue_key, headers=headers, auth=("admin", "admin"))
+    delete_end = time.time()
+    logger.locust_info(f'*********** DEL Issue ({str(r.status_code)}): {str(delete_end - delete_start)} seconds')
+
+
 
 
