@@ -37,7 +37,7 @@ def app_specific_action(locust):
     issue_key = resp_json['key']
     """
 
-    issue_key = str(int(random.randint(23634, 23841)))
+    issue_key = "UM-" + str(int(random.randint(23634, 23841)))
     story_points = str(int(random.randint(5, 30)))
 
     put_story_points_start = time.time()
