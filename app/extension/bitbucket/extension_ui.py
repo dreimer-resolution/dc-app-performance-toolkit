@@ -35,16 +35,16 @@ def app_specific_action(webdriver, datasets):
             page.wait_until_visible((By.XPATH, ".//span[text()='Sync']"))
 
             # check if there is a sync still running, for that we'll fetch the whole reconfigure div text
-            us_div = webdriver.find_element_by_xpath(".//*[@id='reconfigure-react-root']")
+            us_div = webdriver.find_element("xpath", ".//*[@id='reconfigure-react-root']")
 
             # only try to start sync again if none is still running
             if "RUNNING" not in us_div.text:
                 # click sync button
-                webdriver.find_element_by_xpath(".//span[text()='Sync']").click()
+                webdriver.find_element("xpath", ".//span[text()='Sync']").click()
                 # wait for status window to open
                 page.wait_until_visible((By.XPATH, ".//div[text()='Sync Status']"))
                 # press close button
-                webdriver.find_element_by_xpath(".//span[text()='Close']").click()
+                webdriver.find_element("xpath", ".//span[text()='Close']").click()
         sub_measure()
     measure()
 
