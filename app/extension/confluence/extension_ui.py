@@ -20,6 +20,19 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_specific_login")
     def measure():
 
+        @print_timing("selenium_app_specific_login:get_node_id_and_node_ip")
+        def sub_measure():
+            login_page.go_to()
+            if login_page.is_logged_in():
+                login_page.delete_all_cookies()
+                login_page.go_to()
+            login_page.wait_for_page_loaded()
+            node_id = login_page.get_node_id()
+            node_ip = rest_client.get_node_ip(node_id)
+            webdriver.node_ip = node_ip
+
+        sub_measure()
+
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
             username = datasets['current_session']['username']
@@ -35,10 +48,10 @@ def app_specific_action(webdriver, datasets):
             all_updates_page = AllUpdates(webdriver)
             all_updates_page.wait_for_page_loaded()
 
-            node_info_span = webdriver.find_element("xpath", ".//*[@id='footer-cluster-node']")
-            node_id = node_info_span.text.split(':')[-1].replace(')', '').replace(' ', '')
-            node_ip = rest_client.get_node_ip(node_id)
-            webdriver.node_ip = node_ip
+            # node_info_span = webdriver.find_element("xpath", ".//*[@id='footer-cluster-node']")
+            # node_id = node_info_span.text.split(':')[-1].replace(')', '').replace(' ', '')
+            # node_ip = rest_client.get_node_ip(node_id)
+            # webdriver.node_ip = node_ip
 
         sub_measure()
     measure()
