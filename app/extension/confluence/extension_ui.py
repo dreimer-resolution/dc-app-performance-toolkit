@@ -16,10 +16,10 @@ def app_specific_action(webdriver, datasets):
 
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
-            print(f"login_with_saml_sso, user: {datasets['username']}")
+            username = datasets['current_session']['username']
+            print(f"login_with_saml_sso, user: {username}")
             # trigger sso directly
-            # page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?redirectTo=%2F")
-            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + datasets['username'])
+            page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + username)
 
             # wait for html body id which is always present, both for users who never logged in and who did
             page.wait_until_visible((By.ID, "com-atlassian-confluence"))
