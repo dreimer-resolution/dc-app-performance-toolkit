@@ -23,6 +23,9 @@ def app_specific_action(webdriver, datasets):
 
             # wait for html body id which is always present, both for users who never logged in and who did
             page.wait_until_visible((By.ID, "com-atlassian-confluence"))
+            node_ip = rest_client.get_node_ip(node_id)
+            webdriver.node_ip = node_ip
+
 
             if login_page.is_first_login():
                 login_page.first_user_setup()
