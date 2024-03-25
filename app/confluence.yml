@@ -5,11 +5,11 @@ settings:
   verbose: false
   check-updates: false                 # disable bzt check for updates
   env:
-    application_hostname: test_confluence_instance.atlassian.com   # Confluence DC hostname without protocol, port and postfix e.g. test-confluence.atlassian.com or localhost
-    application_protocol: http         # http or https
-    application_port: 80               # 80, 443, 8080, 1990, etc
+    application_hostname: confluence.dc-testing.reslab.de   # Confluence DC hostname without protocol, port and postfix e.g. test-confluence.atlassian.com or localhost
+    application_protocol: https        # http or https
+    application_port: 443              # 80, 443, 8080, 1990, etc
     secure: True                       # Set False to allow insecure connections, e.g. when using self-signed SSL certificate
-    application_postfix: /confluence   # e.g. /confluence for TerraForm deployment url like `http://a1234-54321.us-east-2.elb.amazonaws.com/confluence`. Leave this value blank for url without postfix.
+    application_postfix:   # e.g. /confluence for TerraForm deployment url like `http://a1234-54321.us-east-2.elb.amazonaws.com/confluence`. Leave this value blank for url without postfix.
     admin_login: admin
     admin_password: admin
     load_executor: jmeter              # jmeter and locust are supported. jmeter by default.
@@ -25,14 +25,14 @@ settings:
     extended_metrics: False
     # Action percentage for JMeter and Locust load executors
     view_page: 33
-    view_dashboard: 9
+    view_dashboard: 10
     view_blog: 13
-    search_cql: 10
-    create_blog: 4
-    create_and_edit_page: 8
-    comment_page: 7
-    view_attachment: 5
-    upload_attachment: 6
+    search_cql: 4
+    create_blog: 5
+    create_and_edit_page: 9
+    comment_page: 8
+    view_attachment: 6
+    upload_attachment: 7
     like_page: 3
     upload_emoticon: 2      # For Confluence 8.4.x+
     standalone_extension: 0 # By default disabled
@@ -52,7 +52,7 @@ services:
       - python util/post_run/cleanup_results_dir.py
   - module: pip-install
     packages:
-      - selenium==4.16.0
+      - selenium==4.18.1
 execution:
   - scenario: ${load_executor}
     executor: ${load_executor}
@@ -118,7 +118,7 @@ modules:
       httpsampler.ignore_failed_embedded_resources: "true"
   selenium:
     chromedriver:
-      version: "120.0.6099.109" # Supports Chrome version 120. You can refer to https://googlechromelabs.github.io/chrome-for-testing
+      version: "122.0.6261.128" # Supports Chrome version 122. You can refer to https://googlechromelabs.github.io/chrome-for-testing
 reporting:
 - data-source: sample-labels
   module: junit-xml
