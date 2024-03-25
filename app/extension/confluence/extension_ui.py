@@ -48,6 +48,7 @@ def app_specific_action(webdriver, datasets):
             all_updates_page = AllUpdates(webdriver)
             all_updates_page.wait_for_page_loaded()
 
+            # this doesn't always work and fails getting the node id sometimes
             # node_info_span = webdriver.find_element("xpath", ".//*[@id='footer-cluster-node']")
             # node_id = node_info_span.text.split(':')[-1].replace(')', '').replace(' ', '')
             # node_ip = rest_client.get_node_ip(node_id)
