@@ -4,9 +4,15 @@ from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from util.conf import CONFLUENCE_SETTINGS
 from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager
-
+from util.api.confluence_clients import ConfluenceRestClient
 
 def app_specific_action(webdriver, datasets):
+    rest_client = ConfluenceRestClient(
+        CONFLUENCE_SETTINGS.server_url,
+        CONFLUENCE_SETTINGS.admin_login,
+        CONFLUENCE_SETTINGS.admin_password,
+        verify=CONFLUENCE_SETTINGS.secure,
+    )
     modules.setup_run_data(datasets)
     login_page = Login(webdriver)
     page = BasePage(webdriver)
@@ -23,6 +29,8 @@ def app_specific_action(webdriver, datasets):
 
             # wait for html body id which is always present, both for users who never logged in and who did
             page.wait_until_visible((By.ID, "com-atlassian-confluence"))
+            node_info_span = webdriver.find_element("xpath", ".//*[@id='footer-cluster-node']")
+            node_id = node_info_span.text.split(':')[-1].replace(')', '').replace(' ', '')
             node_ip = rest_client.get_node_ip(node_id)
             webdriver.node_ip = node_ip
 
