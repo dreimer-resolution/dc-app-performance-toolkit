@@ -16,7 +16,8 @@ def app_specific_action(webdriver, datasets):
     def measure():
         @print_timing("selenium_app_custom_action:login_with_saml_sso")
         def sub_measure():
-            print(f"login_with_saml_sso, user: {datasets['username']}")
+            username = datasets['current_session']['username']
+            print(f"login_with_saml_sso, user: {username}")
 
             # important, retrieves the bitbucket version that is used in other tests
             client = BitbucketRestClient(
@@ -30,7 +31,7 @@ def app_specific_action(webdriver, datasets):
             login_page.delete_all_cookies()
 
             # trigger sso directly
-            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + datasets['username'])
+            page.go_to_url(f"{BITBUCKET_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + username)
 
             # using end-of-test code from atlassian again (deals with first time login/ validates successful login)
             get_started_page = GetStarted(webdriver)
