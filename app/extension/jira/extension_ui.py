@@ -50,7 +50,8 @@ def app_specific_action(webdriver, datasets):
 
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
-            print(f"login_with_alb_auth, user: {datasets['username']}")
+            username = datasets['current_session']['username']
+            print(f"login_with_saml_sso, user: {username}")
             try:
                 # todo: this is most likely obsolete now that we log out on Azure as well
                 # this is only present if we are logged in already
@@ -66,7 +67,7 @@ def app_specific_action(webdriver, datasets):
                 # clear existing value
                 username_input.clear()
                 # add username to it
-                username_input.send_keys(datasets['username'] + "@azuread.lab.resolution.de")
+                username_input.send_keys(username + "@azuread.lab.resolution.de")
                 next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
                 next_is_password.click()
 
