@@ -496,7 +496,7 @@ def open_editor_and_create_blog(locust):
                    catch_response=True)
 
         # 620 plugins/servlet/notifications-miniview
-        locust.get('/plugins/servlet/notifications-miniview', catch_response=True)
+        locust.get('/plugins/servlet/notifications-miniview', headers=TEXT_HEADERS, catch_response=True)
 
         # 630 rest/shortcuts/latest/shortcuts/{build_number}/{keyboard_hash}
         locust.get(f'/rest/shortcuts/latest/shortcuts/{build_number}/{keyboard_hash}'
@@ -513,7 +513,7 @@ def open_editor_and_create_blog(locust):
         # 640 json/startheartbeatactivity.action
         r = locust.post('/json/startheartbeatactivity.action',
                         heartbeat_activity_body,
-                        TEXT_HEADERS,
+                        headers=TEXT_HEADERS,
                         catch_response=True)
 
         content = r.content.decode('utf-8')
