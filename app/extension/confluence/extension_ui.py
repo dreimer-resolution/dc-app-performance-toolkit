@@ -99,7 +99,7 @@ def app_specific_action(webdriver, datasets):
                 # wait for confluence page
                 page.wait_until_visible((By.ID, "com-atlassian-confluence"))
                 node_id = login_page.get_node_id()
-                print(f"logged in, got node_id: {node_id}")
+                print(f"logged in, got node_id: >{node_id}<")
                 node_ip = rest_client.get_node_ip(node_id)
                 webdriver.node_id = node_id
                 webdriver.node_ip = node_ip
