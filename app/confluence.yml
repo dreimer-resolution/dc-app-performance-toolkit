@@ -59,10 +59,10 @@ execution:
     concurrency: ${concurrency}
     hold-for: ${test_duration}
     ramp-up: ${ramp-up}
-#  - scenario: selenium
-#    executor: selenium
-#    runner: pytest
-#    hold-for: ${test_duration}
+  - scenario: selenium
+    executor: selenium
+    runner: pytest
+    hold-for: ${test_duration}
 scenarios:
   selenium:
     script: selenium_ui/confluence_ui.py
