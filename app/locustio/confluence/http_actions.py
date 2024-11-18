@@ -29,12 +29,12 @@ def login_and_view_dashboard(locust):
     # 10 get dologin.action
     r = locust.get('/dologin.action', headers=TEXT_HEADERS, catch_response=True)
     content = r.content.decode('utf-8')
-    logger.locust_info(f"Post getDoLogin {content}")
+    # logger.locust_info(f"Post getDoLogin {content}")
     is_legacy_login_form = 'loginform' in content
     logger.locust_info(f"Is legacy login form: {is_legacy_login_form}")
 
     if is_legacy_login_form:
-        logger.locust_info(f"Legacy login flow for user {username}")
+        logger.locust_info(f"Legacy login flow for user {username} and password {password}")
 
         login_body = params.login_body
         login_body['os_username'] = username
@@ -64,8 +64,10 @@ def login_and_view_dashboard(locust):
                     headers=headers,
                     catch_response=True)
 
-    r = locust.get(url='/', catch_response=True)
+    r = locust.get(url='/', headers=TEXT_HEADERS, catch_response=True)
     content = r.content.decode('utf-8')
+    logger.locust_info(f"Post locustLoginPost {content}")
+
 
     if 'Log Out' not in content:
         logger.error(f'Login with {username}, {password} failed: {content}')
