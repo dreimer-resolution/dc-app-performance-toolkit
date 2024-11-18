@@ -12,7 +12,7 @@ settings:
     application_postfix:   # e.g. /confluence for TerraForm deployment url like `http://a1234-54321.us-east-2.elb.amazonaws.com/confluence`. Leave this value blank for url without postfix.
     admin_login: admin
     admin_password: admin
-    load_executor: locust              # jmeter and locust are supported. jmeter by default.
+    load_executor: jmeter              # jmeter and locust are supported. jmeter by default.
     concurrency: 200                   # number of concurrent virtual users for jmeter or locust scenario
     test_duration: 45m
     ramp-up: 5m                        # time to spin all concurrent users
@@ -54,15 +54,15 @@ services:
     packages:
       - selenium==4.25.0
 execution:
-#  - scenario: ${load_executor}
-#    executor: ${load_executor}
-#    concurrency: ${concurrency}
-#    hold-for: ${test_duration}
-#    ramp-up: ${ramp-up}
-  - scenario: selenium
-    executor: selenium
-    runner: pytest
+  - scenario: ${load_executor}
+    executor: ${load_executor}
+    concurrency: ${concurrency}
     hold-for: ${test_duration}
+    ramp-up: ${ramp-up}
+#  - scenario: selenium
+#    executor: selenium
+#    runner: pytest
+#    hold-for: ${test_duration}
 scenarios:
   selenium:
     script: selenium_ui/confluence_ui.py
