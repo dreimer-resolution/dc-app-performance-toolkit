@@ -29,7 +29,6 @@ def login_and_view_dashboard(locust):
     # 10 get dologin.action
     r = locust.get('/dologin.action', headers=TEXT_HEADERS, catch_response=True)
     content = r.content.decode('utf-8')
-    # logger.locust_info(f"Post getDoLogin {content}")
     is_legacy_login_form = 'loginform' in content
     logger.locust_info(f"Is legacy login form: {is_legacy_login_form}")
 
@@ -43,7 +42,7 @@ def login_and_view_dashboard(locust):
         # 16 dologin.action
         locust.post('/dologin.action',
                     login_body,
-                    TEXT_HEADERS,
+                    headers=TEXT_HEADERS,
                     catch_response=True)
     else:
         logger.locust_info(f"2SV login flow for user {username}")
