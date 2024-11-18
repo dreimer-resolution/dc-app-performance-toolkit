@@ -51,7 +51,7 @@ def app_specific_action(webdriver, datasets):
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
             username = datasets['current_session']['username']
-            print(f"login_with_saml_sso, user: {username}")
+            print(f"login_with_alb_auth, user: {username}")
             try:
                 # todo: this is most likely obsolete now that we log out on Azure as well
                 # this is only present if we are logged in already
