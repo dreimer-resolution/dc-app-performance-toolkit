@@ -2,7 +2,7 @@
 settings:
   artifacts-dir: results/confluence/%Y-%m-%d_%H-%M-%S
   aggregator: consolidator
-  verbose: True
+  verbose: False
   check-updates: false                 # disable bzt check for updates
   env:
     application_hostname: confluence.dcapt.reslab.de   # Confluence DC hostname without protocol, port and postfix e.g. test-confluence.atlassian.com or localhost
@@ -59,10 +59,10 @@ execution:
     concurrency: ${concurrency}
     hold-for: ${test_duration}
     ramp-up: ${ramp-up}
-#  - scenario: selenium
-#    executor: selenium
-#    runner: pytest
-#    hold-for: ${test_duration}
+  - scenario: selenium
+    executor: selenium
+    runner: pytest
+    hold-for: ${test_duration}
 scenarios:
   selenium:
     script: selenium_ui/confluence_ui.py
