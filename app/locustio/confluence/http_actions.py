@@ -1029,6 +1029,7 @@ def create_and_edit_page(locust):
                        f'&atl_after_login_redirect=/display/{space_key}/{page_title}'
                        f"&atl_token={locust.session_data_storage['token']}"
                        f'&timeout=12000&_={timestamp_int()}',
+                       headers=TEXT_HEADERS,
                        catch_response=True)
 
         content = r.content.decode('utf-8')
@@ -1509,6 +1510,7 @@ def upload_attachments(locust):
                     params={"atl_token": locust.session_data_storage['token'], "comment_0": "", "comment_1": "",
                             "comment_2": "", "comment_3": "", "comment_4": "0", "confirm": "Attach"},
                     files=multipart_form_data,
+                    headers=TEXT_HEADERS,
                     catch_response=True)
     content = r.content.decode('utf-8')
     if not('Upload file' in content and 'Attach more files' in content):
@@ -1537,6 +1539,7 @@ def upload_attachments(locust):
                f'&ancestors={parent_page_id}'
                f'&treePageId={page_id}'
                f'&_={timestamp_int()}',
+               headers=TEXT_HEADERS,
                catch_response=True)
 
     # 1930 rest/mywork/latest/status/notification/count
