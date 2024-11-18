@@ -455,6 +455,7 @@ def open_editor_and_create_blog(locust):
         r = locust.get(f'/pages/createblogpost.action'
                        f'?spaceKey={blog_space_key}'
                        f"&atl_token={locust.session_data_storage['token']}",
+                       headers=TEXT_HEADERS,
                        catch_response=True)
 
         content = r.content.decode('utf-8')
@@ -588,7 +589,7 @@ def open_editor_and_create_blog(locust):
         logger.locust_info(f'Blog {created_blog_title} created')
 
         # 680 {created_blog_title}
-        r = locust.get(f'/{created_blog_title}', catch_response=True)
+        r = locust.get(f'/{created_blog_title}', headers=TEXT_HEADERS, catch_response=True)
 
         content = r.content.decode('utf-8')
         if 'Created by' not in content:
@@ -606,7 +607,7 @@ def open_editor_and_create_blog(locust):
         # 690 json/stopheartbeatactivity.action
         r = locust.post('/json/startheartbeatactivity.action',
                         heartbeat_activity_body,
-                        TEXT_HEADERS,
+                        headers=TEXT_HEADERS,
                         catch_response=True)
 
         # 700 rest/webResources/1.0/resources
@@ -616,7 +617,7 @@ def open_editor_and_create_blog(locust):
                     catch_response=True)
 
         # 710 plugins/servlet/notifications-miniview
-        locust.get('/plugins/servlet/notifications-miniview', catch_response=True)
+        locust.get('/plugins/servlet/notifications-miniview', headers=TEXT_HEADERS, catch_response=True)
 
         # 720 rest/watch-button/1.0/watchState/{content-id}
         locust.get(f'/rest/watch-button/1.0/watchState/{content_id}'
@@ -666,6 +667,7 @@ def open_editor_and_create_blog(locust):
 
         # 800 s/en_GB/{build-number}/{keyboardshortcut-hash}/_/images/icons/profilepics/add_profile_pic.svg
         locust.get(f'/s/en_GB/{build_number}/{keyboard_hash}/_/images/icons/profilepics/add_profile_pic.svg',
+                   headers=TEXT_HEADERS,
                    catch_response=True)
 
         # 810 rest/helptips/1.0/tips
@@ -714,6 +716,7 @@ def open_editor_and_create_blog(locust):
                        f'&atl_after_login_redirect=/pages/viewpage.action'
                        f"&atl_token={locust.session_data_storage['token']}"
                        f'&timeout=12000&_={timestamp_int()}',
+                       headers=TEXT_HEADERS,
                        catch_response=True)
 
         # 910 rest/webResources/1.0/resources
@@ -725,7 +728,7 @@ def open_editor_and_create_blog(locust):
         # 920 json/startheartbeatactivity.action
         r = locust.post('/json/startheartbeatactivity.action',
                         heartbeat_activity_body,
-                        TEXT_HEADERS,
+                        headers=TEXT_HEADERS,
                         catch_response=True)
 
         content = r.content.decode('utf-8')
@@ -1569,6 +1572,7 @@ def upload_attachments(locust):
                f"&atl_token={locust.session_data_storage['token']}"
                f'&timeout=12000'
                f'&_={timestamp_int()}',
+               headers=TEXT_HEADERS,
                catch_response=True)
 
     # 1970 rest/webResources/1.0/resources
@@ -1581,6 +1585,7 @@ def upload_attachments(locust):
     locust.get('/plugins/macrobrowser/browse-macros.action'
                '?macroMetadataClientCacheKey=1618624163503'
                '&detailed=false',
+               headers=TEXT_HEADERS,
                catch_response=True)
 
     # 1990 rest/webResources/1.0/resources
