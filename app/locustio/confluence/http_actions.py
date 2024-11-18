@@ -27,7 +27,7 @@ def login_and_view_dashboard(locust):
 
 
     # 10 get dologin.action
-    r = locust.get('/dologin.action', catch_response=True)
+    r = locust.get('/dologin.action', TEXT_HEADERS, catch_response=True)
     content = r.content.decode('utf-8')
     is_legacy_login_form = 'loginform' in content
     logger.locust_info(f"Is legacy login form: {is_legacy_login_form}")
