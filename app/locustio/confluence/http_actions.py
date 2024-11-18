@@ -385,6 +385,7 @@ def view_blog(locust):
                    f'&atl_after_login_redirect=/pages/viewpage.action'
                    f"&atl_token={locust.session_data_storage['token']}"
                    f'&timeout=12000&_={timestamp_int()}',
+                   headers=TEXT_HEADERS,
                    catch_response=True)
 
     content = r.content.decode('utf-8')
@@ -806,7 +807,7 @@ def create_and_edit_page(locust):
         # 1040 json/startheartbeatactivity.action
         r = locust.post('/json/startheartbeatactivity.action',
                         start_heartbeat_activity_body,
-                        TEXT_HEADERS,
+                        headers=TEXT_HEADERS,
                         catch_response=True)
 
         contributor_hash = r.json().get("contributorsHash", None)
