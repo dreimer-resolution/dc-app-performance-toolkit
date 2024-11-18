@@ -754,7 +754,7 @@ def create_and_edit_page(locust):
                        f'&fromPageId={page_id}'
                        f"&atl_token={locust.session_data_storage['token']}"
                        f'&src=quick-create',
-                       header=TEXT_HEADERS,
+                       headers=TEXT_HEADERS,
                        catch_response=True)
 
         content = r.content.decode('utf-8')
