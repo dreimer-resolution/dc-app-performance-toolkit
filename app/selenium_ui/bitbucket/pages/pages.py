@@ -39,12 +39,6 @@ class GetStarted(BasePage):
     page_url = GetStartedLocators.get_started_url
     page_loaded_selector = GetStartedLocators.user_profile_icon
 
-    def close_whats_new_window(self):
-        popup_window = self.get_elements(GetStartedLocators.whats_new_window_close_button)
-        if popup_window:
-            self.wait_until_visible(GetStartedLocators.whats_new_window_close_button).click()
-            self.wait_until_invisible(GetStartedLocators.whats_new_window_close_button)
-
 
 class Dashboard(BasePage):
     page_url = DashboardLocators.dashboard_url
@@ -78,7 +72,7 @@ class PopupManager(BasePage):
     def dismiss_default_popup(self):
         return self.dismiss_popup(PopupLocators.default_popup, PopupLocators.popup_1, PopupLocators.popup_2,
                                   PopupLocators.popup_3, PopupLocators.popup_4, PopupLocators.popup_5,
-                                  PopupLocators.popup_6, PopupLocators.popup_7)
+                                  PopupLocators.popup_6)
 
 
 class Repository(BasePage):
@@ -114,11 +108,6 @@ class RepoPullRequests(BasePage):
         title.send_keys('Selenium test pull request')
         self.wait_until_visible(self.get_selector(RepoLocators.pr_submit_button)).click()
         self.wait_until_visible(PullRequestLocator.pull_request_activity_content)
-        updates_banners = self.get_elements(PullRequestLocator.updates_info_banner)
-        while updates_banners:
-            updates_banners[0].click()
-            self.driver.refresh()
-            updates_banners = self.get_elements(PullRequestLocator.updates_info_banner)
         self.wait_until_clickable(PullRequestLocator.pull_request_page_merge_button)
 
 
@@ -186,12 +175,6 @@ class PullRequest(BasePage):
         self.wait_until_clickable(PullRequestLocator.pull_request_modal_merge_button).click()
         self.wait_until_invisible(PullRequestLocator.del_branch_checkbox_selector)
 
-    def dismiss_updates_info_popup(self):
-        updates_banners = self.get_elements(PullRequestLocator.updates_info_banner)
-        while updates_banners:
-            updates_banners[0].click()
-            self.driver.refresh()
-            updates_banners = self.get_elements(PullRequestLocator.updates_info_banner)
 
 class RepositoryBranches(BasePage):
     page_loaded_selector = BranchesLocator.branches_name

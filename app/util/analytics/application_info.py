@@ -1,7 +1,6 @@
 from util.conf import JIRA_SETTINGS, CONFLUENCE_SETTINGS, BITBUCKET_SETTINGS, JSM_SETTINGS, CROWD_SETTINGS, \
     BAMBOO_SETTINGS
 from util.api.jira_clients import JiraRestClient
-from util.api.jsm_clients import JsmRestClient
 from util.api.confluence_clients import ConfluenceRestClient
 from util.api.bitbucket_clients import BitbucketRestClient
 from util.api.crowd_clients import CrowdRestClient
@@ -34,9 +33,7 @@ class BaseApplication:
 
     def __init__(self, api_client, config_yml):
         self.client = api_client(host=config_yml.server_url,
-                                 user=config_yml.admin_login,
-                                 password=config_yml.admin_password,
-                                 verify=config_yml.secure)
+                                 user=config_yml.admin_login, password=config_yml.admin_password)
         self.config = config_yml
 
     def get_default_actions(self):
@@ -72,10 +69,6 @@ class BaseApplication:
     def java_version(self):
         return None  # TODO: Add Java version to results_summary.log for all supported products
 
-    @property
-    def status(self):
-        return self.client.get_status()
-
 
 class Jira(BaseApplication):
     type = JIRA
@@ -88,8 +81,6 @@ class Jira(BaseApplication):
 
     @property
     def nodes_count(self):
-        if self.client.get_nodes() == 'Server':
-            return 'Server'
         return len(self.client.get_nodes())
 
     def __issues_count(self):
@@ -109,8 +100,6 @@ class Confluence(BaseApplication):
 
     @property
     def nodes_count(self):
-        if self.client.get_confluence_nodes() == 'Server':
-            return 'Server'
         return len(self.client.get_confluence_nodes())
 
     @property
@@ -135,8 +124,7 @@ class Bitbucket(BaseApplication):
 
     @property
     def nodes_count(self):
-        nodes_count = self.client.get_bitbucket_nodes_count()
-        return nodes_count
+        return self.client.get_bitbucket_nodes_count()
 
     @property
     def dataset_information(self):
@@ -153,8 +141,6 @@ class Jsm(BaseApplication):
 
     @property
     def nodes_count(self):
-        if self.client.get_nodes() == 'Server':
-            return 'Server'
         return len(self.client.get_nodes())
 
     def __issues_count(self):
@@ -237,9 +223,9 @@ class ApplicationSelector:
             return Bitbucket(api_client=BitbucketRestClient, config_yml=BITBUCKET_SETTINGS)
         if self.application_type == JSM:
             if JSM_SETTINGS.insight:
-                return Insight(api_client=JsmRestClient, config_yml=JSM_SETTINGS)
+                return Insight(api_client=JiraRestClient, config_yml=JSM_SETTINGS)
             else:
-                return Jsm(api_client=JsmRestClient, config_yml=JSM_SETTINGS)
+                return Jsm(api_client=JiraRestClient, config_yml=JSM_SETTINGS)
         if self.application_type == CROWD:
             return Crowd(api_client=CrowdRestClient, config_yml=CROWD_SETTINGS)
         if self.application_type == BAMBOO:

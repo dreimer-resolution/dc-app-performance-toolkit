@@ -25,43 +25,15 @@ def login_and_view_dashboard(locust):
     username = user[0]
     password = user[1]
 
+    login_body = params.login_body
+    login_body['os_username'] = username
+    login_body['os_password'] = password
 
-    # 10 get dologin.action
-    r = locust.get('/dologin.action', catch_response=True)
-    content = r.content.decode('utf-8')
-    is_legacy_login_form = 'loginform' in content
-    logger.locust_info(f"Is legacy login form: {is_legacy_login_form}")
-
-    if is_legacy_login_form:
-        logger.locust_info(f"Legacy login flow for user {username}")
-
-        login_body = params.login_body
-        login_body['os_username'] = username
-        login_body['os_password'] = password
-
-        # 16 dologin.action
-        locust.post('/dologin.action',
-                    login_body,
-                    TEXT_HEADERS,
-                    catch_response=True)
-    else:
-        logger.locust_info(f"2SV login flow for user {username}")
-
-        login_body = {'username': username,
-                      'password': password,
-                      'rememberMe': 'True',
-                      'targetUrl': ''
-                      }
-
-        headers = {
-            "Content-Type": "application/json"
-        }
-
-        # 15 /rest/tsv/1.0/authenticate
-        locust.post('/rest/tsv/1.0/authenticate',
-                    json=login_body,
-                    headers=headers,
-                    catch_response=True)
+    # 10 dologin.action
+    locust.post('/dologin.action',
+                login_body,
+                TEXT_HEADERS,
+                catch_response=True)
 
     r = locust.get(url='/', catch_response=True)
     content = r.content.decode('utf-8')
@@ -76,6 +48,40 @@ def login_and_view_dashboard(locust):
 
     # 20 index.action
     locust.get('/index.action', catch_response=True)
+
+    # 30 rest/webResources/1.0/resources
+    locust.post('/rest/webResources/1.0/resources',
+                json=params.resources_body.get("30"),
+                headers=RESOURCE_HEADERS,
+                catch_response=True)
+
+    # 40 rest/shortcuts/latest/shortcuts/{ajs-build-number}/{ajs-keyboardshortcut-hash}
+    locust.get(f'/rest/shortcuts/latest/shortcuts/{build_number}/{keyboard_hash}', catch_response=True)
+
+    # 50 rest/mywork/latest/status/notification/count
+    locust.get('/rest/mywork/latest/status/notification/count', catch_response=True)
+
+    # 60 rest/dashboardmacros/1.0/updates
+    locust.get('/rest/dashboardmacros/1.0/updates?maxResults=40&tab=all&showProfilePic=true&labels='
+               '&spaces=&users=&types=&category=&spaceKey=',
+               catch_response=True)
+
+    # 70 rest/experimental/search
+    locust.get(f'/rest/experimental/search?cql=type=space%20and%20space.type=favourite%20order%20by%20'
+               f'favourite%20desc&expand=space.icon&limit=100&_={timestamp_int()}',
+               catch_response=True)
+
+    # 80 rest/analytics/1.0/publish/bulk
+    locust.post('/rest/analytics/1.0/publish/bulk',
+                json=params.resources_body.get("80"),
+                headers=RESOURCE_HEADERS,
+                catch_response=True)
+
+    # 90 rest/analytics/1.0/publish/bulk
+    locust.post('/rest/analytics/1.0/publish/bulk',
+                json=params.resources_body.get("90"),
+                headers=RESOURCE_HEADERS,
+                catch_response=True)
 
     locust.session_data_storage['build_number'] = build_number
     locust.session_data_storage['keyboard_hash'] = keyboard_hash
@@ -92,7 +98,7 @@ def view_page(locust):
     page_id = page[0]
 
     # 100 pages/viewpage.action
-    r = locust.get(f'/pages/viewpage.action?pageId={page_id}&noRedirect=true', catch_response=True)
+    r = locust.get(f'/pages/viewpage.action?pageId={page_id}', catch_response=True)
 
     content = r.content.decode('utf-8')
     if 'Created by' not in content or 'Save for later' not in content:
@@ -199,7 +205,6 @@ def view_page(locust):
                f'&pageId={parsed_page_id}'
                f'&spaceKey={space_key}'
                f'&atl_after_login_redirect=/pages/viewpage.action'
-               f"&atl_token={locust.session_data_storage['token']}"
                f'&timeout=12000&_={timestamp_int()}',
                catch_response=True)
 
@@ -291,7 +296,7 @@ def view_blog(locust):
 
     # 340 pages/viewpage.action
     r = locust.get(f'/pages/viewpage.action'
-                   f'?pageId={blog_id}&noRedirect=true',
+                   f'?pageId={blog_id}',
                    catch_response=True)
 
     content = r.content.decode('utf-8')
@@ -380,7 +385,6 @@ def view_blog(locust):
                    f'&pageId={blog_id}'
                    f'&spaceKey={space_key}'
                    f'&atl_after_login_redirect=/pages/viewpage.action'
-                   f"&atl_token={locust.session_data_storage['token']}"
                    f'&timeout=12000&_={timestamp_int()}',
                    catch_response=True)
 
@@ -404,7 +408,6 @@ def view_blog(locust):
 
 def search_cql_and_view_results(locust):
     raise_if_login_failed(locust)
-    cql = random.choice(confluence_dataset["cqls"])[0]
 
     @confluence_measure('locust_search_cql:recently_viewed')
     def search_recently_viewed():
@@ -417,7 +420,7 @@ def search_cql_and_view_results(locust):
     def search_cql():
         # 530 rest/api/search
         r = locust.get(f"/rest/api/search"
-                       f"?cql=siteSearch~'{cql}'"
+                       f"?cql=siteSearch~'{generate_random_string(3, only_letters=True)}'"
                        f"&start=0"
                        f"&limit=20",
                        catch_response=True)
@@ -449,8 +452,7 @@ def open_editor_and_create_blog(locust):
 
         # 550 pages/createblogpost.action
         r = locust.get(f'/pages/createblogpost.action'
-                       f'?spaceKey={blog_space_key}'
-                       f"&atl_token={locust.session_data_storage['token']}",
+                       f'?spaceKey={blog_space_key}',
                        catch_response=True)
 
         content = r.content.decode('utf-8')
@@ -708,7 +710,6 @@ def open_editor_and_create_blog(locust):
                        f'&pageId={content_id}'
                        f'&spaceKey={parsed_space_key}'
                        f'&atl_after_login_redirect=/pages/viewpage.action'
-                       f"&atl_token={locust.session_data_storage['token']}"
                        f'&timeout=12000&_={timestamp_int()}',
                        catch_response=True)
 
@@ -749,7 +750,6 @@ def create_and_edit_page(locust):
         r = locust.get(f'/pages/createpage.action'
                        f'?spaceKey={space_key}'
                        f'&fromPageId={page_id}'
-                       f"&atl_token={locust.session_data_storage['token']}"
                        f'&src=quick-create',
                        catch_response=True)
 
@@ -934,7 +934,7 @@ def create_and_edit_page(locust):
                     catch_response=True)
 
         # 1160 display/{space_key}/{page_title}
-        locust.get(f'/pages/viewpage.action?spaceKey={space_key}&title={page_title}', catch_response=True)
+        locust.get(f'/display/{space_key}/{page_title}', catch_response=True)
 
         # 1170 json/startheartbeatactivity.action
         locust.post('/json/startheartbeatactivity.action',
@@ -1022,7 +1022,6 @@ def create_and_edit_page(locust):
                        f'&pageId={locust.session_data_storage["content_id"]}'
                        f'&spaceKey={space_key}'
                        f'&atl_after_login_redirect=/display/{space_key}/{page_title}'
-                       f"&atl_token={locust.session_data_storage['token']}"
                        f'&timeout=12000&_={timestamp_int()}',
                        catch_response=True)
 
@@ -1198,7 +1197,7 @@ def create_and_edit_page(locust):
                     catch_response=True)
 
         # 1490 /display/${space_key}/${page_title}
-        locust.get(f'/pages/viewpage.action?spaceKey={space_key}&title={page_title}',
+        locust.get(f'/display/{space_key}/{page_title}',
                    catch_response=True)
 
         # 1500 rest/webResources/1.0/resources
@@ -1279,7 +1278,6 @@ def create_and_edit_page(locust):
                    f'&pageId={locust.session_data_storage["content_id"]}'
                    f'&spaceKey={space_key}'
                    f'&atl_after_login_redirect=/pages/viewpage.action'
-                   f"&atl_token={locust.session_data_storage['token']}"
                    f'&timeout=12000'
                    f'&_={timestamp_int()}', catch_response=True)
 
@@ -1442,7 +1440,6 @@ def view_attachments(locust):
                f'&pageId={page_id}'
                f'&spaceKey={space_key}'
                f'&atl_after_login_redirect=/pages/viewpage.action'
-               f"&atl_token={locust.session_data_storage['token']}"
                f'&timeout=12000'
                f'&_={timestamp_int()}',
                catch_response=True)
@@ -1484,7 +1481,7 @@ def upload_attachments(locust):
     page_id = page[0]
     space_key = page[1]
 
-    r = locust.get(f'/pages/viewpage.action?pageId={page_id}&noRedirect=true', catch_response=True)
+    r = locust.get(f'/pages/viewpage.action?pageId={page_id}', catch_response=True)
     content = r.content.decode('utf-8')
     if not('Created by' in content and 'Save for later' in content):
         logger.error(f'Failed to open page {page_id}: {content}')
@@ -1557,7 +1554,6 @@ def upload_attachments(locust):
                f'&pageId={page_id}'
                f'&spaceKey={space_key}'
                f'&atl_after_login_redirect=/pages/viewpage.action'
-               f"&atl_token={locust.session_data_storage['token']}"
                f'&timeout=12000'
                f'&_={timestamp_int()}',
                catch_response=True)

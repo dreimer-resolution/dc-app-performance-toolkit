@@ -18,9 +18,3 @@ def __write_to_file(file_path, items):
     with open(file_path, 'w') as f:
         for item in items:
             f.write(f"{item}\n")
-
-
-def __read_file(file):
-    with file.open('r') as f:
-        lines = f.read().splitlines()
-        return lines
