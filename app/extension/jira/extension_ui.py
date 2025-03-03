@@ -31,7 +31,7 @@ def app_specific_action(webdriver, datasets):
                 login_page.first_login_second_page_setup()
             login_page.wait_for_page_loaded()
             # uncomment below line to do web_sudo and authorise access to admin pages
-            # AdminPage(webdriver).go_to(password=password)
+            AdminPage(webdriver).go_to(password=password)
 
         app_specific_user_login(username='admin', password='admin')
 
