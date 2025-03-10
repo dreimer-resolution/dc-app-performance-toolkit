@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 import time
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
-from selenium_ui.bitbucket.pages.pages import LoginPage, GetStarted
+from selenium_ui.bitbucket.pages.pages import LoginPage, GetStarted, AdminPage, PopupManager
 from util.conf import BITBUCKET_SETTINGS
 
 
@@ -15,10 +15,14 @@ def app_specific_action(webdriver, datasets):
             login_page = LoginPage(webdriver)
             login_page.delete_all_cookies()
             login_page.go_to()
+            login_page.wait_for_page_loaded()
             login_page.set_credentials(username=username, password=password)
             login_page.submit_login()
             get_started_page = GetStarted(webdriver)
             get_started_page.wait_for_page_loaded()
+            PopupManager(webdriver).dismiss_default_popup()
+            get_started_page.close_whats_new_window()
+            AdminPage(webdriver).go_to(password=password)
         app_specific_user_login(username='admin', password='admin')
     measure()
 
