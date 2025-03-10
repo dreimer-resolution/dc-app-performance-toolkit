@@ -58,9 +58,9 @@ def test_1_selenium_view_branches(bitbucket_webdriver, bitbucket_datasets, bitbu
 def test_1_selenium_view_commits(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
     modules.view_commits(bitbucket_webdriver, bitbucket_datasets)
 
-#
-# def test_1_selenium_custom_action(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
-#     extension_ui.app_specific_action(bitbucket_webdriver, bitbucket_datasets)
+
+def test_1_selenium_custom_action(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
+    extension_ui.app_specific_action(bitbucket_webdriver, bitbucket_datasets)
 
 
 def test_2_selenium_logout(bitbucket_webdriver, bitbucket_datasets, bitbucket_screen_shots):
