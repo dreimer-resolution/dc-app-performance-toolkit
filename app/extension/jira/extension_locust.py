@@ -29,7 +29,7 @@ def app_specific_action(locust):
     }
 
     create_start = time.time()
-    r = requests.post('https://jira.dc-testing.reslab.de/rest/api/2/issue', json.dumps(create_issue_payload),
+    r = requests.post('https://jira.dcapt.reslab.de/rest/api/2/issue', json.dumps(create_issue_payload),
                       headers=headers, auth=("admin", "admin"))
     create_end = time.time()
     logger.locust_info(f'*********** POST Issue: {str(create_end - create_start)} seconds')
@@ -37,12 +37,12 @@ def app_specific_action(locust):
     issue_key = resp_json['key']
     """
 
-    issue_key = "UM-" + str(int(random.randint(23634, 23841)))
+    issue_key = "UM-" + str(int(random.randint(1, 300)))
     story_points = str(int(random.randint(5, 30)))
 
     put_story_points_start = time.time()
     body = '{"fields": {"customfield_10106": ' + story_points + '}}'
-    r = requests.put('https://jira.dc-testing.reslab.de/rest/api/2/issue/' + issue_key, body, headers=headers, auth=("admin", "admin"))
+    r = requests.put('https://jira.dcapt.reslab.de/rest/api/2/issue/' + issue_key, body, headers=headers, auth=("admin", "admin"))
     put_story_points_end = time.time()
     logger.locust_info(f'*********** PUT Issue: {str(put_story_points_end - put_story_points_start)} seconds')
     assert r.status_code == 204
@@ -50,7 +50,7 @@ def app_specific_action(locust):
     """
     # delete issue again to not blow up the sprint
     delete_start = time.time()
-    r = requests.delete('https://jira.dc-testing.reslab.de/rest/api/2/issue/' + issue_key, headers=headers, auth=("admin", "admin"))
+    r = requests.delete('https://jira.dcapt.reslab.de/rest/api/2/issue/' + issue_key, headers=headers, auth=("admin", "admin"))
     delete_end = time.time()
     logger.locust_info(f'*********** DEL Issue ({str(r.status_code)}): {str(delete_end - delete_start)} seconds')
     """
