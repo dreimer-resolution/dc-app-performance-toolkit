@@ -6,7 +6,7 @@ from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 
 from util.conf import JIRA_SETTINGS
-from selenium_ui.jira.pages.pages import Login, PopupManager, Logout
+from selenium_ui.jira.pages.pages import Login, AdminPage, PopupManager, Logout
 from selenium.common.exceptions import TimeoutException
 
 
@@ -106,3 +106,4 @@ def app_specific_action(webdriver, datasets):
 
     measure()
     PopupManager(webdriver).dismiss_default_popup()
+

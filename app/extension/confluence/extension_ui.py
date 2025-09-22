@@ -4,8 +4,9 @@ from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
 from util.conf import CONFLUENCE_SETTINGS
-from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager, Logout
+from selenium_ui.confluence.pages.pages import Login, AllUpdates, AdminPage, PopupManager, Logout
 from selenium.common.exceptions import TimeoutException
 
 
