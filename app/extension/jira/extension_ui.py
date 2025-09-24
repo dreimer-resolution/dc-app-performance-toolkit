@@ -52,55 +52,54 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
-            # try:
-            #     # todo: this is most likely obsolete now that we log out on Azure as well
-            #     # this is only present if we are logged in already
-            #     webdriver.find_element("xpath",".//*[@id='jira']")
-            # except:  # if not, there is an excption and we need to login     # noqa E722
-                # open dashboard to trigger ALB auth
-            page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
-            print(f"after navigating to the dashboard")
-            # wait for azure user input field to be shown
-            page.wait_until_visible((By.ID, "i0116"))
-            # get username field
-            username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
-            # clear existing value
-            username_input.clear()
-            # add username to it
-            username_input.send_keys(username + "@azuread.lab.resolution.de")
-            next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
-            next_is_password.click()
-
             try:
-                # if we don't see password input within 5 seconds ...
-                page.wait_until_visible((By.ID, "i0118"), 5)
-            except TimeoutException:
-                # ... restart test
-                app_specific_action(webdriver, datasets)
-                return
+                # this is only present if we are logged in already
+                webdriver.find_element("xpath", ".//*[@id='jira']")
+            except:  # if not, there is an excption and we need to login     # noqa E722
+                # open dashboard to trigger ALB auth
+                page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+                print(f"after navigating to the dashboard")
+                # wait for azure user input field to be shown
+                page.wait_until_visible((By.ID, "i0116"))
+                # get username field
+                username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
+                # clear existing value
+                username_input.clear()
+                # add username to it
+                username_input.send_keys(username + "@azuread.lab.resolution.de")
+                next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
+                next_is_password.click()
 
-            password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
-            password_input.clear()
+                try:
+                    # if we don't see password input within 5 seconds ...
+                    page.wait_until_visible((By.ID, "i0118"), 5)
+                except TimeoutException:
+                    # ... restart test
+                    app_specific_action(webdriver, datasets)
+                    return
 
-            # this is required to prevent StaleElementReferenceException
-            actions = ActionChains(webdriver)
-            actions.send_keys("justAnotherPassw0rd!")
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
+                password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
+                password_input.clear()
 
-            stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
-            stay_signed_in_no.click()
+                # this is required to prevent StaleElementReferenceException
+                actions = ActionChains(webdriver)
+                actions.send_keys("justAnotherPassw0rd!")
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
 
-            # wait for html body id "jira" which is always present, both for users who never logged in and who did
-            page.wait_until_visible((By.ID, "jira"))
-            webdriver.node_id = login_page.get_node_id()
-            print(f"node_id: {webdriver.node_id}")
+                stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
+                stay_signed_in_no.click()
 
-            if login_page.is_first_login():
-                login_page.first_login_setup()
-            if login_page.is_first_login_second_page():
-                login_page.first_login_second_page_setup()
-            login_page.wait_for_page_loaded()
+                # wait for html body id "jira" which is always present, both for users who never logged in and who did
+                page.wait_until_visible((By.ID, "jira"))
+                webdriver.node_id = login_page.get_node_id()
+                print(f"node_id: {webdriver.node_id}")
+
+                if login_page.is_first_login():
+                    login_page.first_login_setup()
+                if login_page.is_first_login_second_page():
+                    login_page.first_login_second_page_setup()
+                login_page.wait_for_page_loaded()
 
         sub_measure()
 
