@@ -4,7 +4,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
-import time
 
 from util.conf import JIRA_SETTINGS
 from selenium_ui.jira.pages.pages import Login, AdminPage, PopupManager, Logout
@@ -53,66 +52,55 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
-            try:
-                # todo: this is most likely obsolete now that we log out on Azure as well
-                # this is only present if we are logged in already
-                webdriver.find_element("xpath",".//*[@id='jira']")
-            except:  # if not, there is an excption and we need to login     # noqa E722
+            # try:
+            #     # todo: this is most likely obsolete now that we log out on Azure as well
+            #     # this is only present if we are logged in already
+            #     webdriver.find_element("xpath",".//*[@id='jira']")
+            # except:  # if not, there is an excption and we need to login     # noqa E722
                 # open dashboard to trigger ALB auth
-                page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
 
-                # Give the page time to redirect to Microsoft auth
-                time.sleep(2)
+            # wait for azure user input field to be shown
+            page.wait_until_visible((By.ID, "i0116"))
+            # get username field
+            username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
+            # clear existing value
+            username_input.clear()
+            # add username to it
+            username_input.send_keys(username + "@azuread.lab.resolution.de")
+            next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
+            next_is_password.click()
 
-                # wait for azure user input field to be shown (increased timeout)
-                # Microsoft sometimes takes longer to load the login page
-                page.wait_until_visible((By.ID, "i0116"), timeout=30)
-                # get username field
-                username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
-                # clear existing value
-                username_input.clear()
-                # add username to it
-                username_input.send_keys(username + "@azuread.lab.resolution.de")
-                next_is_password = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
-                next_is_password.click()
+            try:
+                # if we don't see password input within 5 seconds ...
+                page.wait_until_visible((By.ID, "i0118"), 5)
+            except TimeoutException:
+                # ... restart test
+                app_specific_action(webdriver, datasets)
+                return
 
-                try:
-                    # if we don't see password input within 10 seconds ...
-                    page.wait_until_visible((By.ID, "i0118"), 10)
-                except TimeoutException:
-                    # ... restart test
-                    app_specific_action(webdriver, datasets)
-                    return
+            password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
+            password_input.clear()
 
-                password_input = webdriver.find_element("xpath", ".//*[@id='i0118']")
-                password_input.clear()
+            # this is required to prevent StaleElementReferenceException
+            actions = ActionChains(webdriver)
+            actions.send_keys("justAnotherPassw0rd!")
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
 
-                # this is required to prevent StaleElementReferenceException
-                actions = ActionChains(webdriver)
-                actions.send_keys("justAnotherPassw0rd!")
-                actions.send_keys(Keys.ENTER)
-                actions.perform()
+            stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
+            stay_signed_in_no.click()
 
-                # Wait for the "Stay signed in?" page to appear before interacting
-                try:
-                    page.wait_until_visible((By.ID, "idBtn_Back"), timeout=15)
-                    # Re-find the element after the wait to avoid stale reference
-                    stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
-                    stay_signed_in_no.click()
-                except TimeoutException:
-                    # Sometimes Microsoft skips the "Stay signed in?" page
-                    print("Stay signed in page not shown, continuing...")
+            # wait for html body id "jira" which is always present, both for users who never logged in and who did
+            page.wait_until_visible((By.ID, "jira"))
+            webdriver.node_id = login_page.get_node_id()
+            print(f"node_id: {webdriver.node_id}")
 
-                # wait for html body id "jira" which is always present, both for users who never logged in and who did
-                page.wait_until_visible((By.ID, "jira"))
-                webdriver.node_id = login_page.get_node_id()
-                print(f"node_id: {webdriver.node_id}")
-
-                if login_page.is_first_login():
-                    login_page.first_login_setup()
-                if login_page.is_first_login_second_page():
-                    login_page.first_login_second_page_setup()
-                login_page.wait_for_page_loaded()
+            if login_page.is_first_login():
+                login_page.first_login_setup()
+            if login_page.is_first_login_second_page():
+                login_page.first_login_second_page_setup()
+            login_page.wait_for_page_loaded()
 
         sub_measure()
 
