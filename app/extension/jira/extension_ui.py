@@ -6,7 +6,7 @@ from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 
 from util.conf import JIRA_SETTINGS
-from selenium_ui.jira.pages.pages import Login, AdminPage, PopupManager, Logout
+from selenium_ui.jira.pages.pages import Login, PopupManager, Logout
 from selenium.common.exceptions import TimeoutException
 
 
@@ -53,12 +53,13 @@ def app_specific_action(webdriver, datasets):
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
             try:
+                # todo: this is most likely obsolete now that we log out on Azure as well
                 # this is only present if we are logged in already
-                webdriver.find_element("xpath", ".//*[@id='jira']")
+                webdriver.find_element("xpath",".//*[@id='jira']")
             except:  # if not, there is an excption and we need to login     # noqa E722
                 # open dashboard to trigger ALB auth
                 page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
-                print(f"after navigating to the dashboard")
+
                 # wait for azure user input field to be shown
                 page.wait_until_visible((By.ID, "i0116"))
                 # get username field
@@ -105,4 +106,3 @@ def app_specific_action(webdriver, datasets):
 
     measure()
     PopupManager(webdriver).dismiss_default_popup()
-
