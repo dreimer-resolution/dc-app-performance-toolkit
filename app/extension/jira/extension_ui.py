@@ -52,9 +52,13 @@ def app_specific_action(webdriver, datasets):
         def sub_measure():
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
+
+            # Navigate to dashboard to check login status and potentially trigger ALB auth
+            page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+
             try:
-                # Wait for the page to load and check if user is already logged in
-                # The 'jira' element is present when user is authenticated
+                # Check if we're on the dashboard (user is logged in)
+                # The 'jira' element is present when user is authenticated and on Jira pages
                 page.wait_until_visible((By.ID, "jira"), timeout=3)
                 print("User already logged in, skipping Azure auth")
                 # Set node_id and perform necessary setup
@@ -69,8 +73,7 @@ def app_specific_action(webdriver, datasets):
                 return  # Exit early, no login needed
             except TimeoutException:
                 print("User not logged in, proceeding with Azure auth")
-                # open dashboard to trigger ALB auth
-                page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
+                # Dashboard navigation already triggered ALB auth, now wait for Azure login page
 
                 # wait for azure user input field to be shown
                 page.wait_until_visible((By.ID, "i0116"))
