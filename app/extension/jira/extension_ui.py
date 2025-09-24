@@ -59,7 +59,7 @@ def app_specific_action(webdriver, datasets):
             # except:  # if not, there is an excption and we need to login     # noqa E722
                 # open dashboard to trigger ALB auth
             page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
-
+            print(f"after navigating to the dashboard")
             # wait for azure user input field to be shown
             page.wait_until_visible((By.ID, "i0116"))
             # get username field
