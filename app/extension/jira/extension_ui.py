@@ -53,10 +53,22 @@ def app_specific_action(webdriver, datasets):
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
             try:
-                # todo: this is most likely obsolete now that we log out on Azure as well
-                # this is only present if we are logged in already
-                webdriver.find_element("xpath",".//*[@id='jira']")
-            except:  # if not, there is an excption and we need to login     # noqa E722
+                # Wait for the page to load and check if user is already logged in
+                # The 'jira' element is present when user is authenticated
+                page.wait_until_visible((By.ID, "jira"), timeout=3)
+                print("User already logged in, skipping Azure auth")
+                # Set node_id and perform necessary setup
+                webdriver.node_id = login_page.get_node_id()
+                print(f"node_id: {webdriver.node_id}")
+
+                if login_page.is_first_login():
+                    login_page.first_login_setup()
+                if login_page.is_first_login_second_page():
+                    login_page.first_login_second_page_setup()
+                login_page.wait_for_page_loaded()
+                return  # Exit early, no login needed
+            except TimeoutException:
+                print("User not logged in, proceeding with Azure auth")
                 # open dashboard to trigger ALB auth
                 page.go_to_url(f"{JIRA_SETTINGS.server_url}/secure/Dashboard.jspa")
 
