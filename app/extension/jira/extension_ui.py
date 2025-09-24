@@ -81,7 +81,25 @@ def app_specific_action(webdriver, datasets):
 
                 # wait for azure user input field to be shown with increased timeout
                 # Azure login page sometimes takes longer to fully load
-                page.wait_until_visible((By.ID, "i0116"), timeout=30)
+                try:
+                    page.wait_until_visible((By.ID, "i0116"), timeout=30)
+                except TimeoutException:
+                    # User might still be signed in to Azure, try to log out and restart
+                    print("Azure login page not found, attempting to log out from Azure and restart")
+                    webdriver.get("https://login.microsoftonline.com/ede9c166-5c73-46ba-9efc-605bd207f1f6/oauth2/v2.0/logout")
+                    time.sleep(2)
+
+                    # Check if we need to pick a signed-in user to log out
+                    pick_signed_in_user = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
+                    if len(pick_signed_in_user) > 0:
+                        print(f"Found {len(pick_signed_in_user)} signed-in users, clicking first one to log out")
+                        pick_signed_in_user[0].click()
+                        time.sleep(2)
+
+                    # Restart the test after logging out
+                    print("Restarting test after Azure logout")
+                    app_specific_action(webdriver, datasets)
+                    return
                 # get username field
                 username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
                 # clear existing value
