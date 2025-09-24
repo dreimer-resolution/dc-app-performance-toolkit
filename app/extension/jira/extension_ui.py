@@ -75,8 +75,13 @@ def app_specific_action(webdriver, datasets):
                 print("User not logged in, proceeding with Azure auth")
                 # Dashboard navigation already triggered ALB auth, now wait for Azure login page
 
-                # wait for azure user input field to be shown
-                page.wait_until_visible((By.ID, "i0116"))
+                # Add a small delay to allow redirect to complete
+                import time
+                time.sleep(2)
+
+                # wait for azure user input field to be shown with increased timeout
+                # Azure login page sometimes takes longer to fully load
+                page.wait_until_visible((By.ID, "i0116"), timeout=30)
                 # get username field
                 username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
                 # clear existing value
@@ -103,8 +108,13 @@ def app_specific_action(webdriver, datasets):
                 actions.send_keys(Keys.ENTER)
                 actions.perform()
 
-                stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
-                stay_signed_in_no.click()
+                # Handle "Stay signed in?" prompt - it might not always appear
+                try:
+                    page.wait_until_visible((By.ID, "idBtn_Back"), timeout=5)
+                    stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
+                    stay_signed_in_no.click()
+                except TimeoutException:
+                    print("Stay signed in prompt not shown, continuing...")
 
                 # wait for html body id "jira" which is always present, both for users who never logged in and who did
                 page.wait_until_visible((By.ID, "jira"))
