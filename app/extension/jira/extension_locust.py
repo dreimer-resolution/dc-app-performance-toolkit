@@ -3,15 +3,12 @@ import re
 import time
 import requests
 from locustio.common_utils import init_logger, jira_measure, run_as_specific_user  # noqa F401
+from util.conf import JIRA_SETTINGS
 
 logger = init_logger(app_type='jira')
 
 
 @jira_measure("locust_app_specific_action")
-# WebSudo is a feature that enhances security by requiring administrators to re-authenticate before
-# accessing administrative functions within Atlassian applications.
-# do_websudo=True requires user administrative rights, otherwise requests fail.
-#@run_as_specific_user(username='admin', password='admin', do_websudo=False)  # run as specific user
 def app_specific_action(locust):
 
     # create token with description for current perf user
@@ -37,9 +34,8 @@ def app_specific_action(locust):
 
     # use that token for another GET request, need to override the password for the request.
     # using the requests library here because locust get ignores auth header.
-    # hard coding the instance here should be fine since we now are using a persistent domain for jira.
     # TODO: locust.client.cookies.clear() might actually help before executing the request
-    r = requests.get('https://jira.dcapt.reslab.de/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
+    r = requests.get(f'{JIRA_SETTINGS.server_url}/rest/api/2/myself', auth=(current_user, plain_text_token[0]))
     content = r.content.decode('utf-8')   # decode response content
 
     username_pattern = '"name":"(.+?)"'
