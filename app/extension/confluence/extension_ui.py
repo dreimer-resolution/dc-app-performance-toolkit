@@ -8,18 +8,13 @@ from selenium.webdriver.common.action_chains import ActionChains
 from util.conf import CONFLUENCE_SETTINGS
 from selenium_ui.confluence.pages.pages import Login, AllUpdates, AdminPage, PopupManager, Logout
 from selenium.common.exceptions import TimeoutException
-
+import time
 
 def app_specific_logout(webdriver, datasets):
 
     @print_timing("selenium_app_specific_log_out")
     def measure():
         logout_page = Logout(webdriver)
-        # logout_page.go_to()
-        # pick_signed_in_user \
-        #     = webdriver.find_elements_by_xpath(".//div[@class='table-cell text-left content']")
-        # if len(pick_signed_in_user) > 0:
-        #     pick_signed_in_user[0].click()
         logout_page.go_to()
         pick_signed_in_user \
             = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
@@ -42,22 +37,11 @@ def app_specific_action(webdriver, datasets):
     @print_timing("selenium_app_specific_login")
     def measure():
 
-        """
-        @print_timing("selenium_app_specific_login:open_login_page")
-        def sub_measure():
-            login_page.go_to()
-        sub_measure()
-        """
-
         @print_timing("selenium_app_specific_login:login_and_view_dashboard")
         def sub_measure():
 
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
-            # try:
-            #     # this is only present if we are logged in already
-            #     webdriver.find_element_by_xpath(".//*[@id='com-atlassian-confluence']")
-            # except: # if not, there is an excption and we need to login     # noqa E722
 
             # open base url
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/")
@@ -66,6 +50,29 @@ def app_specific_action(webdriver, datasets):
                 still_logged_in = webdriver.find_element("xpath", ".//*[@id='com-atlassian-confluence']")
                 print(still_logged_in)
             except:
+
+                try:
+                    page.wait_until_visible((By.ID, "i0116"), timeout=30)
+                except TimeoutException:
+                    # User might still be signed in to Azure, try to log out and restart
+                    print("Azure login page not found, attempting to log out from Azure and restart")
+                    webdriver.get(
+                        "https://login.microsoftonline.com/ede9c166-5c73-46ba-9efc-605bd207f1f6/oauth2/v2.0/logout")
+                    time.sleep(2)
+
+                    # Check if we need to pick a signed-in user to log out
+                    pick_signed_in_user = webdriver.find_elements("xpath",
+                                                                  ".//div[@class='table-cell text-left content']")
+                    if len(pick_signed_in_user) > 0:
+                        print(f"Found {len(pick_signed_in_user)} signed-in users, clicking first one to log out")
+                        pick_signed_in_user[0].click()
+                        time.sleep(2)
+
+                    # Restart the test after logging out
+                    print("Restarting test after Azure logout")
+                    app_specific_action(webdriver, datasets)
+                    return
+
                 # wait for azure user input field to be shown
                 page.wait_until_visible((By.ID, "i0116"))
                 # get field object
