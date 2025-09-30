@@ -43,16 +43,62 @@ def app_specific_action(webdriver, datasets):
             username = datasets['current_session']['username']
             print(f"login_with_alb_auth, user: {username}")
 
-            # open base url
+            # Navigate to base url to check login status and potentially trigger ALB auth
             page.go_to_url(f"{CONFLUENCE_SETTINGS.server_url}/")
 
             try:
-                still_logged_in = webdriver.find_element("xpath", ".//*[@id='com-atlassian-confluence']")
-                print(still_logged_in)
-            except:
-                # wait for azure user input field to be shown
-                page.wait_until_visible((By.ID, "i0116"))
-                # get field object
+                # Check if we're on Confluence (user is logged in)
+                # The 'com-atlassian-confluence' element is present when user is authenticated
+                page.wait_until_visible((By.ID, "com-atlassian-confluence"), timeout=3)
+                print("User already logged in, skipping Azure auth")
+                # Set node_id and perform necessary setup
+                node_id = login_page.get_node_id()
+                if node_id == '':
+                    print(f"no node_id, restarting")
+                    app_specific_action(webdriver, datasets)
+                    return
+                else:
+                    print(f"logged in, got node_id: >{node_id}<")
+                    node_ip = rest_client.get_node_ip(node_id)
+                    webdriver.node_id = node_id
+                    webdriver.node_ip = node_ip
+
+                if login_page.is_first_login():
+                    login_page.first_user_setup()
+                all_updates_page = AllUpdates(webdriver)
+                all_updates_page.wait_for_page_loaded()
+                return  # Exit early, no login needed
+            except TimeoutException:
+                print("User not logged in, proceeding with Azure auth")
+                # Navigation already triggered ALB auth, now wait for Azure login page
+
+                # Add a small delay to allow redirect to complete
+                import time
+                time.sleep(2)
+
+                # wait for azure user input field to be shown with increased timeout
+                # Azure login page sometimes takes longer to fully load
+                try:
+                    page.wait_until_visible((By.ID, "i0116"), timeout=30)
+                except TimeoutException:
+                    # User might still be signed in to Azure, try to log out and restart
+                    print("Azure login page not found, attempting to log out from Azure and restart")
+                    webdriver.get("https://login.microsoftonline.com/ede9c166-5c73-46ba-9efc-605bd207f1f6/oauth2/v2.0/logout")
+                    time.sleep(2)
+
+                    # Check if we need to pick a signed-in user to log out
+                    pick_signed_in_user = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
+                    if len(pick_signed_in_user) > 0:
+                        print(f"Found {len(pick_signed_in_user)} signed-in users, clicking first one to log out")
+                        pick_signed_in_user[0].click()
+                        time.sleep(2)
+
+                    # Restart the test after logging out
+                    print("Restarting test after Azure logout")
+                    app_specific_action(webdriver, datasets)
+                    return
+
+                # get username field
                 username_input = webdriver.find_element("xpath", ".//*[@id='i0116']")
                 # clear existing value
                 username_input.clear()
@@ -78,8 +124,13 @@ def app_specific_action(webdriver, datasets):
                 actions.send_keys(Keys.ENTER)
                 actions.perform()
 
-                yes_button = webdriver.find_element("xpath", ".//*[@id='idSIButton9']")
-                yes_button.click()
+                # Handle "Stay signed in?" prompt - it might not always appear
+                try:
+                    page.wait_until_visible((By.ID, "idBtn_Back"), timeout=5)
+                    stay_signed_in_no = webdriver.find_element("xpath", ".//*[@id='idBtn_Back']")
+                    stay_signed_in_no.click()
+                except TimeoutException:
+                    print("Stay signed in prompt not shown, continuing...")
 
                 # wait for confluence page
                 page.wait_until_visible((By.ID, "com-atlassian-confluence"))
