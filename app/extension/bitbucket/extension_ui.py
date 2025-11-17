@@ -1,5 +1,4 @@
 from selenium.webdriver.common.by import By
-import time
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
 from selenium_ui.bitbucket.pages.pages import LoginPage, GetStarted, AdminPage, PopupManager
