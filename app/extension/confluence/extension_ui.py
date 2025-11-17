@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium_ui.confluence import modules
 from selenium_ui.base_page import BasePage
 from selenium_ui.conftest import print_timing
+from selenium_ui.confluence.pages.pages import Login, AllUpdates, AdminPage
 from util.conf import CONFLUENCE_SETTINGS
 from selenium_ui.confluence.pages.pages import Login, AllUpdates, PopupManager
 from util.api.confluence_clients import ConfluenceRestClient
@@ -18,6 +19,7 @@ def app_specific_action(webdriver, datasets):
     page = BasePage(webdriver)
 
     @print_timing("selenium_app_specific_login")
+
     def measure():
 
         @print_timing("selenium_app_specific_login:get_node_id_and_node_ip")
