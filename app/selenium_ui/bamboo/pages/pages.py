@@ -10,7 +10,7 @@ class Login(BasePage):
 
     def __init__(self, driver):
         super().__init__(driver)
-        self.is_2sv_login = True
+        self.is_2sv_login = False
 
     def wait_for_page_loaded(self):
         self.wait_until_visible(LoginPageLocators.login_page_content)
