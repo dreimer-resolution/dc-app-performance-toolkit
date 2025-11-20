@@ -8,21 +8,23 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
 
-def app_specific_logout(webdriver, datasets):
+def app_specific_action(webdriver, datasets):
+    modules.setup_run_data(datasets)
     page = BasePage(webdriver)
 
-    # minor modifications so that logout works with Azure whenever there are more than one user with an existing session
-    @print_timing("selenium_app_specific_log_out")
+    @print_timing("selenium_app_specific_login:login_and_view_all_plans")
     def measure():
-        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/userLogout.action")
-        pick_signed_in_user \
-            = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
-        if len(pick_signed_in_user) > 0:
-            pick_signed_in_user[0].click()
+
+        username = datasets['username']
+        print(f"login_with_saml_sso, user: {username}")
+        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso?NameID=" + username)
+        page.wait_until_visible((By.ID, "dashboard"))
+
     measure()
 
 
-def app_specific_action(webdriver, datasets):
+# deprecated
+def app_specific_action_entra(webdriver, datasets):
     modules.setup_run_data(datasets)
     page = BasePage(webdriver)
 
@@ -96,4 +98,19 @@ def app_specific_action(webdriver, datasets):
         # wait for build plan dashboard table
         page.wait_until_visible((By.ID, "dashboard"))
 
+    measure()
+
+
+# deprecated
+def app_specific_logout(webdriver, datasets):
+    page = BasePage(webdriver)
+
+    # minor modifications so that logout works with Azure whenever there are more than one user with an existing session
+    @print_timing("selenium_app_specific_log_out")
+    def measure():
+        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/userLogout.action")
+        pick_signed_in_user \
+            = webdriver.find_elements("xpath", ".//div[@class='table-cell text-left content']")
+        if len(pick_signed_in_user) > 0:
+            pick_signed_in_user[0].click()
     measure()

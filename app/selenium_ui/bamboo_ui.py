@@ -47,8 +47,11 @@ def test_1_selenium_view_job_configuration(bamboo_webdriver, bamboo_datasets, ba
     modules.view_job_configuration(bamboo_webdriver, bamboo_datasets)
 
 
+# # this action should be the last one
+# def test_2_selenium_z_log_out(bamboo_webdriver, bamboo_datasets, bamboo_screen_shots):
+#     # modules.log_out(bamboo_webdriver, bamboo_datasets)
+#     extension_ui.app_specific_logout(bamboo_webdriver, bamboo_datasets)
+
 # this action should be the last one
 def test_2_selenium_z_log_out(bamboo_webdriver, bamboo_datasets, bamboo_screen_shots):
-    # modules.log_out(bamboo_webdriver, bamboo_datasets)
-    extension_ui.app_specific_logout(bamboo_webdriver, bamboo_datasets)
-
+    modules.log_out(bamboo_webdriver, bamboo_datasets)
