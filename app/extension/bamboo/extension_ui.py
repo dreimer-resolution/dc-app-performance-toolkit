@@ -33,36 +33,6 @@ def app_specific_action_entra(webdriver, datasets):
 
         # open url to trigger SSO
         page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
-
-        # the below is to log in with the test idp.
-        # we don't use that for bamboo because of bad results nobody could explain
-        """
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
-        print(f"{current_time} - starting sso for user: {datasets['username']}")
-        # trigger sso directly
-        page.go_to_url(f"{BAMBOO_SETTINGS.server_url}/plugins/servlet/samlsso")
-        # wait for nameID input field to be shown
-        page.wait_until_visible((By.ID, "nameID"))
-        current_time = time.strftime("%H:%M:%S", t)
-        print(f"{current_time} - name id field is available")
-        # get field object
-        username_input = webdriver.find_element_by_xpath(".//*[@id='nameID']")
-        # clear existing value
-        username_input.clear()
-        # add username to it
-        username_input.send_keys(datasets['username'])
-        # click send button
-        webdriver.find_element_by_xpath(".//*[@class='btn btn-default']").click()
-        current_time = time.strftime("%H:%M:%S", t)
-        print(f"{current_time} - clicked send button")
-        # wait for element on page
-        page.wait_until_visible((By.ID, "page"))
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
-        print(f"{current_time} - successfully logged in user: {datasets['username']}")
-        """
-
         # log in with Azure AD - wait for azure user input field to be shown
         page.wait_until_visible((By.ID, "i0116"))
         # get username field
