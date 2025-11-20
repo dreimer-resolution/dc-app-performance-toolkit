@@ -33,7 +33,7 @@ def run_build_plans(locust):
     def run_build_plan(locust):
         r = locust.post(f'/rest/api/latest/queue/{build_plan_id}', catch_response=True,
                         headers=auth_headers, auth=user_auth)
-        logger.info(f'Run plan response: {r}')
+        logger.info(f'Run plan response: {r.json()}')
         build_num = r.json()['buildNumber']
         build_job_num = f'{build_plan_id}-{DEFAULT_DATASET_JOB_KEY}-{build_num}'
         plan_is_running = False
@@ -44,7 +44,7 @@ def run_build_plans(locust):
             time.sleep(PLAN_STATUS_REQUEST_TIMEOUT)
             r = locust.get(f'/rest/api/latest/result/{build_job_num}',
                            catch_response=True, headers=auth_headers)
-            logger.info(f'Run plan status: {r}')
+            logger.info(f'Run plan status: {r.json()}')
             response = r.json()
             if 'buildStartedTime' in response:
                 plan_is_running = True
