@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 
@@ -19,7 +20,7 @@ VENV_DIR = os.path.join(REPO_ROOT, "venv")
 VENV_PYTHON = os.path.join(VENV_DIR, "bin", "python")
 
 REMOTE_USER = "ubuntu"
-REMOTE_HOST = "107.23.221.35"
+REMOTE_HOST = "13.223.187.108"
 REMOTE_HOST_AND_USER = REMOTE_USER + "@" + REMOTE_HOST
 SSH_KEY = os.path.expanduser("~/.ssh/dc.pem")
 REMOTE_BASE = "/home/ubuntu/repositories/dc-app-performance-toolkit"
@@ -36,7 +37,14 @@ def ensure_venv():
     if os.path.isfile(VENV_PYTHON):
         return
     print("[setup] Creating virtualenv...")
-    subprocess.run(["virtualenv", VENV_DIR, "-p", "python3"], check=True)
+    if shutil.which("virtualenv"):
+        subprocess.run(["virtualenv", VENV_DIR, "-p", "python3"], check=True)
+    else:
+        # No virtualenv binary available -- fall back to the stdlib module.
+        # --clear rebuilds from scratch, which also repairs a stale venv whose
+        # base interpreter was removed (e.g. an upgraded Homebrew python).
+        print("[setup] virtualenv not found, falling back to stdlib venv...")
+        subprocess.run([sys.executable, "-m", "venv", "--clear", VENV_DIR], check=True)
     print("[setup] Installing requirements...")
     subprocess.run(
         [os.path.join(VENV_DIR, "bin", "pip"), "install", "-r",
@@ -47,7 +55,7 @@ def ensure_venv():
 
 def reexec_in_venv():
     """If not running inside the venv, set it up and re-exec this script in it."""
-    if sys.executable == VENV_PYTHON:
+    if os.path.realpath(sys.prefix) == os.path.realpath(VENV_DIR):
         return
     ensure_venv()
     print("[setup] Re-launching inside venv...\n")
