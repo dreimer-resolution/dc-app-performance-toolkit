@@ -9,7 +9,6 @@ from selenium_ui.conftest import print_timing
 
 from util.conf import JIRA_SETTINGS
 from selenium_ui.jira.pages.pages import Login, PopupManager, Logout
-from selenium_ui.jira.pages.selectors import LogoutLocators
 from selenium.common.exceptions import TimeoutException, WebDriverException
 
 AZURE_TENANT_ID = "ede9c166-5c73-46ba-9efc-605bd207f1f6"
@@ -135,16 +134,15 @@ def app_specific_logout(webdriver, datasets):
 
     @print_timing("selenium_app_specific_log_out")
     def measure():
+        # /logoutconfirm.jsp does not render a Jira confirm button here: it starts
+        # IdP single-logout and redirects to Azure's "Which account do you want to
+        # sign out of?" page, so the account row is what has to be clicked.
         logout_page.go_to()
-        # /logoutconfirm.jsp only ASKS to confirm - without this click the Jira
-        # session survives the "logout". Not waiting for the logged-out page
-        # afterwards on purpose: the ALB still holds its own OIDC session and may
-        # sign the user straight back in, which would fail every iteration.
-        confirm = webdriver.find_elements(*LogoutLocators.logout_submit_button)
-        if confirm:
-            confirm[0].click()
+        accounts = webdriver.find_elements(*AZURE_ACCOUNT_ROW)
+        if accounts:
+            accounts[0].click()
         else:
-            print("Jira logout confirm button not shown, session may already be gone")
+            print("Azure sign-out account row not shown, session may already be gone")
 
     measure()
 
