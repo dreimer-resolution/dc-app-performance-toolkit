@@ -78,9 +78,11 @@ grep -c "verified logged in user" $R/pytest.out   # should equal logins
 grep -c "Azure login attempt"      $R/pytest.out   # occasional is fine, see below
 ```
 
-`logins` and `completed` should track each other. **Logins climbing while
-completed stalls is the failure signature** — that is what hung the Jira run on
-2026-09-15 for 94 minutes.
+`logins` and `completed` should track each other. `selenium_app_specific_login`
+is written even when the login fails (`print_timing` records the sample first,
+then raises), so a gap between the two counts failed logins directly.
+**Logins climbing while completed stalls is the failure signature** — that is
+what hung the Jira run on 2026-09-15 for 94 minutes.
 
 ## 5. What a failure looks like now (and why it no longer hangs)
 
